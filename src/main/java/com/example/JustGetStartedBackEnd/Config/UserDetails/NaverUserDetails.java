@@ -6,22 +6,22 @@ import lombok.AllArgsConstructor;
 import java.util.Map;
 
 @AllArgsConstructor
-public class GoogleUserDetails implements OAuth2UserInfo {
+public class NaverUserDetails implements OAuth2UserInfo {
 
     private Map<String, Object> attributes;
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("email");
+        return (String) ((Map) attributes.get("response")).get("email");
     }
 
     @Override
     public String getName() {
-        return (String) attributes.get("name");
+        return (String) ((Map) attributes.get("response")).get("name");
     }
 
     @Override
     public String getProfileImageUrl() {
-        return (String) attributes.get("picture");
+        return (String) ((Map) attributes.get("response")).get("profile_image");
     }
 }

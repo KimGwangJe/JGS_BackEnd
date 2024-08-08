@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .oauth2Login((auth) -> auth
                         .loginPage("/oauth-login/login")
                         .defaultSuccessUrl("/oauth-login") // 성공 시 리디렉션 URL
-                        .failureUrl("/oauth-login/login")
+                        .failureUrl("/oauth-login/fail")
                         .permitAll());
 
 

@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.Config.Auth;
 
 import com.example.JustGetStartedBackEnd.Member.Member;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOauth2UserDetails implements UserDetails, OAuth2User {
 
+    @Getter
     private Member member;
     private Map<String, Object> attributes;
 

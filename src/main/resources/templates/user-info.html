@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>유저 정보</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .user-info {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .profile-image {
+      max-width: 150px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="user-info">
+  <h2>유저 정보</h2>
+  <img th:src="${user.profileImage}" class="profile-image" alt="Profile Image">
+  <p><strong>이름:</strong> <span th:text="${user.name}"></span></p>
+  <p><strong>이메일:</strong> <span th:text="${user.email}"></span></p>
+</div>
+
+</body>
+</html>
