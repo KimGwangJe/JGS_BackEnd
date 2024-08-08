@@ -1,9 +1,11 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.Member;
 
+import com.example.JustGetStartedBackEnd.Domain.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,9 +36,10 @@ public class Member {
     @Column(name = "name")
     private String name;
 
-    @NotBlank
+    @Enumerated(EnumType.STRING)
+    @NotNull
     @Column(name = "role")
-    private String role;
+    private MemberRole role;
 
     @NotBlank
     @Column(name = "profile_image")
@@ -66,8 +69,19 @@ public class Member {
     @OneToMany(mappedBy = "writter", fetch = FetchType.LAZY)
     private List<TeamReview> teamReviews = new ArrayList<>();
 
+    public String getRoleKey(){
+        return this.role.getKey();
+    }
+
+    public Member update(String name, String profileImage) {
+        this.name = name;
+        this.profileImage = profileImage;
+
+        return this;
+    }
+
     @Builder
-    public Member(String password, String email, String name, String role, String profileImage, String profileName) {
+    public Member(String password, String email, String name, MemberRole role, String profileImage, String profileName) {
         this.password = password;
         this.email = email;
         this.name = name;
