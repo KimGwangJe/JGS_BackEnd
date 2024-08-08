@@ -77,4 +77,12 @@ public class CustomOauth2UserDetails implements UserDetails, OAuth2User {
         return true;
     }
 
+    // Additional getters for the additional fields
+    public String getEmail() {
+        return member.getEmail();
+    }
+
+    public String getProfileImage() {
+        return member.getProfileImage();
+    }
 }

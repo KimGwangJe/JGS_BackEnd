@@ -24,7 +24,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 );
 
-        // Google OAuth 2.0 로그인 방식 설정
+        // OAuth 2.0 로그인 방식 설정
         http
                 .oauth2Login((auth) -> auth
                         .loginPage("/oauth-login/login")

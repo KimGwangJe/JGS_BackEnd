@@ -1,5 +1,7 @@
 package com.example.JustGetStartedBackEnd.Config.Auth;
 
+import com.example.JustGetStartedBackEnd.Config.UserDetails.GoogleUserDetails;
+import com.example.JustGetStartedBackEnd.Config.UserDetails.KakaoUserDetails;
 import com.example.JustGetStartedBackEnd.Member.Member;
 import com.example.JustGetStartedBackEnd.Member.MemberRepository;
 import com.example.JustGetStartedBackEnd.Member.MemberRole;
@@ -33,7 +35,9 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         if(provider.equals("google")){
             log.info("구글 로그인");
             oAuth2UserInfo = new GoogleUserDetails(oAuth2User.getAttributes());
-
+        } else if (provider.equals("kakao")) {
+            log.info("카카오 로그인");
+            oAuth2UserInfo = new KakaoUserDetails(oAuth2User.getAttributes());
         }
 
         String email = oAuth2UserInfo.getEmail();
