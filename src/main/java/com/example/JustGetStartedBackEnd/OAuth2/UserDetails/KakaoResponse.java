@@ -1,14 +1,24 @@
-package com.example.JustGetStartedBackEnd.Config.UserDetails;
+package com.example.JustGetStartedBackEnd.OAuth2.UserDetails;
 
-import com.example.JustGetStartedBackEnd.Config.Auth.OAuth2UserInfo;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;
 
 @AllArgsConstructor
-public class KakaoUserDetails implements OAuth2UserInfo {
+public class KakaoResponse implements OAuth2Response {
 
     private Map<String, Object> attributes;
+
+    @Override
+    public String getProvider() {
+        return "kakao";
+    }
+
+    @Override
+    public String getProviderId() {
+        return attributes.get("id").toString();
+    }
+
 
     @Override
     public String getEmail() {

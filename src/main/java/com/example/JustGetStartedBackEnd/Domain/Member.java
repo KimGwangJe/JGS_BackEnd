@@ -1,6 +1,5 @@
-package com.example.JustGetStartedBackEnd.Member;
+package com.example.JustGetStartedBackEnd.Domain;
 
-import com.example.JustGetStartedBackEnd.Domain.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -73,11 +72,10 @@ public class Member {
         return this.role.getKey();
     }
 
-    public Member update(String name, String profileImage) {
+    public void update(String name, String profileImage) {
         this.name = name;
         this.profileImage = profileImage;
 
-        return this;
     }
 
     @Builder

@@ -1,5 +1,7 @@
-package com.example.JustGetStartedBackEnd.Member;
+package com.example.JustGetStartedBackEnd.Member.Service;
 
+import com.example.JustGetStartedBackEnd.Domain.Member;
+import com.example.JustGetStartedBackEnd.Member.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
