@@ -1,5 +1,8 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.API.Match.Entity;
 
+import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchDTO;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +19,7 @@ public class GameMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_id")
-    private int matchId;
+    private Long matchId;
 
     @Column(name = "match_date")
     private Timestamp matchDate;
@@ -53,5 +56,17 @@ public class GameMatch {
         this.teamA = teamA;
         this.teamB = teamB;
         this.referee = referee;
+    }
+
+    public MatchDTO toMatchDTO() {
+        MatchDTO dto = new MatchDTO();
+        dto.setMatchId(this.matchId);
+        dto.setMatchDate(this.matchDate);
+        dto.setTeamA(this.teamA.getTeamName());
+        dto.setTeamB(this.teamB.getTeamName());
+        dto.setTeamAScore(this.teamAScore);
+        dto.setTeamBScore(this.teamBScore);
+        dto.setReferee(this.referee.getMemberId());
+        return dto;
     }
 }

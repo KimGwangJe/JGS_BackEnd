@@ -1,0 +1,117 @@
+package com.example.JustGetStartedBackEnd.API.Team.Entity;
+
+import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
+import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
+import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
+import com.example.JustGetStartedBackEnd.Domain.Community;
+import com.example.JustGetStartedBackEnd.Domain.MatchNotification;
+import com.example.JustGetStartedBackEnd.Domain.MatchPost;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Entity
+@Getter
+@Table(name = "team")
+@NoArgsConstructor
+public class Team {
+
+    @Id
+    @Column(name = "team_name")
+    private String teamName;
+
+    @NotBlank
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @NotBlank
+    @Column(name = "tier")
+    private String tier;
+
+    @Column(name = "tier_point")
+    private int tierPoint;
+
+    @Column(name = "introduce")
+    private String introduce;
+
+    @Column(name = "last_match_date")
+    private Date lastMatchDate;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    private List<Community> communities;
+
+    @OneToMany(mappedBy = "winnerTeam", fetch = FetchType.LAZY)
+    private List<Conference> conferences;
+
+    @OneToMany(mappedBy = "teamA", fetch = FetchType.LAZY)
+    private List<GameMatch> gameMatchesAsTeamA;
+
+    @OneToMany(mappedBy = "teamB", fetch = FetchType.LAZY)
+    private List<GameMatch> gameMatchesAsTeamB;
+
+    @OneToMany(mappedBy = "teamA", fetch = FetchType.LAZY)
+    private List<MatchPost> matchPostsAsTeamA;
+
+    @OneToMany(mappedBy = "appliTeamName", fetch = FetchType.LAZY)
+    private List<MatchNotification> matchNotifications;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    private List<TeamMember> teamMembers;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    private List<TeamReview> teamReviews;
+
+    public void updateLastMatchDate(Date lastMatchDate) {
+        this.lastMatchDate = lastMatchDate;
+    }
+
+    public void updateIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
+    public void updateTierPoint(int point) {
+        this.tierPoint += point;
+    }
+
+    public TeamDTO toTeamDTO() {
+        TeamDTO teamDTO = new TeamDTO();
+        teamDTO.setTeamName(this.teamName);
+        teamDTO.setTier(this.tier);
+        teamDTO.setCreateDate(this.createDate);
+        teamDTO.setTierPoint(this.tierPoint);
+        teamDTO.setIntroduce(this.introduce);
+        return teamDTO;
+    }
+
+    public TeamInfoDTO toTeamInfoDTO() {
+        TeamInfoDTO teamInfoDTO = new TeamInfoDTO();
+        teamInfoDTO.setTeamName(this.teamName);
+        teamInfoDTO.setTier(this.tier);
+        teamInfoDTO.setCreateDate(this.createDate);
+        teamInfoDTO.setTierPoint(this.tierPoint);
+        teamInfoDTO.setIntroduce(this.introduce);
+        teamInfoDTO.setLastMatchDate(this.lastMatchDate);
+
+        List<TeamMemberDTO> teamMemberDTOS = this.teamMembers.stream()
+                .map(TeamMember::toTeamMemberDTO)
+                .collect(Collectors.toList());
+        TeamMemberListDTO teamMemberListDTO = new TeamMemberListDTO();
+        teamMemberListDTO.setTeamMemberDTOList(teamMemberDTOS);
+        teamInfoDTO.setTeamMemberListDTO(teamMemberListDTO);
+
+        return teamInfoDTO;
+    }
+
+}

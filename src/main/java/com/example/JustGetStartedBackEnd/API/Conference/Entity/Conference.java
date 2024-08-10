@@ -1,5 +1,8 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.API.Conference.Entity;
 
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,5 +41,15 @@ public class Conference {
         this.conferenceDate = conferenceDate;
         this.content = content;
         this.winnerTeam = winnerTeam;
+    }
+
+    public ConferenceDTO toConferenceDTO() {
+        ConferenceDTO dto = new ConferenceDTO();
+        dto.setConferenceName(this.conferenceName);
+        dto.setWinnerTeam(this.winnerTeam.getTeamName());
+        dto.setConferenceDate(this.conferenceDate);
+        dto.setOrganizer(this.organizer.getMemberId());
+        dto.setContent(this.content);
+        return dto;
     }
 }

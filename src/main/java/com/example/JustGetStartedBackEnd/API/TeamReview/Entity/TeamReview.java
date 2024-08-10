@@ -1,5 +1,8 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.API.TeamReview.Entity;
 
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewDTO;
+import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +17,7 @@ public class TeamReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_review_id")
-    private int teamReviewId;
+    private Long teamReviewId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="team_name")
@@ -36,5 +39,15 @@ public class TeamReview {
         this.rating = rating;
         this.content = content;
         this.writter = writter;
+    }
+
+    public TeamReviewDTO toTeamReviewDTO() {
+        TeamReviewDTO dto = new TeamReviewDTO();
+        dto.setTeamName(this.team.getTeamName());
+        dto.setTeamReviewID(this.teamReviewId);
+        dto.setContent(this.content);
+        dto.setWritter(this.writter.getMemberId());
+        dto.setRating(this.rating);
+        return dto;
     }
 }

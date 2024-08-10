@@ -1,5 +1,10 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.Member.Entity;
 
+import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
+import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
+import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
+import com.example.JustGetStartedBackEnd.Domain.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -21,7 +26,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private int memberId;
+    private Long memberId;
 
     @Column(name = "password")
     private String password;

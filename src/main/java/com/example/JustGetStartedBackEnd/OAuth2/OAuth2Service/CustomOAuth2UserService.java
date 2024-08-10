@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.OAuth2.OAuth2Service;
 
-import com.example.JustGetStartedBackEnd.Domain.Member;
-import com.example.JustGetStartedBackEnd.Domain.MemberRole;
+import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.Member.Entity.MemberRole;
 import com.example.JustGetStartedBackEnd.Member.DTO.MemberDTO;
 import com.example.JustGetStartedBackEnd.Member.Repository.MemberRepository;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.*;

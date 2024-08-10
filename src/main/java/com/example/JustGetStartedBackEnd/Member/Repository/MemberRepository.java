@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.Member.Repository;
 
-import com.example.JustGetStartedBackEnd.Domain.Member;
+import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

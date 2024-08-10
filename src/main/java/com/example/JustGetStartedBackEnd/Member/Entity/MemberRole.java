@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.Member.Entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -86,8 +86,8 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/").permitAll()
-                        .anyRequest().authenticated());
+                                .requestMatchers("/api/**").authenticated() // "/api"로 시작하는 경로는 인증된 사용자만 접근 허용
+                                .anyRequest().permitAll()); // 그 외 모든 경로는 모든 사용자에게 허용
 
         //세션 설정 : STATELESS
         http
