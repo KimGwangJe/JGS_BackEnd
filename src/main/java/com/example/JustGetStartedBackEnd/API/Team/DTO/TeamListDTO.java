@@ -8,5 +8,10 @@ import java.util.List;
 @Getter
 @Setter
 public class TeamListDTO {
-    List<TeamDTO> teamInfoList;
+    private List<TeamDTO> teamInfoList;
+    private int pageNo;
+    private int pageSize;
+    private long totalElements;
+    private int totalPages;
+    private boolean last;
 }

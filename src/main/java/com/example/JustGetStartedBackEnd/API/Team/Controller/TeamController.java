@@ -15,11 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/team")
 public class TeamController {
         private final TeamService teamService;
+        private final int SIZE = 10;
 
         //페이징 처리
         @GetMapping("/all")
-        public ResponseEntity<TeamListDTO> GetAllTeams() {
-            return ResponseEntity.status(HttpStatus.OK).body(teamService.findAll());
+        public ResponseEntity<TeamListDTO> getAllTeams(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(required = false) String keyword) {
+            // 페이징 및 정렬 설정
+            TeamListDTO teamListDTO = teamService.findAll(page, SIZE, keyword);
+
+            return ResponseEntity.status(HttpStatus.OK).body(teamListDTO);
         }
 
         @GetMapping("/info")
