@@ -1,12 +1,18 @@
 package com.example.JustGetStartedBackEnd.API.Team.Entity;
 
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceListDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchListDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
+import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewDTO;
+import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
 import com.example.JustGetStartedBackEnd.Domain.Community;
 import com.example.JustGetStartedBackEnd.Domain.MatchNotification;
@@ -20,6 +26,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Getter
@@ -110,6 +117,30 @@ public class Team {
         TeamMemberListDTO teamMemberListDTO = new TeamMemberListDTO();
         teamMemberListDTO.setTeamMemberDTOList(teamMemberDTOS);
         teamInfoDTO.setTeamMemberListDTO(teamMemberListDTO);
+
+        List<TeamReviewDTO> teamReviewDTOS = this.teamReviews.stream()
+                .map(TeamReview::toTeamReviewDTO)
+                .collect(Collectors.toList());
+        TeamReviewListDTO teamReviewListDTO = new TeamReviewListDTO();
+        teamReviewListDTO.setTeamReviewDTOList(teamReviewDTOS);
+        teamInfoDTO.setTeamReviewListDTO(teamReviewListDTO);
+
+        List<MatchDTO> matchDTOS = Stream.concat(
+                        this.gameMatchesAsTeamA.stream(),
+                        this.gameMatchesAsTeamB.stream()
+                )
+                .map(GameMatch::toMatchDTO)
+                .collect(Collectors.toList());
+        MatchListDTO matchListDTO = new MatchListDTO();
+        matchListDTO.setMatches(matchDTOS);
+        teamInfoDTO.setMatchListDTO(matchListDTO);
+
+        List<ConferenceDTO> conferenceDTOS = this.conferences.stream()
+                .map(Conference::toConferenceDTO)
+                .collect(Collectors.toList());
+        ConferenceListDTO conferenceListDTO = new ConferenceListDTO();
+        conferenceListDTO.setConferenceDTOList(conferenceDTOS);
+        teamInfoDTO.setConferenceListDTO(conferenceListDTO);
 
         return teamInfoDTO;
     }
