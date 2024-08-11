@@ -4,7 +4,9 @@ import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamListDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
+import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +51,9 @@ public class TeamService {
     @Transactional(readOnly = true)
     public TeamInfoDTO findByTeamName(String teamName) {
         Team team = teamRepository.findByTeamName(teamName);
+        if(team == null){
+            throw new BusinessLogicException(TeamExceptionType.TEAM_NOT_FOUND);
+        }
         return team.toTeamInfoDTO();
     }
 }

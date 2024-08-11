@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberRepository memberRepository;
 
+    @Transactional(readOnly = true)
     public MemberListDTO getMemberList(int page, int size, String keyword){
         Pageable pageable = PageRequest.of(page, size);
         Page<Member> memberPage;
@@ -44,6 +46,7 @@ public class MemberService {
         return memberListDTO;
     }
 
+    @Transactional(readOnly = true)
     public MemberDTO findById(Long id){
         Optional<Member> member = memberRepository.findById(id);
         if(member.isPresent()){

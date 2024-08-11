@@ -42,6 +42,8 @@ public class TeamMember {
         dto.setTeamName(this.team.getTeamName());
         dto.setTeamMemberId(this.teamMemberId);
         dto.setTeamMemberName(this.member.getName());
+        dto.setMemberId(this.member.getMemberId());
+        dto.setProfileImage(this.member.getProfileImage());
         dto.setRole(this.role);
         return dto;
     }

@@ -11,4 +11,6 @@ public class TeamMemberDTO {
     private String teamMemberName;
     private String teamName;
     private TeamMemberRole role;
+    private Long memberId;
+    private String profileImage;
 }
