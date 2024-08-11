@@ -55,4 +55,14 @@ public class MemberService {
             throw new BusinessLogicException(MemberExceptionType.MEMBER_NOT_FOUND);
         }
     }
+
+    @Transactional(readOnly = true)
+    public Member findByIdReturnEntity(Long id){
+        Optional<Member> member = memberRepository.findById(id);
+        if(member.isPresent()){
+            return member.get();
+        } else{
+            throw new BusinessLogicException(MemberExceptionType.MEMBER_NOT_FOUND);
+        }
+    }
 }

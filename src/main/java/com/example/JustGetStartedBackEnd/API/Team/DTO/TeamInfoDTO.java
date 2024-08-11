@@ -14,7 +14,7 @@ import java.util.Date;
 public class TeamInfoDTO {
     private String teamName;
     private Date createDate;
-    private String tier;
+    private TierDTO tier;
     private int tierPoint;
     private String introduce;
     private Date lastMatchDate;

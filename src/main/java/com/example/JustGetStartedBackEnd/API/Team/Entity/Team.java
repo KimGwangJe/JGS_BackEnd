@@ -19,7 +19,8 @@ import com.example.JustGetStartedBackEnd.Domain.MatchNotification;
 import com.example.JustGetStartedBackEnd.Domain.MatchPost;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,13 +39,13 @@ public class Team {
     @Column(name = "team_name")
     private String teamName;
 
-    @NotBlank
+    @NotNull
     @Column(name = "create_date")
     private Date createDate;
 
-    @NotBlank
-    @Column(name = "tier")
-    private String tier;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tier_id")
+    private Tier tier;
 
     @Column(name = "tier_point")
     private int tierPoint;
@@ -95,7 +96,7 @@ public class Team {
     public TeamDTO toTeamDTO() {
         TeamDTO teamDTO = new TeamDTO();
         teamDTO.setTeamName(this.teamName);
-        teamDTO.setTier(this.tier);
+        teamDTO.setTier(this.tier.tierDTO());
         teamDTO.setCreateDate(this.createDate);
         teamDTO.setTierPoint(this.tierPoint);
         teamDTO.setIntroduce(this.introduce);
@@ -105,7 +106,7 @@ public class Team {
     public TeamInfoDTO toTeamInfoDTO() {
         TeamInfoDTO teamInfoDTO = new TeamInfoDTO();
         teamInfoDTO.setTeamName(this.teamName);
-        teamInfoDTO.setTier(this.tier);
+        teamInfoDTO.setTier(this.tier.tierDTO());
         teamInfoDTO.setCreateDate(this.createDate);
         teamInfoDTO.setTierPoint(this.tierPoint);
         teamInfoDTO.setIntroduce(this.introduce);
@@ -145,4 +146,13 @@ public class Team {
         return teamInfoDTO;
     }
 
+    @Builder
+    public Team(String teamName, Date createDate, Tier tier, int tierPoint, String introduce, Date lastMatchDate) {
+        this.teamName = teamName;
+        this.createDate = createDate;
+        this.tier = tier;
+        this.tierPoint = tierPoint;
+        this.introduce = introduce;
+        this.lastMatchDate = lastMatchDate;
+    }
 }

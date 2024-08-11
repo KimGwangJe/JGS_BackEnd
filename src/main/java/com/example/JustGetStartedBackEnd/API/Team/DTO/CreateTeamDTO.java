@@ -1,17 +1,13 @@
 package com.example.JustGetStartedBackEnd.API.Team.DTO;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter
 @Setter
-public class TeamDTO {
+public class CreateTeamDTO {
+    @NotBlank
     private String teamName;
-    private Date createDate;
-    private TierDTO tier;
-    private int tierPoint;
     private String introduce;
-    private Date lastMatchDate;
 }
