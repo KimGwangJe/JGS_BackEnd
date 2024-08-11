@@ -1,10 +1,14 @@
 package com.example.JustGetStartedBackEnd.API.Team.Service;
 
 import com.example.JustGetStartedBackEnd.API.Team.DTO.CreateTeamDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.UpdateIntroduceDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
+import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.TeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
@@ -39,9 +43,25 @@ public class APITeamService {
                 .build();
         try{
             teamRepository.save(newTeam);
-            teamMemberService.createLeaderTeamMember(member, team);
+            teamMemberService.createLeaderTeamMember(member, newTeam);
         } catch(Exception e){
             throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateIntroduce(Long memberId, UpdateIntroduceDTO updateIntroduceDTO){
+        Member member = memberService.findByIdReturnEntity(memberId);
+
+        for(TeamMember teamMember : member.getTeamMembers()){
+            // 받아온 팀명과 같고 그 팀의 리더여야됨
+            if(teamMember.getTeam().getTeamName().equals(updateIntroduceDTO.getTeamName())
+                    && teamMember.getRole().equals(TeamMemberRole.Leader)){
+                teamMember.getTeam().updateIntroduce(updateIntroduceDTO.getIntroduce());
+                return;
+            }
+        }
+
+        throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
     }
 }

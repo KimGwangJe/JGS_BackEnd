@@ -20,9 +20,10 @@ public class TeamController {
         //페이징 처리
         @GetMapping("/all")
         public ResponseEntity<TeamListDTO> getAllTeams(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(required = false) String keyword) {
-            // 페이징 및 정렬 설정
-            TeamListDTO teamListDTO = teamService.findAll(page, SIZE, keyword);
+                                                       @RequestParam(required = false) String keyword,
+                                                       @RequestParam(required = false) String tier
+                                                       ) {
+            TeamListDTO teamListDTO = teamService.findAll(page, SIZE, keyword, tier);
 
             return ResponseEntity.status(HttpStatus.OK).body(teamListDTO);
         }

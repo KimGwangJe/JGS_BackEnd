@@ -16,4 +16,13 @@ public interface TeamRepository extends JpaRepository<Team, String>{
     @Query("SELECT t FROM Team t " +
             "WHERE LOWER(t.teamName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Team> findByTeamNameKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT t FROM Team t " +
+            "WHERE t.tier.tierId = :tierId AND " +
+            "LOWER(t.teamName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Team> findByTierAndKeyword(@Param("tierId") Long tierId, @Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT t FROM Team t WHERE t.tier.tierId = :tierId")
+    Page<Team> findByTier(@Param("tierId") Long tierId, Pageable pageable);
+
 }
