@@ -59,6 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberRepository.save(newMember);
 
             MemberDTO memberDTO = new MemberDTO();
+            memberDTO.setMemberId(newMember.getMemberId());
             memberDTO.setEmail(oAuth2Response.getEmail());
             memberDTO.setName(oAuth2Response.getName());
             memberDTO.setProfileImage(oAuth2Response.getProfileImageUrl());
@@ -69,6 +70,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             member.get().update(oAuth2Response.getName(), oAuth2Response.getProfileImageUrl());
             memberRepository.save(member.get());
             MemberDTO memberDTO = new MemberDTO();
+            memberDTO.setMemberId(member.get().getMemberId());
             memberDTO.setEmail(oAuth2Response.getEmail());
             memberDTO.setName(oAuth2Response.getName());
             memberDTO.setProfileImage(oAuth2Response.getProfileImageUrl());

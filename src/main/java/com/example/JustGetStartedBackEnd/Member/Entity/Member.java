@@ -4,7 +4,9 @@ import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
-import com.example.JustGetStartedBackEnd.Domain.*;
+import com.example.JustGetStartedBackEnd.Domain.Community;
+import com.example.JustGetStartedBackEnd.Domain.JoinNotification;
+import com.example.JustGetStartedBackEnd.Member.DTO.MemberDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -81,6 +83,16 @@ public class Member {
         this.name = name;
         this.profileImage = profileImage;
 
+    }
+
+    public MemberDTO toMemberDTO(){
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberId(this.memberId);
+        memberDTO.setName(this.name);
+        memberDTO.setProfileImage(this.profileImage);
+        memberDTO.setEmail(this.email);
+        memberDTO.setRole(this.getRoleKey());
+        return memberDTO;
     }
 
     @Builder

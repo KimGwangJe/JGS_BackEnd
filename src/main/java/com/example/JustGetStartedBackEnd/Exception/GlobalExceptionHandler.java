@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -16,7 +17,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessLogicException.class)
-    public ResponseEntity handleBusinessLogicExceptions(BusinessLogicException e) {
+    public ResponseEntity<ErrorResponse> handleBusinessLogicExceptions(BusinessLogicException e) {
         return ResponseEntity.status(e.getExceptionType().getErrorCode())
                 .body(ErrorResponse.of(e.getExceptionType()));
     }
@@ -34,20 +35,28 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        if(e.getCause() instanceof InvalidFormatException){
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        if (e.getCause() instanceof InvalidFormatException) {
             InvalidFormatException t = (InvalidFormatException) e.getCause();
             ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST.value(),
-                    t.getPath().get(0).getFieldName()+" : 잘못된 형식의 값입니다");
+                    t.getPath().get(0).getFieldName() + " : 잘못된 형식의 값입니다");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(response);
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "Malformed JSON request"));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity handleMethodNotAllowedException(HttpRequestMethodNotSupportedException e) {
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException e) {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED.value(),e.getMessage()));
+                .body(ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED.value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        String errorMessage = String.format("파라미터 '%s' 는 null일 수 없습니다.", e.getParameterName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), errorMessage));
     }
 }

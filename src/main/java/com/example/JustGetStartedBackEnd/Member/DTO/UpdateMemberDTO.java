@@ -1,14 +1,14 @@
 package com.example.JustGetStartedBackEnd.Member.DTO;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberDTO {
-    private Long memberId;
-    private String role;
+public class UpdateMemberDTO {
+    @NotBlank
     private String name;
-    private String email;
+    @NotBlank
     private String profileImage;
 }

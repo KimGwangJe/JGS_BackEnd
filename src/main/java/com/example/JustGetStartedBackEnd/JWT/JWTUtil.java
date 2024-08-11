@@ -22,6 +22,10 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseClaimsJws(token).getBody().get("tokenType", String.class);
     }
 
+    public Long getMemberId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("member_id", Long.class);
+    }
+
     public String getName(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("name", String.class);
     }
@@ -45,10 +49,11 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String tokenType, String name, String email, String profile_image, String role, Long expiredMs) {
+    public String createJwt(String tokenType, Long memberId,String name, String email, String profile_image, String role, Long expiredMs) {
 
         return Jwts.builder()
                 .claim("tokenType",tokenType)
+                .claim("member_id",memberId)
                 .claim("name", name)
                 .claim("email", email)
                 .claim("profile_image", profile_image)

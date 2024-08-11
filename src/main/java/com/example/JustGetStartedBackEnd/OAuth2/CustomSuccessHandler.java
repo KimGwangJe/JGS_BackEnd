@@ -36,6 +36,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
+        Long memberId = customUserDetails.getMemberId();
         String name = customUserDetails.getName();
         String email = customUserDetails.getEmail();
         String profileImage = customUserDetails.getProfileImage();
@@ -45,9 +46,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("Access_Token", name, email, profileImage, role, 1800000L); // 30분
-        String refresh = jwtUtil.createJwt("Refresh_Token", name, email, profileImage, role, 21600000L); //6시간
-
+        String access = jwtUtil.createJwt("Access_Token",memberId, name, email, profileImage, role, 1800000L); // 30분
+        String refresh = jwtUtil.createJwt("Refresh_Token",memberId, name, email, profileImage, role, 21600000L); //6시간
+        System.out.println(access);
         // 로그인에 성공하면 Redis에 키 - RefreshToken 값에 - email을 넣어서 저장
         RefreshToken refreshToken = new RefreshToken(refresh, email);
         refreshTokenRepository.save(refreshToken);
