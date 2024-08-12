@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.Team.Service;
 
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamListDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamListPagingDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
@@ -25,7 +25,7 @@ public class TeamService {
     private final TierService tierService;
 
     @Transactional(readOnly = true)
-    public TeamListDTO findAll(int page, int size, String keyword, String tier) {
+    public TeamListPagingDTO findAll(int page, int size, String keyword, String tier) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Team> teamPage;
 
@@ -50,15 +50,15 @@ public class TeamService {
                 .map(Team::toTeamDTO)
                 .collect(Collectors.toList());
 
-        TeamListDTO teamListDTO = new TeamListDTO();
-        teamListDTO.setTeamInfoList(teamDTOs);
-        teamListDTO.setPageNo(teamPage.getNumber());
-        teamListDTO.setPageSize(teamPage.getSize());
-        teamListDTO.setTotalElements(teamPage.getTotalElements());
-        teamListDTO.setTotalPages(teamPage.getTotalPages());
-        teamListDTO.setLast(teamPage.isLast());
+        TeamListPagingDTO teamListPagingDTO = new TeamListPagingDTO();
+        teamListPagingDTO.setTeamInfoList(teamDTOs);
+        teamListPagingDTO.setPageNo(teamPage.getNumber());
+        teamListPagingDTO.setPageSize(teamPage.getSize());
+        teamListPagingDTO.setTotalElements(teamPage.getTotalElements());
+        teamListPagingDTO.setTotalPages(teamPage.getTotalPages());
+        teamListPagingDTO.setLast(teamPage.isLast());
 
-        return teamListDTO;
+        return teamListPagingDTO;
     }
 
     @Transactional(readOnly = true)
