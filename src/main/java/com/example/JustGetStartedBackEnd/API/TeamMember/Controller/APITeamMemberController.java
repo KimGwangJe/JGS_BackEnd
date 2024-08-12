@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/team-member")
@@ -23,5 +21,12 @@ public class APITeamMemberController {
         if(teamMemberListDTO.getTeamMemberDTOList().isEmpty())
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         return ResponseEntity.status(HttpStatus.OK).body(teamMemberListDTO);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteTeamMember(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                 @RequestParam("teamMemberId") Long teamMemberId) {
+        apiTeamMemberService.deleteTeamMember(customOAuth2User.getMemberId(), teamMemberId);
+        return ResponseEntity.ok().build();
     }
 }

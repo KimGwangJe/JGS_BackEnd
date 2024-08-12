@@ -69,4 +69,13 @@ public class TeamService {
         }
         return team.toTeamInfoDTO();
     }
+
+    @Transactional(readOnly = true)
+    public Team findByTeamNameReturnEntity(String teamName) {
+        Team team = teamRepository.findByTeamName(teamName);
+        if(team == null){
+            throw new BusinessLogicException(TeamExceptionType.TEAM_NOT_FOUND);
+        }
+        return team;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Conference.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import jakarta.persistence.*;
@@ -33,6 +34,16 @@ public class Conference {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winner_team")
     private Team winnerTeam;
+
+    public void updateWinnerTeam(Team winnerTeam){
+        this.winnerTeam = winnerTeam;
+    }
+
+    public void udpateConferenceInfo(ConferenceInfoDTO conferenceInfoDTO){
+        this.conferenceName = conferenceInfoDTO.getConferenceName();
+        this.content = conferenceInfoDTO.getContent();
+        this.conferenceDate = conferenceInfoDTO.getConferenceDate();
+    }
 
     @Builder
     public Conference(String conferenceName, Member organizer, Date conferenceDate, String content, Team winnerTeam) {
