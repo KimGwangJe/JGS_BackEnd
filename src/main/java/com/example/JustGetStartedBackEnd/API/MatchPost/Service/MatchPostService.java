@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class MatchPostService {
     private final MatchPostRepository matchPostRepository;
     private final TierService tierService;
 
+    @Transactional(readOnly = true)
     public MatchPostPagingDTO getMatchPostList(int page, int size, String keyword, String tier){
         Pageable pageable = PageRequest.of(page,size);
         Page<MatchPost> matchPost;

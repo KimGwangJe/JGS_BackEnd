@@ -57,19 +57,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(createCookie("Refresh_Token", refresh));
 
         // 리디렉션 설정
-        response.sendRedirect("http://localhost:3000");
+        response.sendRedirect("http://localhost:3000?Access_Token=" + access);
 
         // Access Token을 프론트엔드에 JSON으로 전달
         response.setContentType("application/json");
         response.setStatus(HttpStatus.OK.value());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("Access_Token", access);
-        String responseBodyJson = objectMapper.writeValueAsString(responseBody);
-
         PrintWriter writer = response.getWriter();
-        writer.println(responseBodyJson);
         writer.flush();
     }
 
