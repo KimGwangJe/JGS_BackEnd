@@ -7,7 +7,7 @@ import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepos
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
-import com.example.JustGetStartedBackEnd.Domain.Community;
+import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
@@ -76,5 +76,16 @@ public class APICommunityService {
             throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
         }
         community.updateContentAndTitle(updateCommunityDTO.getContent(), updateCommunityDTO.getTitle());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteCommunityPost(Long memberId, Long communityId){
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
+        if(community.getWriter().getMemberId() == memberId){
+            communityRepository.delete(community);
+        } else{
+            throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
+        }
     }
 }

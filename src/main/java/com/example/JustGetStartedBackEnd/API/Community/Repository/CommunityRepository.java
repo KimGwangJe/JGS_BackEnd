@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Community.Repository;
 
-import com.example.JustGetStartedBackEnd.Domain.Community;
+import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

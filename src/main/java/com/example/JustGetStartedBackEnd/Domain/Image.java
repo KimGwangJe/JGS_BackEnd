@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.Domain;
 
+import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

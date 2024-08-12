@@ -30,4 +30,11 @@ public class APICommunityController {
         apiCommunityService.updateCommunityPost(customOAuth2User.getMemberId(), updateCommunityDTO);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCommunityPost(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                    @RequestParam("communityId") Long communityId) {
+        apiCommunityService.deleteCommunityPost(customOAuth2User.getMemberId(), communityId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

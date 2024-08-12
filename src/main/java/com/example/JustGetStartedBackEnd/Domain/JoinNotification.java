@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.Domain;
 
+import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;

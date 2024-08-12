@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.Domain;
 
+import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import jakarta.persistence.*;
 import lombok.Builder;

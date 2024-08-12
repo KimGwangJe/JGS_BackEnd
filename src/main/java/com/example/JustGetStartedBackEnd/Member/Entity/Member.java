@@ -4,7 +4,7 @@ import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
-import com.example.JustGetStartedBackEnd.Domain.Community;
+import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.Domain.JoinNotification;
 import com.example.JustGetStartedBackEnd.Member.DTO.MemberDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
