@@ -56,11 +56,12 @@ public class Community {
     @OneToMany(mappedBy = "community", fetch = FetchType.LAZY)
     private List<JoinNotification> joinNotifications = new ArrayList<>();
 
-    public void updateContent(String content) {
+    public void updateContentAndTitle(String content, String title) {
         this.content = content;
+        this.title = title;
     }
 
-    public CommunityDTO getCommuntiyPaging(){
+    public CommunityDTO getCommunityPaging(){
         CommunityDTO communityDTO = new CommunityDTO();
         communityDTO.setTitle(this.title);
         communityDTO.setCommunityId(this.communityId);

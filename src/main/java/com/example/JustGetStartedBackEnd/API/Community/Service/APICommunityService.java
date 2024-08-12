@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Community.Service;
 
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CreateCommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.UpdateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
@@ -65,5 +66,15 @@ public class APICommunityService {
         } catch (Exception e) {
             throw new BusinessLogicException(CommunityExceptionType.COMMUNITY_SAVE_ERROR);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateCommunityPost(Long memberId, UpdateCommunityDTO updateCommunityDTO){
+        Community community = communityRepository.findById(updateCommunityDTO.getCommunityId())
+                .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
+        if(community.getWriter().getMemberId() != memberId){
+            throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
+        }
+        community.updateContentAndTitle(updateCommunityDTO.getContent(), updateCommunityDTO.getTitle());
     }
 }

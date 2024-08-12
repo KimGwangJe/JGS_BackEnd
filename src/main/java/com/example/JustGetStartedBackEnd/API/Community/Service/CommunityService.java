@@ -30,7 +30,7 @@ public class CommunityService {
         }
 
         List<CommunityDTO> communityDTOList = communityPage.getContent().stream()
-                .map(Community::getCommuntiyPaging)
+                .map(Community::getCommunityPaging)
                 .toList();
         CommunityListPageDTO communityListPageDTO = new CommunityListPageDTO();
         communityListPageDTO.setCommunityDTOList(communityDTOList);
