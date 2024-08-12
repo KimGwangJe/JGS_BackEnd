@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.Domain;
 
+import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,7 +23,7 @@ public class Community {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_id")
-    private int communityId;
+    private Long communityId;
 
     @NotBlank
     @Column(name="title")
@@ -57,6 +58,17 @@ public class Community {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public CommunityDTO getCommuntiyPaging(){
+        CommunityDTO communityDTO = new CommunityDTO();
+        communityDTO.setTitle(this.title);
+        communityDTO.setCommunityId(this.communityId);
+        communityDTO.setRecruit(this.recruit);
+        communityDTO.setTeamName(this.team.getTeamName());
+        communityDTO.setRecruitDate(this.recruitDate);
+
+        return communityDTO;
     }
 
     @Builder
