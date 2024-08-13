@@ -18,10 +18,10 @@ public class NotificationSenderController {
     }
 
     @PostMapping("/api/send-notification")
-    public ResponseEntity<String> sendNotification(
+    public ResponseEntity<Long> sendNotification(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @RequestParam String message) {
         notificationController.sendNotification(customOAuth2User.getMemberId(), message);
-        return ResponseEntity.status(HttpStatus.OK).body("Notification sent successfully!");
+        return ResponseEntity.status(HttpStatus.OK).body(customOAuth2User.getMemberId());
     }
 }

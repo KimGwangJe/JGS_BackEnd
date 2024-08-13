@@ -20,10 +20,10 @@ public class NotificationController {
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
-    @GetMapping("/sse/subscribe")
+    @GetMapping("/api/sse/subscribe")
     public SseEmitter subscribe(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         Long userId = customOAuth2User.getMemberId();
-        SseEmitter emitter = new SseEmitter(TimeUnit.MINUTES.toMillis(10)); // 10분 타임아웃 설정
+        SseEmitter emitter = new SseEmitter(TimeUnit.HOURS.toMillis(1)); // 1시간 타임아웃 설정
 
         // 사용자 식별자(예: JWT에서 추출한 사용자 ID)를 키로 사용
         emitters.put(userId, emitter);
@@ -42,7 +42,7 @@ public class NotificationController {
         // 클라이언트에게 연결이 성공했음을 알리는 기본 메시지 전송 (선택적)
         executor.execute(() -> {
             try {
-                emitter.send(SseEmitter.event().name("connection-success").data("Connected to SSE successfully"));
+                emitter.send(SseEmitter.event().name("connection-success").data("SSE Connection Successful"));
             } catch (IOException e) {
                 cleanup(userId);
             }
