@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class MatchPost {
     private boolean isEnd;
 
     @Column(name = "match_date")
-    private Date matchDate;
+    private LocalDateTime matchDate;
 
     @Column(name = "location")
     private String location;
@@ -54,8 +55,13 @@ public class MatchPost {
         return matchPostDTO;
     }
 
+    public void updateMatchPost(LocalDateTime matchDate, String location){
+        this.matchDate = matchDate;
+        this.location = location;
+    }
+
     @Builder
-    public MatchPost(Team teamA, boolean isEnd, Date matchDate, String location) {
+    public MatchPost(Team teamA, boolean isEnd, LocalDateTime matchDate, String location) {
         this.teamA = teamA;
         this.isEnd = isEnd;
         this.matchDate = matchDate;

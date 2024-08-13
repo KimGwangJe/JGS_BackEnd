@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ public class CreateMatchPostDTO {
     @NotBlank
     private String teamName;
     @NotNull
-    private Date matchDate;
+    private LocalDateTime matchDate;
     @NotBlank
     private String location;
 }

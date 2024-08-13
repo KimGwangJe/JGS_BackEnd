@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.MatchPost.Service;
 
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.CreateMatchPostDTO;
+import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.UpdateMatchPostDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.ExceptionType.MatchPostException;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Repository.MatchPostRepository;
@@ -38,4 +39,40 @@ public class APIMatchPostService {
             throw new BusinessLogicException(MatchPostException.MATCH_POST_SAVE_ERROR);
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateMatchPost(Long memberId, UpdateMatchPostDTO updateMatchPostDTO){
+        MatchPost matchPost = matchPostRepository.findById(updateMatchPostDTO.getMatchPostId()).orElseThrow(
+                () -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
+        boolean isLeader = matchPost.getTeamA().getTeamMembers().stream()
+                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
+                        teamMember.getRole() == TeamMemberRole.Leader);
+
+        if (isLeader) {
+            matchPost.updateMatchPost(updateMatchPostDTO.getMatchDate(), updateMatchPostDTO.getLocation());
+        } else{
+            throw new BusinessLogicException(MatchPostException.NOT_ALLOW_AUTHORITY);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteMatchPost(Long memberId, Long matchPostId) {
+        MatchPost matchPost = matchPostRepository.findById(matchPostId)
+                .orElseThrow(() -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
+
+        boolean isLeader = matchPost.getTeamA().getTeamMembers().stream()
+                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
+                        teamMember.getRole() == TeamMemberRole.Leader);
+
+        if (!isLeader) {
+            throw new BusinessLogicException(MatchPostException.NOT_ALLOW_AUTHORITY);
+        }
+
+        try {
+            matchPostRepository.delete(matchPost);
+        } catch (Exception e) {
+            throw new BusinessLogicException(MatchPostException.MATCH_POST_DELETE_ERROR);
+        }
+    }
+
 }
