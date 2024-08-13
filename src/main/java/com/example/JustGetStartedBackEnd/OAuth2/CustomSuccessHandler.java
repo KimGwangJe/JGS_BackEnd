@@ -46,15 +46,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String access = jwtUtil.createJwt("Access_Token", memberId, name, email, profileImage, role, 1800000L); // 30분
         String refresh = jwtUtil.createJwt("Refresh_Token", memberId, name, email, profileImage, role, 21600000L); // 6시간
         log.info(access);
+        log.info(refresh);
+
         // Refresh_Token을 Redis에 저장
         RefreshToken refreshToken = new RefreshToken(refresh, email);
         refreshTokenRepository.save(refreshToken);
 
-        // Refresh_Token을 쿠키로 추가
         response.addCookie(createCookie("Refresh_Token", refresh));
 
         // 로그인 성공 후 프론트엔드로 리다이렉트하면서 Access_Token 전달
-        String redirectUrl = "http://localhost:3000?Access_Token=" + access;
+        String redirectUrl = "http://localhost:3000?Access_Token=" + access + "&Refresh_Token=" + refresh;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 
