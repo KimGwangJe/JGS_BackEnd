@@ -2,6 +2,7 @@ package com.example.JustGetStartedBackEnd.Member.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
+import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
@@ -74,6 +75,10 @@ public class Member {
     @JsonIgnore
     @OneToMany(mappedBy = "writter", fetch = FetchType.LAZY)
     private List<TeamReview> teamReviews = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<TeamInviteNotification> teamInviteNotifications = new ArrayList<>();
 
     public String getRoleKey(){
         return this.role.getKey();

@@ -8,6 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchListDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
+import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
@@ -80,6 +81,10 @@ public class Team {
 
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<TeamReview> teamReviews;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    private List<TeamInviteNotification> teamInviteNotifications;
 
     public void updateLastMatchDate(Date lastMatchDate) {
         this.lastMatchDate = lastMatchDate;
