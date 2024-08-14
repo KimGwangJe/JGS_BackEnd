@@ -1,5 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.TeamMember.Service;
 
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
@@ -7,17 +9,22 @@ import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Repository.TeamMemberRepository;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class APITeamMemberService {
     private final TeamMemberRepository teamMemberRepository;
+    private final TeamService teamService;
+    private final MemberService memberService;
 
     @Transactional(readOnly = true)
     public TeamMemberListDTO findMyTeam(Long memberId){
@@ -55,5 +62,28 @@ public class APITeamMemberService {
             }
         }
         throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void joinTeamMember(Long memberId, String teamName){
+        Team team = teamService.findByTeamNameReturnEntity(teamName);
+        Member member = memberService.findByIdReturnEntity(memberId);
+        System.out.println(memberId + teamName);
+        for(TeamMember teamMember :team.getTeamMembers()){
+            if(Objects.equals(teamMember.getMember().getMemberId(), member.getMemberId())){
+                throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
+            }
+        }
+        //이미 가입 되어있는지 확인 필요
+        TeamMember teamMember = TeamMember.builder()
+                .team(team)
+                .member(member)
+                .role(TeamMemberRole.Member)
+                .build();
+        try{
+            teamMemberRepository.save(teamMember);
+        } catch(Exception e){
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_SAVE_ERROR);
+        }
     }
 }
