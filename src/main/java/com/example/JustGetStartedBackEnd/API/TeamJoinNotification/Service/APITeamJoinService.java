@@ -2,6 +2,8 @@ package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service;
 
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.Service.CommunityService;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.ExceptionType.TeamJoinExceptionType;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +32,27 @@ public class APITeamJoinService {
     private final MemberService memberService;
     private final NotificationController notificationController;
     private final APITeamMemberService apiTeamMemberService;
+
+    @Transactional(readOnly = true)
+    public JoinNotificationListDTO getTeamJoinList(Long memberId){
+        List<JoinNotification> joinNotificationnList = teamJoinNotificationRepository.findByWriterMemberId(memberId);
+
+        List<JoinNotificationDTO> joinNotificationDTOS = new ArrayList<>();
+        for(JoinNotification joinNotification : joinNotificationnList){
+            JoinNotificationDTO joinNotificationDTO = new JoinNotificationDTO();
+            joinNotificationDTO.setNotificationId(joinNotification.getNotificationId());
+            joinNotificationDTO.setTeamName(joinNotification.getCommunity().getTeam().getTeamName());
+            joinNotificationDTO.setRead(joinNotification.isRead());
+            joinNotificationDTO.setMemberName(joinNotification.getPubMember().getName());
+
+            joinNotificationDTOS.add(joinNotificationDTO);
+        }
+
+        JoinNotificationListDTO joinNotificationListDTO = new JoinNotificationListDTO();
+        joinNotificationListDTO.setJoinNotifications(joinNotificationDTOS);
+
+        return joinNotificationListDTO;
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public void createTeamJoinNotification(Long memberId, Long communityId){

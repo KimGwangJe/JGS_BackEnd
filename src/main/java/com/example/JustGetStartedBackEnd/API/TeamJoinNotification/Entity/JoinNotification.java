@@ -16,7 +16,7 @@ public class JoinNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
-    private int notificationId;
+    private Long notificationId;
 
     @Column(name = "is_read")
     private boolean isRead;

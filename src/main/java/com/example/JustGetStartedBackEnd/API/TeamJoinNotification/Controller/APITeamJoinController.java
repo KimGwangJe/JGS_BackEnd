@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Controller;
 
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service.APITeamJoinService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
@@ -16,6 +17,15 @@ import org.springframework.web.bind.annotation.*;
 public class APITeamJoinController {
 
     private final APITeamJoinService apiTeamJoinService;
+
+    @GetMapping
+    public ResponseEntity<JoinNotificationListDTO> getTeamJoinList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        JoinNotificationListDTO joinNotificationListDTO = apiTeamJoinService.getTeamJoinList(customOAuth2User.getMemberId());
+        if(joinNotificationListDTO.getJoinNotifications().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(joinNotificationListDTO);
+    }
 
     @PostMapping
     public ResponseEntity<Void> createTeamJoinNotification(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
