@@ -29,6 +29,10 @@ public class JoinNotification {
     @ManyToOne(fetch = FetchType.LAZY)
     private Community community;
 
+    public void updateRead(){
+        this.isRead = true;
+    }
+
     @Builder
     JoinNotification(boolean isRead, Member pubMember, Community community) {
         this.isRead = isRead;

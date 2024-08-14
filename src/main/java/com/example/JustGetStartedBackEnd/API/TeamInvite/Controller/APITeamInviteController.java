@@ -35,8 +35,9 @@ public class APITeamInviteController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> readTeamInvite(@RequestParam(name = "inviteId") Long inviteId){
-        apiTeamInviteService.readTeamInvite(inviteId);
+    public ResponseEntity<Void> readTeamInvite(@RequestParam(name = "inviteId") Long inviteId,
+                                               @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
+        apiTeamInviteService.readTeamInvite(inviteId, customOAuth2User.getMemberId());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

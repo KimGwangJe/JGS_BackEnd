@@ -27,6 +27,19 @@ public class APITeamJoinController {
         return ResponseEntity.status(HttpStatus.OK).body(joinNotificationListDTO);
     }
 
+    @PutMapping
+    public ResponseEntity<Void> updateRead(@RequestParam(name = "joinNotificationId") Long joinNotificationId,
+                                           @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
+        apiTeamJoinService.updateRead(joinNotificationId, customOAuth2User.getMemberId());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PutMapping("/all")
+    public ResponseEntity<Void> updateReadAll(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
+        apiTeamJoinService.updateReadAll(customOAuth2User.getMemberId());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PostMapping
     public ResponseEntity<Void> createTeamJoinNotification(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                            @RequestParam(name = "communityId") Long communityId){

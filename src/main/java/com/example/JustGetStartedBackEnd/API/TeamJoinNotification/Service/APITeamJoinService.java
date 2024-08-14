@@ -14,6 +14,7 @@ import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMember
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,27 @@ public class APITeamJoinService {
         joinNotificationListDTO.setJoinNotifications(joinNotificationDTOS);
 
         return joinNotificationListDTO;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateRead(Long joinNotificationId, Long memberId){
+        JoinNotification joinNotification = teamJoinNotificationRepository.findById(joinNotificationId)
+                .orElseThrow(() -> new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_NOT_FOUND));
+        if(joinNotification.getCommunity().getWriter().getMemberId().equals(memberId)){
+            joinNotification.updateRead();
+            return;
+        }
+        throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateReadAll(Long memberId){
+        try{
+            teamJoinNotificationRepository.updateReadStatusByMemberId(memberId);
+        } catch(Exception e){
+            throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_READ_ERROR);
+        }
+
     }
 
     @Transactional(rollbackFor = Exception.class)

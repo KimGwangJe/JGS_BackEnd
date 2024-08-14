@@ -15,6 +15,7 @@ import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
@@ -94,10 +95,15 @@ public class APITeamInviteService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void readTeamInvite(Long inviteId){
+    public void readTeamInvite(Long inviteId, Long memberId){
         TeamInviteNotification teamInviteNotification = teamInviteRepository.findById(inviteId)
                 .orElseThrow(() -> new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_NOT_FOUND));
-        teamInviteNotification.updateRead();
+        if(teamInviteNotification.getMember().getMemberId().equals(memberId)){
+            teamInviteNotification.updateRead();
+            return;
+        }
+        throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
+
     }
 
     @Transactional(rollbackFor = Exception.class)
