@@ -2,8 +2,10 @@ package com.example.JustGetStartedBackEnd.API.Community.Service;
 
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityListPageDTO;
+import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
+import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,5 +43,11 @@ public class CommunityService {
         communityListPageDTO.setLast(communityPage.isLast());
 
         return communityListPageDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public Community getCommunityById(Long communityId){
+        return communityRepository.findById(communityId).orElseThrow(
+                () -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
     }
 }

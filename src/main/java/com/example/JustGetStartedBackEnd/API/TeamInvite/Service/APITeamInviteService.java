@@ -9,6 +9,8 @@ import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.ExceptionType.TeamInviteExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Repository.TeamInviteRepository;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
@@ -41,15 +43,27 @@ public class APITeamInviteService {
                         teamMember.getRole() == TeamMemberRole.Leader);
 
         if(!isLeader) throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        TeamInviteNotification TIN = teamInviteRepository.findByMemberIdAndTeamName(dto.getTo(), dto.getTeamName());
+        if(TIN != null){
+            throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ALREADY_REQUEST);
+        }
+
+        //이미 가입된 사용자인지 확인
+        TeamMemberListDTO teamMemberListDTO = apiTeamMemberService.findMyTeam(dto.getTo());
+        for(TeamMemberDTO teamMember : teamMemberListDTO.getTeamMemberDTOList()){
+            if(teamMember.getTeamName().equals(dto.getTeamName())){
+                throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
+            }
+        }
 
         try{
-            TeamInviteNotification TIN = TeamInviteNotification.builder()
+            TeamInviteNotification newTIN = TeamInviteNotification.builder()
                     .team(team)
                     .member(memberService.findByIdReturnEntity(dto.getTo()))
                     .isRead(false)
                     .inviteDate(LocalDateTime.now())
                     .build();
-            teamInviteRepository.save(TIN);
+            teamInviteRepository.save(newTIN);
 
             notificationController.sendNotification(dto.getTo(), dto.getTeamName() + "팀으로 부터 초대가 왔습니다.");
         } catch( Exception e){

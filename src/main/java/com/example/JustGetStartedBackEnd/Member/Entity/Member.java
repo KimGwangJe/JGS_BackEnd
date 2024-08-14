@@ -6,7 +6,7 @@ import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotific
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
-import com.example.JustGetStartedBackEnd.Domain.JoinNotification;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
 import com.example.JustGetStartedBackEnd.Member.DTO.MemberDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

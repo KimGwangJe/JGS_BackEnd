@@ -3,7 +3,7 @@ package com.example.JustGetStartedBackEnd.API.Community.Entity;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.Domain.Image;
-import com.example.JustGetStartedBackEnd.Domain.JoinNotification;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Community {
     private boolean recruit;
 
     @Column(name = "recruit_date")
-    private Date recruitDate;
+    private LocalDateTime recruitDate;
 
     @Column(name = "write_date")
     private Date writeDate;
@@ -75,7 +76,7 @@ public class Community {
     }
 
     @Builder
-    Community(String title, String content, boolean recruit, Date recruitDate, Date writeDate, Member writer, Team team) {
+    Community(String title, String content, boolean recruit, LocalDateTime recruitDate, Date writeDate, Member writer, Team team) {
         this.title = title;
         this.content = content;
         this.recruit = recruit;

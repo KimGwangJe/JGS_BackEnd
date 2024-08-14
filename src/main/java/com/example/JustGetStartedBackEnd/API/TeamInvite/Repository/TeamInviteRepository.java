@@ -17,4 +17,6 @@ public interface TeamInviteRepository extends JpaRepository<TeamInviteNotificati
     @Query("UPDATE TeamInviteNotification t SET t.isRead = true WHERE t.member.memberId = :memberId")
     void updateReadStatusByMemberId(@Param("memberId") Long memberId);
 
+    @Query("SELECT t FROM TeamInviteNotification t WHERE t.member.memberId = :memberId And t.team.teamName = :teamName")
+    TeamInviteNotification findByMemberIdAndTeamName(@Param("memberId") Long memberId, @Param("teamName") String teamName);
 }

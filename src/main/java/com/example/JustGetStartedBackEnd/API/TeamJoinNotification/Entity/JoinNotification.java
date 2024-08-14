@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
@@ -18,9 +18,6 @@ public class JoinNotification {
     @Column(name = "notification_id")
     private int notificationId;
 
-    @Column(name = "is_join")
-    private boolean isJoin;
-
     @Column(name = "is_read")
     private boolean isRead;
 
@@ -33,8 +30,7 @@ public class JoinNotification {
     private Community community;
 
     @Builder
-    JoinNotification(boolean isJoin, boolean isRead, Member pubMember, Community community) {
-        this.isJoin = isJoin;
+    JoinNotification(boolean isRead, Member pubMember, Community community) {
         this.isRead = isRead;
         this.pubMember = pubMember;
         this.community = community;

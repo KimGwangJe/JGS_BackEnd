@@ -9,7 +9,7 @@ import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
-import com.example.JustGetStartedBackEnd.API.TeamMember.Service.TeamMemberService;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
@@ -24,7 +24,7 @@ import java.util.Date;
 public class APITeamService {
     private final TeamRepository teamRepository;
     private final MemberService memberService;
-    private final TeamMemberService teamMemberService;
+    private final APITeamMemberService apiTeamMemberService;
 
     @Transactional(rollbackFor = Exception.class)
     public void makeTeam(Long memberId, CreateTeamDTO createTeamDTO){
@@ -43,7 +43,7 @@ public class APITeamService {
                 .build();
         try{
             teamRepository.save(newTeam);
-            teamMemberService.createLeaderTeamMember(member, newTeam);
+            apiTeamMemberService.createLeaderTeamMember(member, newTeam);
         } catch(Exception e){
             throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
         }

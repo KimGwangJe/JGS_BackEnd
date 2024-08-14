@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -15,7 +16,7 @@ public class CommunityDTO {
     @NotBlank
     private String title;
     private boolean recruit;
-    private Date recruitDate;
+    private LocalDateTime recruitDate;
     private Date writeDate;
     private String teamName;
 }

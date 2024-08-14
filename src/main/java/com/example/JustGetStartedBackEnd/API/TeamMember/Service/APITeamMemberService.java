@@ -26,6 +26,21 @@ public class APITeamMemberService {
     private final TeamService teamService;
     private final MemberService memberService;
 
+    @Transactional(rollbackFor = Exception.class)
+    public void createLeaderTeamMember(Member member, Team team){
+        try{
+            TeamMember teamMember = TeamMember.builder()
+                    .member(member)
+                    .team(team)
+                    .role(TeamMemberRole.Leader)
+                    .build();
+
+            teamMemberRepository.save(teamMember);
+        } catch(Exception e){
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_SAVE_ERROR);
+        }
+    }
+
     @Transactional(readOnly = true)
     public TeamMemberListDTO findMyTeam(Long memberId){
         List<TeamMember> teamMembers = teamMemberRepository.findAllByMemberId(memberId);
@@ -68,13 +83,13 @@ public class APITeamMemberService {
     public void joinTeamMember(Long memberId, String teamName){
         Team team = teamService.findByTeamNameReturnEntity(teamName);
         Member member = memberService.findByIdReturnEntity(memberId);
-        System.out.println(memberId + teamName);
+
         for(TeamMember teamMember :team.getTeamMembers()){
             if(Objects.equals(teamMember.getMember().getMemberId(), member.getMemberId())){
                 throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
             }
         }
-        //이미 가입 되어있는지 확인 필요
+
         TeamMember teamMember = TeamMember.builder()
                 .team(team)
                 .member(member)
