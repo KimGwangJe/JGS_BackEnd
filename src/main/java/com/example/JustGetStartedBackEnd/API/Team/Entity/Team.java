@@ -94,8 +94,9 @@ public class Team {
         this.introduce = introduce;
     }
 
-    public void updateTierPoint(int point) {
-        this.tierPoint += point;
+    public void updateTier(Tier tier, int tierPoint){
+        this.tier = tier;
+        this.tierPoint = tierPoint;
     }
 
     public TeamDTO toTeamDTO() {

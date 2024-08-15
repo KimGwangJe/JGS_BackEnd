@@ -78,4 +78,13 @@ public class TeamService {
         }
         return team;
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void save(Team team){
+        try{
+            teamRepository.save(team);
+        } catch(Exception e){
+            throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
+        }
+    }
 }

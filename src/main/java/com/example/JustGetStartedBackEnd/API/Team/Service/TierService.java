@@ -21,4 +21,10 @@ public class TierService {
         }
         return tier;
     }
+
+    @Transactional(readOnly = true)
+    public Tier getTierById(Long tierId){
+        return tierRepository.findById(tierId).orElseThrow(
+                () -> new BusinessLogicException(TierExceptionType.INVALID_TIER_ID));
+    }
 }
