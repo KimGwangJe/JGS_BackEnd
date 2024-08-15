@@ -16,7 +16,7 @@ import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
-import com.example.JustGetStartedBackEnd.Domain.MatchNotification;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotification;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

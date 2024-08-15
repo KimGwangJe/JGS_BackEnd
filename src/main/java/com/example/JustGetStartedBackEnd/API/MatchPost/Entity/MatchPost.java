@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.MatchPost.Entity;
 
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.MatchPostDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
-import com.example.JustGetStartedBackEnd.Domain.MatchNotification;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity

@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.API.MatchNotification.Entity;
 
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
@@ -22,21 +22,13 @@ public class MatchNotification {
     @JoinColumn(name = "match_post_id")
     private MatchPost matchPostId;
 
-    @Column(name = "status")
-    private boolean status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appli_team_name")
     private Team appliTeamName;
 
-    public void updateStatus() {
-        this.status = true;
-    }
-
     @Builder
-    public MatchNotification(MatchPost matchPostId, boolean status, Team appliTeamName) {
-        this.matchPostId = matchPostId;
-        this.status = status;
-        this.appliTeamName = appliTeamName;
+    public MatchNotification(MatchPost matchPost, Team team) {
+        this.matchPostId = matchPost;
+        this.appliTeamName = team;
     }
 }

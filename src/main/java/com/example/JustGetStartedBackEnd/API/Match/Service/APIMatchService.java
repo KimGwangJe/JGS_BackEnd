@@ -4,6 +4,7 @@ import com.example.JustGetStartedBackEnd.API.Match.DTO.EnterScoreDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.ExceptionType.MatchExceptionType;
 import com.example.JustGetStartedBackEnd.API.Match.Repository.GameMatchRepository;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
@@ -21,6 +22,16 @@ public class APIMatchService {
     private final GameMatchRepository gameMatchRepository;
     private final TeamService teamService;
     private final TierService tierService;
+
+    @Transactional(rollbackFor = Exception.class)
+    public void createMatch(CreateMatchDTO createMatchDTO){
+        GameMatch gameMatch = GameMatch.builder()
+                .matchDate(createMatchDTO.getMatchDate())
+                .teamA(teamService.findByTeamNameReturnEntity(createMatchDTO.getTeamA()))
+                .teamB(teamService.findByTeamNameReturnEntity(createMatchDTO.getTeamB()))
+                .build();
+        gameMatchRepository.save(gameMatch);
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public void updatePoint(Long memberId, EnterScoreDTO enterScoreDTO) {

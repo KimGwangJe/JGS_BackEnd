@@ -3,9 +3,11 @@ package com.example.JustGetStartedBackEnd.API.MatchPost.Service;
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.MatchPostDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.MatchPostPagingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
+import com.example.JustGetStartedBackEnd.API.MatchPost.ExceptionType.MatchPostException;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Repository.MatchPostRepository;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
+import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,5 +53,20 @@ public class MatchPostService {
         matchPostPagingDTO.setLast(matchPost.isLast());
 
         return matchPostPagingDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public MatchPost findMatchPostById(Long matchPostId){
+        return matchPostRepository.findById(matchPostId).orElseThrow(
+                () -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteMatchPost(Long matchPostId){
+        try{
+            matchPostRepository.deleteById(matchPostId);
+        } catch(Exception e){
+            throw new BusinessLogicException(MatchPostException.MATCH_POST_DELETE_ERROR);
+        }
     }
 }
