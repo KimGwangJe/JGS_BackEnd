@@ -11,7 +11,6 @@ import com.example.JustGetStartedBackEnd.API.TeamInvite.ExceptionType.TeamInvite
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Repository.TeamInviteRepository;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
-import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
@@ -39,9 +38,8 @@ public class APITeamInviteService {
     public void createTeamInvite(Long memberId, CreateTeamInviteDTO dto){
         Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
 
-        boolean isLeader = team.getTeamMembers().stream()
-                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
-                        teamMember.getRole() == TeamMemberRole.Leader);
+
+        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
 
         if(!isLeader) throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         TeamInviteNotification TIN = teamInviteRepository.findByMemberIdAndTeamName(dto.getTo(), dto.getTeamName());

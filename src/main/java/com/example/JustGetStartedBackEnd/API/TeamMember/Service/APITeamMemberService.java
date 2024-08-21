@@ -101,4 +101,10 @@ public class APITeamMemberService {
             throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_SAVE_ERROR);
         }
     }
+
+    public boolean isLeader(Team team, Long memberId){
+        return team.getTeamMembers().stream()
+                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
+                        teamMember.getRole() == TeamMemberRole.Leader);
+    }
 }

@@ -8,6 +8,7 @@ import com.example.JustGetStartedBackEnd.API.MatchPost.Repository.MatchPostRepos
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class APIMatchPostService {
     private final MatchPostRepository matchPostRepository;
     private final TeamService teamService;
+    private final APITeamMemberService apiTeamMemberService;
 
     @Transactional(readOnly = true)
     public void createMatchPost(Long memberId, CreateMatchPostDTO createMatchPostDTO) {
         Team team = teamService.findByTeamNameReturnEntity(createMatchPostDTO.getTeamName());
 
-        boolean isLeader = team.getTeamMembers().stream()
-                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
-                        teamMember.getRole() == TeamMemberRole.Leader);
-
+        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
         if (isLeader) {
             MatchPost matchPost = MatchPost.builder()
                     .teamA(team)
@@ -44,10 +43,7 @@ public class APIMatchPostService {
     public void updateMatchPost(Long memberId, UpdateMatchPostDTO updateMatchPostDTO){
         MatchPost matchPost = matchPostRepository.findById(updateMatchPostDTO.getMatchPostId()).orElseThrow(
                 () -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
-        boolean isLeader = matchPost.getTeamA().getTeamMembers().stream()
-                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
-                        teamMember.getRole() == TeamMemberRole.Leader);
-
+        boolean isLeader = apiTeamMemberService.isLeader(matchPost.getTeamA(), memberId);
         if (isLeader) {
             matchPost.updateMatchPost(updateMatchPostDTO.getMatchDate(), updateMatchPostDTO.getLocation());
         } else{
@@ -60,10 +56,7 @@ public class APIMatchPostService {
         MatchPost matchPost = matchPostRepository.findById(matchPostId)
                 .orElseThrow(() -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
 
-        boolean isLeader = matchPost.getTeamA().getTeamMembers().stream()
-                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
-                        teamMember.getRole() == TeamMemberRole.Leader);
-
+        boolean isLeader = apiTeamMemberService.isLeader(matchPost.getTeamA(), memberId);
         if (!isLeader) {
             throw new BusinessLogicException(MatchPostException.NOT_ALLOW_AUTHORITY);
         }

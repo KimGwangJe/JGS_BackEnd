@@ -8,6 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
@@ -23,6 +24,7 @@ public class APICommunityService {
     private final CommunityRepository communityRepository;
     private final TeamService teamService;
     private final MemberService memberService;
+    private final APITeamMemberService apiTeamMemberService;
 
     @Transactional(rollbackFor = Exception.class)
     public void createCommunity(Long memberId, CreateCommunityDTO createCommunityDTO) {
@@ -32,9 +34,7 @@ public class APICommunityService {
         if (!createCommunityDTO.getTeamName().isEmpty()) {
             Team team = teamService.findByTeamNameReturnEntity(createCommunityDTO.getTeamName());
 
-            boolean isLeader = team.getTeamMembers().stream()
-                    .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId)
-                            && teamMember.getRole() == TeamMemberRole.Leader);
+            boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
 
             if (!isLeader) {
                 throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);

@@ -8,13 +8,13 @@ import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotif
 import com.example.JustGetStartedBackEnd.API.MatchNotification.ExceptionType.MatchNotificationExceptionType;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.MatchNotificationRepository;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
-import com.example.JustGetStartedBackEnd.API.MatchPost.Service.APIMatchPostService;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Service.MatchPostService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +33,13 @@ public class APIMatchNotificationService {
     private final MatchPostService matchPostService;
     private final NotificationController notificationController;
     private final APIMatchService matchService;
-    private final APIMatchPostService apiMatchPostService;
+    private final APITeamMemberService apiTeamMemberService;
 
     @Transactional(rollbackFor = Exception.class)
     public void createMatchNotification(Long memberId, CreateMatchNotificationDTO dto){
         //신청자의 팀
         Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
-        boolean isLeader = team.getTeamMembers().stream()
-                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
-                        teamMember.getRole() == TeamMemberRole.Leader);
-        //리더가 아니라면 매치를 신청 할 수 없음
+        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
         if(!isLeader) throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
 
         //이미 매치가 신청된 상태인지 확인
@@ -97,9 +94,7 @@ public class APIMatchNotificationService {
                 .orElseThrow(() -> new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_NOT_FOUND));
 
         //그 팀의 리더만이 매치 수락 가능
-        boolean isLeader = matchNotification.getMatchPostId().getTeamA().getTeamMembers().stream()
-                .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
-                        teamMember.getRole() == TeamMemberRole.Leader);
+        boolean isLeader = apiTeamMemberService.isLeader(matchNotification.getMatchPostId().getTeamA(), memberId);
         if(!isLeader) throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
 
         //매치를 수락한 경우

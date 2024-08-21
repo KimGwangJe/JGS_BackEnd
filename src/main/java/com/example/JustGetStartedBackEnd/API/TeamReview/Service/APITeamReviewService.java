@@ -2,8 +2,8 @@ package com.example.JustGetStartedBackEnd.API.TeamReview.Service;
 
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
-import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.FillReviewDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
 import com.example.JustGetStartedBackEnd.API.TeamReview.ExceptionType.TeamReviewExceptionType;
@@ -22,6 +22,7 @@ public class APITeamReviewService {
     private final TeamReviewRepository teamReviewRepository;
     private final MatchService matchService;
     private final MemberService memberService;
+    private final APITeamMemberService apiTeamMemberService;
 
     @Transactional(rollbackFor = Exception.class)
     public void fillReview(Long memberId,FillReviewDTO fillReviewDTO){
@@ -33,9 +34,7 @@ public class APITeamReviewService {
         boolean isLeader = true;
         //A팀과 같은 이름이라면 B팀에 대한 리뷰 작성임
         if(gameMatch.getTeamA().getTeamName().equals(fillReviewDTO.getTeamName())){
-            isLeader = gameMatch.getTeamA().getTeamMembers().stream()
-                    .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
-                            teamMember.getRole() == TeamMemberRole.Leader);
+            isLeader = apiTeamMemberService.isLeader(gameMatch.getTeamA(), memberId);
             teamReview = TeamReview.builder()
                     .team(gameMatch.getTeamB())
                     .content(fillReviewDTO.getContent())
@@ -43,9 +42,7 @@ public class APITeamReviewService {
                     .writter(memberService.findByIdReturnEntity(memberId))
                     .build();
         } else {
-            isLeader = gameMatch.getTeamB().getTeamMembers().stream()
-                    .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
-                            teamMember.getRole() == TeamMemberRole.Leader);
+            isLeader = apiTeamMemberService.isLeader(gameMatch.getTeamA(), memberId);
             teamReview = TeamReview.builder()
                     .team(gameMatch.getTeamA())
                     .content(fillReviewDTO.getContent())
