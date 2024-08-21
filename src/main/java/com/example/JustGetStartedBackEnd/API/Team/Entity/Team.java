@@ -106,6 +106,7 @@ public class Team {
         teamDTO.setCreateDate(this.createDate);
         teamDTO.setTierPoint(this.tierPoint);
         teamDTO.setIntroduce(this.introduce);
+        teamDTO.setLastMatchDate(this.lastMatchDate);
         return teamDTO;
     }
 
