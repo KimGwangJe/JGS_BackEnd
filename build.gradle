@@ -50,7 +50,9 @@ dependencies {
 	implementation 'javax.validation:validation-api:2.0.1.Final'
 	implementation 'org.slf4j:slf4j-api:2.0.3' //logging
 
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//AWS S3 연동
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1' //url -> string
 }
 
 tasks.named('test') {

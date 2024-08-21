@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.Domain;
+package com.example.JustGetStartedBackEnd.API.Image.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import jakarta.persistence.*;
