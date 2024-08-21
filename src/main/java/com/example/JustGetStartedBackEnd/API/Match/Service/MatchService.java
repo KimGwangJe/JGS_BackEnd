@@ -3,9 +3,11 @@ package com.example.JustGetStartedBackEnd.API.Match.Service;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchListPagingDTO;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchPagingDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
+import com.example.JustGetStartedBackEnd.API.Match.ExceptionType.MatchExceptionType;
 import com.example.JustGetStartedBackEnd.API.Match.Repository.GameMatchRepository;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
+import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,5 +57,11 @@ public class MatchService {
         matchListPagingDTO.setLast(communityPage.isLast());
 
         return matchListPagingDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public GameMatch findByMatchById(Long matchId){
+        return gameMatchRepository.findById(matchId).orElseThrow(
+                () -> new BusinessLogicException(MatchExceptionType.MATCH_NOT_FOUND));
     }
 }

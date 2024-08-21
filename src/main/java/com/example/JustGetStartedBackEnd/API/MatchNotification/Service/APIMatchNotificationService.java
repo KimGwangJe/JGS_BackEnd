@@ -102,23 +102,30 @@ public class APIMatchNotificationService {
                         teamMember.getRole() == TeamMemberRole.Leader);
         if(!isLeader) throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
 
+        //매치를 수락한 경우
         if(matchingDTO.getStatus()){
             CreateMatchDTO createMatchDTO = new CreateMatchDTO();
             createMatchDTO.setMatchDate(Timestamp.valueOf(matchNotification.getMatchPostId().getMatchDate()));
             createMatchDTO.setTeamA(matchNotification.getMatchPostId().getTeamA().getTeamName()); //매치를 올린 팀
             createMatchDTO.setTeamB(matchNotification.getAppliTeamName().getTeamName()); //도전자
+
+            //두 팀의 마지막 매치 날짜 변경
+            matchNotification.getMatchPostId().getTeamA().updateLastMatchDate(Timestamp.valueOf(matchNotification.getMatchPostId().getMatchDate()));
+            matchNotification.getAppliTeamName().updateLastMatchDate(Timestamp.valueOf(matchNotification.getMatchPostId().getMatchDate()));
+
             matchService.createMatch(createMatchDTO);
 
             matchNotificationRepository.deleteAllByMatchPostId(matchNotification.getMatchPostId().getMatchPostId());
 
             //매치 포스트를 마감처리
             matchNotification.getMatchPostId().updateIsEnd();
-        } else {
-            try{
-                matchNotificationRepository.deleteById(matchingDTO.getMatchNotificationId());
-            } catch(Exception e){
-                throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_DELETE_ERROR);
-            }
+        }
+
+        //매치 수락과 별개로 매치 알림을 삭제
+        try{
+            matchNotificationRepository.deleteById(matchingDTO.getMatchNotificationId());
+        } catch(Exception e){
+            throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_DELETE_ERROR);
         }
     }
 }
