@@ -2,12 +2,12 @@ package com.example.JustGetStartedBackEnd.API.Community.Service;
 
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CreateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.UpdateCommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
+import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
-import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
-import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
@@ -25,6 +25,7 @@ public class APICommunityService {
     private final TeamService teamService;
     private final MemberService memberService;
     private final APITeamMemberService apiTeamMemberService;
+    private final APIImageService apiImageService;
 
     @Transactional(rollbackFor = Exception.class)
     public void createCommunity(Long memberId, CreateCommunityDTO createCommunityDTO) {
@@ -63,6 +64,7 @@ public class APICommunityService {
 
         try {
             communityRepository.save(community);
+            apiImageService.linkImagesToCommunity(community.getContent(),community);
         } catch (Exception e) {
             throw new BusinessLogicException(CommunityExceptionType.COMMUNITY_SAVE_ERROR);
         }
@@ -76,6 +78,7 @@ public class APICommunityService {
             throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
         }
         community.updateContentAndTitle(updateCommunityDTO.getContent(), updateCommunityDTO.getTitle());
+        apiImageService.linkImagesToCommunity(community.getContent(),community);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -83,6 +86,7 @@ public class APICommunityService {
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
         if(community.getWriter().getMemberId() == memberId){
+            apiImageService.deleteImageByCommunityId(communityId);
             communityRepository.delete(community);
         } else{
             throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);

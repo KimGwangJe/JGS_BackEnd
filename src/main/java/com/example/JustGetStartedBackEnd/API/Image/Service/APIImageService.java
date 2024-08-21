@@ -3,6 +3,7 @@ package com.example.JustGetStartedBackEnd.API.Image.Service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Image.Entity.Image;
 import com.example.JustGetStartedBackEnd.API.Image.ExceptionType.ImageExceptionType;
 import com.example.JustGetStartedBackEnd.API.Image.Repository.ImageRepository;
@@ -17,6 +18,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +69,43 @@ public class APIImageService {
             return url;
         } catch (IOException e) {
             throw new BusinessLogicException(ImageExceptionType.IMAGE_SAVE_ERROR);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteImageByCommunityId(Long communityId){
+        imageRepository.deleteByCommunityId(communityId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void linkImagesToCommunity(String html, Community community) {
+        List<String> srcList = new ArrayList<>();
+        Pattern pattern = Pattern.compile("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
+        Matcher matcher = pattern.matcher(html);
+        while (matcher.find()) {
+            srcList.add(matcher.group(1)); // 이미지 src 속성 값 추출
+        }
+
+        // 이미 노트와 관련된 이미지들 가져옴
+        List<Image> relatedImages = imageRepository.findByCommunityId(community.getCommunityId());
+
+        // HTML에 있는 이미지와 이미 노트와 관련된 이미지들을 비교하여 관계 맺기
+        for (String src : srcList) {
+            Image image = imageRepository.findByImageUrl(src);
+            if (image != null && relatedImages.contains(image)) {
+                // 이미 노트와 관련된 이미지이면서 HTML에도 있는 경우, 관계 유지
+                continue;
+            }
+            // 이미 노트와 관련된 이미지가 아니거나 HTML에 없는 경우, 새로운 이미지 생성 및 관계 맺기
+            assert image != null;
+            image.updateCommnunity(community);
+        }
+
+        // HTML에는 없지만 이미 노트와 관련된 이미지들을 찾아서 끊기
+        for (Image image : relatedImages) {
+            if (!srcList.contains(image.getImageUrl())) {
+                image.unLinkCommunity();
+            }
         }
     }
 }

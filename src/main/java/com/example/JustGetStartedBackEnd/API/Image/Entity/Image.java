@@ -29,6 +29,13 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     private Community community;
 
+    public void updateCommnunity(Community community) {
+        this.community = community;
+    }
+    public void unLinkCommunity(){
+        this.community = null;
+    }
+
     @Builder
     Image(String imageName, String imageUrl, Community community) {
         this.imageName = imageName;
