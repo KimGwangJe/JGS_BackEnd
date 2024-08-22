@@ -2,6 +2,7 @@ package com.example.JustGetStartedBackEnd.API.Image.Service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Image.Entity.Image;
@@ -107,6 +108,16 @@ public class APIImageService {
                 image.unLinkCommunity();
             }
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteImageCommunityByNull(){
+        //여기에서 삭제한 URL에 대해서 URL에 대해서 S3에서도 삭제가 필요함
+        List<Image> images = imageRepository.findByCommunityId(null);
+        for(Image image : images){
+            s3Client.deleteObject(new DeleteObjectRequest(bucket, image.getImageName()));
+        }
+        imageRepository.deleteImagesWhereCommunityIdIsNull();
     }
 }
 

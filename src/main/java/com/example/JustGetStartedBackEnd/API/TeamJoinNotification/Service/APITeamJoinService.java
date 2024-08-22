@@ -134,4 +134,9 @@ public class APITeamJoinService {
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_DELETE_ERROR);
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteByCommunityID(Long communityId){
+        teamJoinNotificationRepository.deleteByCommunityId(communityId);
+    }
 }

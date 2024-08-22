@@ -8,6 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepos
 import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service.APITeamJoinService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
@@ -26,6 +27,7 @@ public class APICommunityService {
     private final MemberService memberService;
     private final APITeamMemberService apiTeamMemberService;
     private final APIImageService apiImageService;
+    private final APITeamJoinService apiTeamJoinService;
 
     @Transactional(rollbackFor = Exception.class)
     public void createCommunity(Long memberId, CreateCommunityDTO createCommunityDTO) {
@@ -86,6 +88,7 @@ public class APICommunityService {
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
         if(community.getWriter().getMemberId() == memberId){
+            apiTeamJoinService.deleteByCommunityID(communityId);
             apiImageService.deleteImageByCommunityId(communityId);
             communityRepository.delete(community);
         } else{

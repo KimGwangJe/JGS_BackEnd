@@ -18,4 +18,8 @@ public interface TeamJoinNotificationRepository extends JpaRepository<JoinNotifi
     @Modifying
     @Query("UPDATE JoinNotification jn SET jn.isRead = true WHERE jn.community.writer.memberId = :memberId")
     void updateReadStatusByMemberId(@Param("memberId") Long memberId);
+
+    @Modifying
+    @Query("DELETE FROM JoinNotification jn WHERE jn.community.communityId = :communityId")
+    void deleteByCommunityId(Long communityId);
 }
