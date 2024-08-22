@@ -7,7 +7,6 @@ import com.example.JustGetStartedBackEnd.API.MatchPost.ExceptionType.MatchPostEx
 import com.example.JustGetStartedBackEnd.API.MatchPost.Repository.MatchPostRepository;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
-import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +65,11 @@ public class APIMatchPostService {
         } catch (Exception e) {
             throw new BusinessLogicException(MatchPostException.MATCH_POST_DELETE_ERROR);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateMatchPostsToEnd(){
+        matchPostRepository.updateMatchPostsToEnd();
     }
 
 }

@@ -11,4 +11,5 @@ public class UpdateMemberDTO {
     private String name;
     @NotBlank
     private String profileImage;
+    private String introduce;
 }

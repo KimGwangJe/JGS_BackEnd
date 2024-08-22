@@ -55,6 +55,9 @@ public class Member {
     @Column(name = "profile_name")
     private String profileName;
 
+    @Column(name = "introduce")
+    private String introduce;
+
     @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
     private List<Community> communities = new ArrayList<>();
 
@@ -84,10 +87,10 @@ public class Member {
         return this.role.getKey();
     }
 
-    public void update(String name, String profileImage) {
+    public void update(String name, String profileImage, String introduce) {
         this.name = name;
         this.profileImage = profileImage;
-
+        this.introduce = introduce;
     }
 
     public MemberDTO toMemberDTO(){
@@ -97,16 +100,18 @@ public class Member {
         memberDTO.setProfileImage(this.profileImage);
         memberDTO.setEmail(this.email);
         memberDTO.setRole(this.getRoleKey());
+        memberDTO.setIntroduce(this.introduce);
         return memberDTO;
     }
 
     @Builder
-    public Member(String password, String email, String name, MemberRole role, String profileImage, String profileName) {
+    public Member(String password, String email, String name, MemberRole role, String profileImage, String profileName, String introduce) {
         this.password = password;
         this.email = email;
         this.name = name;
         this.role = role;
         this.profileImage = profileImage;
         this.profileName = profileName;
+        this.introduce = introduce;
     }
 }

@@ -4,6 +4,7 @@ import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,4 +21,8 @@ public interface MatchPostRepository extends JpaRepository<MatchPost, Long> {
             "WHERE mp.teamA.tier.tierId = :tierId AND " +
             "LOWER(mp.teamA.teamName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<MatchPost> findByTierAndKeyword(@Param("tierId") Long tierId, @Param("keyword") String keyword, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE MatchPost mp SET mp.isEnd = true WHERE mp.matchDate <= CURRENT_TIMESTAMP")
+    void updateMatchPostsToEnd();
 }
