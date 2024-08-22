@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Service;
 
+import com.example.JustGetStartedBackEnd.API.Notification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.CreateTeamInviteDTO;
@@ -31,8 +32,9 @@ public class APITeamInviteService {
     private final TeamInviteRepository teamInviteRepository;
     private final TeamService teamService;
     private final MemberService memberService;
-    private final NotificationController notificationController;
+    private final NotificationController NotificationController;
     private final APITeamMemberService apiTeamMemberService;
+    private final APINotificationService apiNotificationService;
 
     @Transactional(rollbackFor = Exception.class)
     public void createTeamInvite(Long memberId, CreateTeamInviteDTO dto){
@@ -64,7 +66,7 @@ public class APITeamInviteService {
                     .build();
             teamInviteRepository.save(newTIN);
 
-            notificationController.sendNotification(dto.getTo(), dto.getTeamName() + "팀으로 부터 초대가 왔습니다.");
+            NotificationController.sendNotification(dto.getTo(), dto.getTeamName() + "팀으로 부터 초대가 왔습니다.");
         } catch( Exception e){
             System.out.println(e);
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ERROR);
@@ -119,8 +121,21 @@ public class APITeamInviteService {
         TeamInviteNotification teamInviteNotification = teamInviteRepository.findById(joinTeamDTO.getInviteId())
                 .orElseThrow(() -> new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_NOT_FOUND));
 
+        String memberName = memberService.findById(memberId).getName();
+        Long notificationMemberId = apiTeamMemberService.getLeaderId(teamInviteNotification.getTeam());
         if(joinTeamDTO.getIsJoin()){
+            //멤버 가입 처리
             apiTeamMemberService.joinTeamMember(memberId, teamInviteNotification.getTeam().getTeamName());
+
+            //팀 가입 요청 승인 알림 SSO & DB 저장
+            String message = memberName + "님이 " + teamInviteNotification.getTeam().getTeamName() + "팀에 가입하였습니다.";
+            NotificationController.sendNotification(notificationMemberId, message);
+            apiNotificationService.saveNotification(message, notificationMemberId);
+        } else {
+            //팀 가입 요청 거부 알림 SSO & DB 저장
+            String message = memberName + "님이 " + teamInviteNotification.getTeam().getTeamName() + "팀에 대한 가입 요청을 거절하였습니다.";
+            NotificationController.sendNotification(notificationMemberId, message);
+            apiNotificationService.saveNotification(message, notificationMemberId);
         }
 
         try{

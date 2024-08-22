@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -106,5 +107,17 @@ public class APITeamMemberService {
         return team.getTeamMembers().stream()
                 .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
                         teamMember.getRole() == TeamMemberRole.Leader);
+    }
+
+    public Long getLeaderId(Team team){
+        Optional<TeamMember> optionalLeader = team.getTeamMembers().stream()
+                .filter(teamMember -> teamMember.getRole() == TeamMemberRole.Leader)
+                .findFirst(); // 첫 번째 일치하는 요소를 반환
+        if(optionalLeader.isPresent()){
+            TeamMember leader = optionalLeader.get();
+            return leader.getMember().getMemberId();
+        } else {
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        }
     }
 }
