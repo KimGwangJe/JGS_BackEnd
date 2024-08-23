@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MatchNotificationRepository extends JpaRepository<MatchNotification, Long> {
 
     @Query("SELECT mn FROM MatchNotification mn WHERE mn.appliTeamName.teamName = :teamName And mn.matchPostId.matchPostId = :matchPostId")
@@ -14,4 +16,7 @@ public interface MatchNotificationRepository extends JpaRepository<MatchNotifica
     @Modifying
     @Query("DELETE FROM MatchNotification mn WHERE mn.matchPostId.matchPostId = :matchPostId")
     void deleteAllByMatchPostId(@Param("matchPostId") Long matchPostId);
+
+    @Query("SELECT mn FROM MatchNotification mn WHERE mn.appliTeamName.teamName = :teamName")
+    List<MatchNotification> findByTeamName(@Param("teamName") String teamName);
 }

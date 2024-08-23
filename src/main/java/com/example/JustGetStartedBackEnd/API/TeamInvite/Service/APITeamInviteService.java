@@ -23,8 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,15 +58,17 @@ public class APITeamInviteService {
         }
 
         try{
+            String message = dto.getTeamName() + "팀으로 부터 초대가 왔습니다.";
             TeamInviteNotification newTIN = TeamInviteNotification.builder()
                     .team(team)
                     .member(memberService.findByIdReturnEntity(dto.getTo()))
                     .isRead(false)
                     .inviteDate(LocalDateTime.now())
+                    .content(message)
                     .build();
             teamInviteRepository.save(newTIN);
 
-            NotificationController.sendNotification(dto.getTo(), dto.getTeamName() + "팀으로 부터 초대가 왔습니다.");
+            NotificationController.sendNotification(dto.getTo(), message);
         } catch( Exception e){
             System.out.println(e);
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ERROR);
@@ -74,20 +76,16 @@ public class APITeamInviteService {
     }
 
     @Transactional(readOnly = true)
-    public TeamInviteListDTO getTeamInvite(Long memberId){
+    public TeamInviteListDTO getTeamInvite(Long memberId) {
+        // 회원 ID로 팀 초대 알림 조회
         List<TeamInviteNotification> teamInviteNotifications = teamInviteRepository.findByMemberId(memberId);
-        List<TeamInviteInfoDTO> teamInviteInfoDTOS = new ArrayList<>();
 
-        for(TeamInviteNotification teamInviteNotification : teamInviteNotifications){
-            TeamInviteInfoDTO teamInviteInfoDTO = new TeamInviteInfoDTO();
-            teamInviteInfoDTO.setInviteId(teamInviteNotification.getInviteId());
-            teamInviteInfoDTO.setTeamName(teamInviteNotification.getTeam().getTeamName());
-            teamInviteInfoDTO.setInviteDate(teamInviteNotification.getInviteDate());
-            teamInviteInfoDTO.setRead(teamInviteNotification.isRead());
+        // 스트림을 사용하여 DTO로 변환
+        List<TeamInviteInfoDTO> teamInviteInfoDTOS = teamInviteNotifications.stream()
+                .map(TeamInviteNotification::toDTO)
+                .collect(Collectors.toList());
 
-            teamInviteInfoDTOS.add(teamInviteInfoDTO);
-        }
-
+        // 결과를 TeamInviteListDTO에 설정
         TeamInviteListDTO teamInviteListDTO = new TeamInviteListDTO();
         teamInviteListDTO.setTeamInviteInfoDTOList(teamInviteInfoDTOS);
 

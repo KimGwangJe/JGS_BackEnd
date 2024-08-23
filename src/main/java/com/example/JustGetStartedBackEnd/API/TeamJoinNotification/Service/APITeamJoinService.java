@@ -23,8 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,20 +37,16 @@ public class APITeamJoinService {
     private final APINotificationService apinotificationService;
 
     @Transactional(readOnly = true)
-    public JoinNotificationListDTO getTeamJoinList(Long memberId){
-        List<JoinNotification> joinNotificationnList = teamJoinNotificationRepository.findByWriterMemberId(memberId);
+    public JoinNotificationListDTO getTeamJoinList(Long memberId) {
+        // 회원 ID로 팀 가입 알림 조회
+        List<JoinNotification> joinNotificationList = teamJoinNotificationRepository.findByWriterMemberId(memberId);
 
-        List<JoinNotificationDTO> joinNotificationDTOS = new ArrayList<>();
-        for(JoinNotification joinNotification : joinNotificationnList){
-            JoinNotificationDTO joinNotificationDTO = new JoinNotificationDTO();
-            joinNotificationDTO.setNotificationId(joinNotification.getNotificationId());
-            joinNotificationDTO.setTeamName(joinNotification.getCommunity().getTeam().getTeamName());
-            joinNotificationDTO.setRead(joinNotification.isRead());
-            joinNotificationDTO.setMemberName(joinNotification.getPubMember().getName());
+        // 스트림을 사용하여 DTO로 변환
+        List<JoinNotificationDTO> joinNotificationDTOS = joinNotificationList.stream()
+                .map(JoinNotification::toDTO)
+                .collect(Collectors.toList());
 
-            joinNotificationDTOS.add(joinNotificationDTO);
-        }
-
+        // 결과를 JoinNotificationListDTO에 설정
         JoinNotificationListDTO joinNotificationListDTO = new JoinNotificationListDTO();
         joinNotificationListDTO.setJoinNotifications(joinNotificationDTOS);
 
@@ -103,19 +99,19 @@ public class APITeamJoinService {
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_OWN_ERROR);
         }
 
-        JoinNotification newJoinNotification = JoinNotification.builder()
-                .isRead(false)
-                .community(community)
-                .pubMember(member)
-                .build();
-
         try{
-            Long subMemberId = community.getWriter().getMemberId();
+            String message = member.getName() + "님으로 부터 " + community.getTeam().getTeamName() +
+                    "팀에 가입 신청이 왔습니다.";
+            JoinNotification newJoinNotification = JoinNotification.builder()
+                    .isRead(false)
+                    .community(community)
+                    .pubMember(member)
+                    .content(message)
+                    .build();
             teamJoinNotificationRepository.save(newJoinNotification);
-            NotificationController.sendNotification(
-                    subMemberId, member.getName() + "님으로 부터 "
-                            + community.getTeam().getTeamName() +
-                            "팀에 가입 신청이 왔습니다.");
+
+            Long subMemberId = community.getWriter().getMemberId();
+            NotificationController.sendNotification(subMemberId, message);
         } catch(Exception e){
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_REQUEST_ERROR);
         }

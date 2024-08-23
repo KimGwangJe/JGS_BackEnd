@@ -1,9 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Service;
 
 import com.example.JustGetStartedBackEnd.API.Match.Service.APIMatchService;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchDTO;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchNotificationDTO;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchingDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.*;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotification;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.ExceptionType.MatchNotificationExceptionType;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.MatchNotificationRepository;
@@ -11,7 +9,11 @@ import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Service.MatchPostService;
 import com.example.JustGetStartedBackEnd.API.Notification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
@@ -22,12 +24,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class APIMatchNotificationService {
     private final MatchNotificationRepository matchNotificationRepository;
     private final TeamService teamService;
+    private final APITeamService apiTeamService;
     private final MatchPostService matchPostService;
     private final NotificationController NotificationController;
     private final APIMatchService matchService;
@@ -60,17 +65,19 @@ public class APIMatchNotificationService {
             throw new BusinessLogicException(MatchNotificationExceptionType.SAME_TEAM_MATCH_ERROR);
         }
 
-        MatchNotification newMatchNotification = MatchNotification.builder()
-                .matchPost(matchPost)
-                .team(team)
-                .build();
-
         try{
             Long notificationMemberId = apiTeamMemberService.getLeaderId(matchPost.getTeamA());
-            NotificationController.sendNotification(notificationMemberId,
-                    dto.getTeamName() + "팀이 " +
-                            matchPost.getTeamA().getTeamName() +
-                            "팀에 매치를 신청하얐습니다.");
+            String message = dto.getTeamName() + "팀이 " +
+                    matchPost.getTeamA().getTeamName() + "팀에 매치를 신청하였습니다.";
+            NotificationController.sendNotification(notificationMemberId, message);
+
+            MatchNotification newMatchNotification = MatchNotification.builder()
+                    .matchPost(matchPost)
+                    .team(team)
+                    .content(message)
+                    .isRead(false)
+                    .build();
+
             matchNotificationRepository.save(newMatchNotification);
         } catch(Exception e){
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_REQUEST_ERROR);
@@ -128,5 +135,34 @@ public class APIMatchNotificationService {
 
             matchNotificationRepository.deleteById(matchingDTO.getMatchNotificationId());
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateRead(Long matchNotificationId){
+        MatchNotification matchNotification = matchNotificationRepository.findById(matchNotificationId)
+                .orElseThrow(() -> new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_NOT_FOUND));
+        matchNotification.updateRead();
+    }
+
+    @Transactional(readOnly = true)
+    public MatchNotificationListDTO getAllMatchNotifications(Long memberId) {
+        //사용자가 속한 모든 팀을 가져옴
+        TeamMemberListDTO teamMemberListDTO = apiTeamMemberService.findMyTeam(memberId);
+
+        //사용자가 속한 팀 중 사용자가 리더인 팀만 남김
+        List<TeamMemberDTO> leaderTeams = teamMemberListDTO.getTeamMemberDTOList().stream()
+                .filter(member -> member.getRole() == TeamMemberRole.Leader)
+                .toList();
+
+        // DTO 변환
+        List<MatchNotificationDTO> matchNotificationDTOList = leaderTeams.stream()
+                .flatMap(teamMemberDTO -> matchNotificationRepository.findByTeamName(teamMemberDTO.getTeamName()).stream())
+                .map(MatchNotification::toDTO)
+                .collect(Collectors.toList());
+
+
+        MatchNotificationListDTO matchNotificationListDTO = new MatchNotificationListDTO();
+        matchNotificationListDTO.setMatchNotificationDTOList(matchNotificationDTOList);
+        return matchNotificationListDTO;
     }
 }

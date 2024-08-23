@@ -30,4 +30,10 @@ public class APIMatchNotificationController {
         apiMatchNotificationService.deleteMatchNotification(customOAuth2User.getMemberId(), matchingDTO);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PutMapping
+    public ResponseEntity<Void> updateMatchNotification(@RequestParam("matchNotificationId")Long matchNotificationId){
+        apiMatchNotificationService.updateRead(matchNotificationId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

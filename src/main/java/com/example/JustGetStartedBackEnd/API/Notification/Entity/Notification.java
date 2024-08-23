@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Notification.Entity;
 
+import com.example.JustGetStartedBackEnd.API.Notification.DTO.NotificationDTO;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -28,6 +29,14 @@ public class Notification {
 
     public void updateIsRead(){
         this.isRead = true;
+    }
+
+    public NotificationDTO toDTO() {
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setNotificationId(this.getNotificationId());
+        notificationDTO.setRead(this.isRead());
+        notificationDTO.setContent(this.getContent());
+        return notificationDTO;
     }
 
     @Builder
