@@ -76,6 +76,7 @@ public class APIMatchNotificationService {
                     .team(team)
                     .content(message)
                     .isRead(false)
+                    .date(LocalDateTime.now())
                     .build();
 
             matchNotificationRepository.save(newMatchNotification);

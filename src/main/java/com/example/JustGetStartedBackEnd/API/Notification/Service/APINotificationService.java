@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public class APINotificationService {
                 .content(content)
                 .member(memberService.findByIdReturnEntity(memberId))
                 .isRead(false)
+                .date(LocalDateTime.now())
                 .build();
         notificationRepository.save(notification);
     }

@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name="join_notification")
@@ -33,6 +35,9 @@ public class JoinNotification {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "date")
+    private LocalDateTime date;
+
     public void updateRead(){
         this.isRead = true;
     }
@@ -43,14 +48,16 @@ public class JoinNotification {
         joinNotificationDTO.setTeamName(this.getCommunity().getTeam().getTeamName());
         joinNotificationDTO.setRead(this.isRead());
         joinNotificationDTO.setMemberName(this.getPubMember().getName());
+        joinNotificationDTO.setDate(this.date);
         return joinNotificationDTO;
     }
 
     @Builder
-    JoinNotification(boolean isRead, Member pubMember, Community community, String content) {
+    JoinNotification(boolean isRead, Member pubMember, Community community, String content, LocalDateTime date) {
         this.isRead = isRead;
         this.pubMember = pubMember;
         this.community = community;
         this.content = content;
+        this.date = date;
     }
 }

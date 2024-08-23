@@ -21,7 +21,7 @@ public class APIMatchNotificationController {
     public ResponseEntity<Void> createMatchNotification(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                         @Valid @RequestBody CreateMatchNotificationDTO createMatchNotificationDTO) {
         apiMatchNotificationService.createMatchNotification(customOAuth2User.getMemberId(), createMatchNotificationDTO);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping

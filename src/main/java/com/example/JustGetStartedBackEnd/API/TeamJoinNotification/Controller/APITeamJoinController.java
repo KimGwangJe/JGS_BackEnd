@@ -44,7 +44,7 @@ public class APITeamJoinController {
     public ResponseEntity<Void> createTeamJoinNotification(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                            @RequestParam(name = "communityId") Long communityId){
         apiTeamJoinService.createTeamJoinNotification(customOAuth2User.getMemberId(), communityId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping

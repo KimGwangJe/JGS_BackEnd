@@ -107,6 +107,7 @@ public class APITeamJoinService {
                     .community(community)
                     .pubMember(member)
                     .content(message)
+                    .date(LocalDateTime.now())
                     .build();
             teamJoinNotificationRepository.save(newJoinNotification);
 
