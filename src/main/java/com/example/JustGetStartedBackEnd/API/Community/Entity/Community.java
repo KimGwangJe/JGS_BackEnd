@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Community.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Image.Entity.Image;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
@@ -73,6 +74,19 @@ public class Community {
         communityDTO.setRecruitDate(this.recruitDate);
 
         return communityDTO;
+    }
+
+    public CommunityInfoDTO getCommunityInfo(){
+        CommunityInfoDTO communityInfoDTO = new CommunityInfoDTO();
+        communityInfoDTO.setTitle(this.title);
+        communityInfoDTO.setCommunityId(this.communityId);
+        communityInfoDTO.setRecruit(this.recruit);
+        communityInfoDTO.setTeamName(this.team.getTeamName());
+        communityInfoDTO.setContent(this.content);
+        communityInfoDTO.setMemberId(this.writer.getMemberId());
+        communityInfoDTO.setRecruitDate(this.recruitDate);
+        communityInfoDTO.setWriteDate(this.writeDate);
+        return communityInfoDTO;
     }
 
     @Builder

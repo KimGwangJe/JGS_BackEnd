@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Community.Service;
 
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityListPageDTO;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
@@ -43,6 +44,13 @@ public class CommunityService {
         communityListPageDTO.setLast(communityPage.isLast());
 
         return communityListPageDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public CommunityInfoDTO findById(Long communityId){
+        Community community = communityRepository.findById(communityId).orElseThrow(
+                () -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
+        return community.getCommunityInfo();
     }
 
     @Transactional(readOnly = true)
