@@ -88,8 +88,6 @@ public class APICommunityService {
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
         if(community.getWriter().getMemberId() == memberId){
-            apiTeamJoinService.deleteByCommunityID(communityId);
-            apiImageService.deleteImageByCommunityId(communityId);
             communityRepository.delete(community);
         } else{
             throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);

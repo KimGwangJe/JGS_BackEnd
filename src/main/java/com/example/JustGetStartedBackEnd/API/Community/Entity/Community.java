@@ -52,11 +52,11 @@ public class Community {
     @ManyToOne(fetch = FetchType.LAZY)
     private Team team;
 
-    @OneToMany(mappedBy = "community", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "community", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Image> images = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "community", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "community", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<JoinNotification> joinNotifications = new ArrayList<>();
 
     public void updateContentAndTitle(String content, String title) {
