@@ -67,6 +67,22 @@ public class NotificationController {
         }
     }
 
+    // 사용자가 새로운 채팅방을 구독 해야 될 때 사용
+    public void newChatRoom(Long userId, Long chatRoomId) {
+        SseEmitter emitter = emitters.get(userId);
+        if (emitter != null) {
+            executor.execute(() -> {
+                try {
+                    emitter.send(SseEmitter.event()
+                            .name("newChatRoom")
+                            .data(chatRoomId));
+                } catch (IOException e) {
+                    cleanup(userId); // 전송 실패 시 제거
+                }
+            });
+        }
+    }
+
     // 멀티스레드 환경에서 안전하게 emitter를 제거하는 메서드
     private void cleanup(Long userId) {
         emitters.remove(userId);

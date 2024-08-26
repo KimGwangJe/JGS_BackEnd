@@ -1,0 +1,36 @@
+package com.example.JustGetStartedBackEnd.API.Chat.Service;
+
+import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoom;
+import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoomMember;
+import com.example.JustGetStartedBackEnd.API.Chat.ExceptionType.ChatRoomMemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.Chat.Repository.ChatRoomMemberRepository;
+import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class ChatRoomMemberService {
+    private final ChatRoomMemberRepository chatRoomMemberRepository;
+
+    @Transactional(rollbackFor = Exception.class)
+    public void createChatRoomMember(Member member, Member guest, ChatRoom chatroom){
+        ChatRoomMember chatRoomMember1 = ChatRoomMember.builder()
+                .member(member)
+                .chatRoom(chatroom)
+                .build();
+
+        ChatRoomMember chatRoomMember2 = ChatRoomMember.builder()
+                .member(guest)
+                .chatRoom(chatroom)
+                .build();
+        try {
+            chatRoomMemberRepository.save(chatRoomMember1);
+            chatRoomMemberRepository.save(chatRoomMember2);
+        } catch(Exception e){
+            throw new BusinessLogicException(ChatRoomMemberExceptionType.CHAT_ROOM_MEMBER_SAVE_ERROR);
+        }
+    }
+}
