@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ChatRoomMemberService {
@@ -31,6 +33,16 @@ public class ChatRoomMemberService {
             chatRoomMemberRepository.save(chatRoomMember2);
         } catch(Exception e){
             throw new BusinessLogicException(ChatRoomMemberExceptionType.CHAT_ROOM_MEMBER_SAVE_ERROR);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public ChatRoomMember findByMemberIdAndChatRoomId(Long memberId, Long chatRoomId){
+        Optional<ChatRoomMember> chatRoomMember = chatRoomMemberRepository.findByMemberIdAndChatRoomId(memberId, chatRoomId);
+        if(chatRoomMember.isPresent()){
+            return chatRoomMember.get();
+        } else {
+            throw new BusinessLogicException(ChatRoomMemberExceptionType.CHAT_ROOM_MEMBER_FOUND_ERROR);
         }
     }
 }

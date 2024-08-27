@@ -12,19 +12,26 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker //웹소켓 활성화
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+//    private final StompHandler stompHandler;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // 메모리 기반 메시지 브로커가 해당 api를 구독하고 있는 클라이언트에게 메시지를 전달한다.
-        registry.enableSimpleBroker("/sub");
+        registry.enableSimpleBroker("/api/sub");
         // 클라이언트로부터 메시지를 받을 api의 prefix를 설정한다.
-        registry.setApplicationDestinationPrefixes("/pub");
+        registry.setApplicationDestinationPrefixes("/api/pub");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat/inbox/room")   //SockJS 연결 주소
-                .setAllowedOriginPatterns("*")      // cors 허용
-                .withSockJS();                      //버전 낮은 브라우저에서도 적용 가능
-        //연결 주소 - ws://localhost:8080/chat/inbox/room
+        registry.addEndpoint("/ws/chat")   //SockJS 연결 주소
+                .setAllowedOriginPatterns("*");      // cors 허용
+//                .withSockJS();                      //버전 낮은 브라우저에서도 적용 가능
+        //연결 주소 - ws://localhost:8080/ws/chat
     }
+//
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(stompHandler);
+//    }
 }

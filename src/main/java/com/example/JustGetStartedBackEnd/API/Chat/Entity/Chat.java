@@ -1,6 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Entity;
 
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,4 +32,22 @@ public class Chat {
 
     @Column(name = "chat_date")
     private LocalDateTime chatDate;
+
+    public ResponseChatDTO toResponseChatDTO() {
+        ResponseChatDTO responseChatDTO = new ResponseChatDTO();
+        responseChatDTO.setChatRoomId(this.chatRoom.getChatRoomId());
+        responseChatDTO.setMemberId(this.chatRoomMember.getMember().getMemberId());
+        responseChatDTO.setMemberName(this.chatRoomMember.getMember().getName());
+        responseChatDTO.setMessage(this.getContent());
+        responseChatDTO.setChatDate(this.getChatDate());
+        return responseChatDTO;
+    }
+
+    @Builder
+    Chat(ChatRoom chatRoom, ChatRoomMember chatRoomMember, String content, LocalDateTime chatDate) {
+        this.chatRoom = chatRoom;
+        this.chatRoomMember = chatRoomMember;
+        this.content = content;
+        this.chatDate = chatDate;
+    }
 }

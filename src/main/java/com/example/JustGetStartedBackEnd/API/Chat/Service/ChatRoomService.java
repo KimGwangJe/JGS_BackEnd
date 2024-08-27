@@ -69,4 +69,10 @@ public class ChatRoomService {
 
         return chatRoomListDTO;
     }
+
+    @Transactional(readOnly = true)
+    public ChatRoom getChatRoomEntity(Long ChatRoomId){
+        return chatRoomRepository.findById(ChatRoomId).orElseThrow(
+                () -> new BusinessLogicException(ChatRoomExceptionType.CHAT_ROOM_NOT_FOUND_ERROR));
+    }
 }
