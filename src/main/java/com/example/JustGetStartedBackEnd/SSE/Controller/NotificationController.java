@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.SSE.Controller;
 
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,6 +79,22 @@ public class NotificationController {
                             .data(chatRoomId));
                 } catch (IOException e) {
                     cleanup(userId); // 전송 실패 시 제거
+                }
+            });
+        }
+    }
+
+    //사용자에게 온 새로운 메시지
+    public void newChat(Long to, ResponseChatDTO responseChatDTO) {
+        SseEmitter emitter = emitters.get(to);
+        if (emitter != null) {
+            executor.execute(() -> {
+                try {
+                    emitter.send(SseEmitter.event()
+                            .name("newChat")
+                            .data(responseChatDTO));
+                } catch (IOException e) {
+                    cleanup(to); // 전송 실패 시 제거
                 }
             });
         }

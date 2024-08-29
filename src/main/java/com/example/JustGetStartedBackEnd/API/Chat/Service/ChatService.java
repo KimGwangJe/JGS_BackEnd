@@ -9,6 +9,7 @@ import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoomMember;
 import com.example.JustGetStartedBackEnd.API.Chat.ExceptionType.ChatExceptionType;
 import com.example.JustGetStartedBackEnd.API.Chat.Repository.ChatRepository;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final ChatRoomMemberService chatRoomMemberService;
     private final ChatRoomService chatRoomService;
+    private final NotificationController notificationController;
 
     @Transactional(rollbackFor = Exception.class)
     public ResponseChatDTO saveChat(RequestChatDTO requestChatDTO){
@@ -38,6 +40,14 @@ public class ChatService {
                 .build();
 
         try{
+            // 채팅을 받는 사람을 채팅방에서 조회해서 그 사람에게 알림을 전송
+            chatRoom.getChatRoomMembers().stream()
+                    .filter(member -> !member.getMember().getMemberId().equals(chatRoomMember.getMember().getMemberId()))
+                    .forEach(member -> notificationController.newChat(
+                            member.getMember().getMemberId(),
+                            chat.toResponseChatDTO()
+                    ));
+
             chatRepository.save(chat);
         } catch(Exception e){
             throw new BusinessLogicException(ChatExceptionType.CHAT_SAVE_ERROR);
