@@ -19,6 +19,7 @@ import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionTyp
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APITeamInviteService {
     private final TeamInviteRepository teamInviteRepository;
     private final TeamService teamService;
@@ -40,12 +42,15 @@ public class APITeamInviteService {
     public void createTeamInvite(Long memberId, CreateTeamInviteDTO dto){
         Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
 
-
         boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
 
-        if(!isLeader) throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        if(!isLeader) {
+            log.warn("Not Allow Authority - Create Team Invite");
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        }
         TeamInviteNotification TIN = teamInviteRepository.findByMemberIdAndTeamName(dto.getTo(), dto.getTeamName());
         if(TIN != null){
+            log.warn("Team Invite Already Request");
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ALREADY_REQUEST);
         }
 
@@ -53,6 +58,7 @@ public class APITeamInviteService {
         TeamMemberListDTO teamMemberListDTO = apiTeamMemberService.findMyTeam(dto.getTo());
         for(TeamMemberDTO teamMember : teamMemberListDTO.getTeamMemberDTOList()){
             if(teamMember.getTeamName().equals(dto.getTeamName())){
+                log.warn("Team Member Already Join");
                 throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
             }
         }
@@ -70,7 +76,7 @@ public class APITeamInviteService {
 
             NotificationController.sendNotification(dto.getTo(), message);
         } catch( Exception e){
-            System.out.println(e);
+            log.warn("Create Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ERROR);
         }
     }
@@ -100,6 +106,7 @@ public class APITeamInviteService {
             teamInviteNotification.updateRead();
             return;
         }
+        log.warn("Not Allow Authority - Read Team Invite");
         throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
 
     }
@@ -109,6 +116,7 @@ public class APITeamInviteService {
         try {
             teamInviteRepository.updateReadStatusByMemberId(memberId);
         } catch (Exception e) {
+            log.warn("Not Allow Authority - Read All Team Invite");
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_READ_ERROR);
         }
     }
@@ -139,6 +147,7 @@ public class APITeamInviteService {
         try{
             teamInviteRepository.deleteById(joinTeamDTO.getInviteId());
         } catch(Exception e){
+            log.warn("Delete Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_DELETE_ERROR);
         }
     }

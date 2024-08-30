@@ -60,13 +60,4 @@ public class MatchPostService {
         return matchPostRepository.findById(matchPostId).orElseThrow(
                 () -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
     }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteMatchPost(Long matchPostId){
-        try{
-            matchPostRepository.deleteById(matchPostId);
-        } catch(Exception e){
-            throw new BusinessLogicException(MatchPostException.MATCH_POST_DELETE_ERROR);
-        }
-    }
 }

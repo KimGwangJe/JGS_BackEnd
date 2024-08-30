@@ -5,11 +5,13 @@ import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TierExceptionTyp
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TierRepository;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TierService {
     private final TierRepository tierRepository;
 
@@ -17,6 +19,7 @@ public class TierService {
     public Tier getTierByName(String tierName){
         Tier tier = tierRepository.findByTierName(tierName);
         if(tier == null){
+            log.warn("Invalid tier name : {}", tierName);
             throw new BusinessLogicException(TierExceptionType.INVALID_TIER_NAME);
         }
         return tier;

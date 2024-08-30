@@ -8,6 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Notification.Repository.Notificatio
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APINotificationService {
     private final NotificationRepository notificationRepository;
     private final MemberService memberService;
@@ -44,6 +46,7 @@ public class APINotificationService {
         try {
             notificationRepository.deleteById(notificationId);
         } catch (Exception e) {
+            log.warn("Notification Delete Failed : {}", e.getMessage());
             throw new BusinessLogicException(NotificationExceptionType.NOTIFICATION_DELETE_ERROR);
         }
     }
@@ -53,6 +56,7 @@ public class APINotificationService {
         try {
             notificationRepository.deleteByMemberId(memberId);
         } catch (Exception e) {
+            log.warn("All Notification Delete Failed : {}", e.getMessage());
             throw new BusinessLogicException(NotificationExceptionType.NOTIFICATION_DELETE_ERROR);
         }
     }

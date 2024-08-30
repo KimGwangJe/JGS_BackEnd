@@ -11,6 +11,7 @@ import com.example.JustGetStartedBackEnd.API.Chat.Repository.ChatRepository;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatService {
     private final ChatRepository chatRepository;
     private final ChatRoomMemberService chatRoomMemberService;
@@ -50,6 +52,7 @@ public class ChatService {
 
             chatRepository.save(chat);
         } catch(Exception e){
+            log.warn("Save Chat Error : {}", e.getMessage());
             throw new BusinessLogicException(ChatExceptionType.CHAT_SAVE_ERROR);
         }
         return chat.toResponseChatDTO();

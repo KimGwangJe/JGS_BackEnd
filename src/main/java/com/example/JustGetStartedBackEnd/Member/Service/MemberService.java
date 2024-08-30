@@ -7,6 +7,7 @@ import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.Member.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
 
@@ -52,6 +54,7 @@ public class MemberService {
         if(member.isPresent()){
             return member.map(Member::toMemberDTO).orElse(null);
         } else{
+            log.warn("Member Not Found : {}", id);
             throw new BusinessLogicException(MemberExceptionType.MEMBER_NOT_FOUND);
         }
     }
@@ -62,6 +65,7 @@ public class MemberService {
         if(member.isPresent()){
             return member.get();
         } else{
+            log.warn("Member Not Found : {}", id);
             throw new BusinessLogicException(MemberExceptionType.MEMBER_NOT_FOUND);
         }
     }

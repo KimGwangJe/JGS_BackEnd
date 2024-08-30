@@ -9,6 +9,7 @@ import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionTyp
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TeamService {
     private final TeamRepository teamRepository;
     private final TierService tierService;
@@ -68,6 +70,7 @@ public class TeamService {
     public TeamInfoDTO findByTeamName(String teamName) {
         Team team = teamRepository.findByTeamName(teamName);
         if(team == null){
+            log.warn("Team Not Found : {}", teamName);
             throw new BusinessLogicException(TeamExceptionType.TEAM_NOT_FOUND);
         }
         return team.toTeamInfoDTO();
@@ -77,6 +80,7 @@ public class TeamService {
     public Team findByTeamNameReturnEntity(String teamName) {
         Team team = teamRepository.findByTeamName(teamName);
         if(team == null){
+            log.warn("Team Not Found : {}", teamName);
             throw new BusinessLogicException(TeamExceptionType.TEAM_NOT_FOUND);
         }
         return team;
@@ -87,6 +91,7 @@ public class TeamService {
         try{
             teamRepository.save(team);
         } catch(Exception e){
+            log.warn("Team Save Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
         }
     }

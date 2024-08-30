@@ -10,6 +10,7 @@ import com.example.JustGetStartedBackEnd.API.Image.ExceptionType.ImageExceptionT
 import com.example.JustGetStartedBackEnd.API.Image.Repository.ImageRepository;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APIImageService {
     private final AmazonS3Client amazonS3Client;
 
@@ -69,6 +71,7 @@ public class APIImageService {
                     .build());
             return url;
         } catch (IOException e) {
+            log.warn("Image Save Error : {}", e.getMessage());
             throw new BusinessLogicException(ImageExceptionType.IMAGE_SAVE_ERROR);
         }
     }

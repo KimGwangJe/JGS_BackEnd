@@ -10,6 +10,7 @@ import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatRoomService {
     private final ChatRoomMemberService chatRoomMemberService;
     private final ChatRoomRepository chatRoomRepository;
@@ -43,6 +45,9 @@ public class ChatRoomService {
         // 아니라면 새로운 채팅방과 채팅 멤버 생성
         Member member = memberService.findByIdReturnEntity(memberId);
         Member guest = memberService.findByIdReturnEntity(guestId);
+
+        log.info("Create Room Member {}, {}", member.getMemberId(), guest.getMemberId());
+
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomName(member.getName() + "&" + guest.getName())
                 .lastChatDate(LocalDateTime.now())

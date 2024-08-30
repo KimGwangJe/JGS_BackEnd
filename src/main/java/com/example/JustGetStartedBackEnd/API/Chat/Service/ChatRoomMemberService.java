@@ -7,6 +7,7 @@ import com.example.JustGetStartedBackEnd.API.Chat.Repository.ChatRoomMemberRepos
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatRoomMemberService {
     private final ChatRoomMemberRepository chatRoomMemberRepository;
 
@@ -32,6 +34,7 @@ public class ChatRoomMemberService {
             chatRoomMemberRepository.save(chatRoomMember1);
             chatRoomMemberRepository.save(chatRoomMember2);
         } catch(Exception e){
+            log.warn(e.getMessage());
             throw new BusinessLogicException(ChatRoomMemberExceptionType.CHAT_ROOM_MEMBER_SAVE_ERROR);
         }
     }

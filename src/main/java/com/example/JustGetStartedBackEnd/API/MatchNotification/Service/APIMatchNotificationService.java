@@ -19,6 +19,7 @@ import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberSer
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APIMatchNotificationService {
     private final MatchNotificationRepository matchNotificationRepository;
     private final TeamService teamService;
@@ -44,12 +46,16 @@ public class APIMatchNotificationService {
         //신청자의 팀
         Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
         boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-        if(!isLeader) throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        if(!isLeader) {
+            log.warn("Not Allow Authority - Create Match Notification");
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        }
 
         //이미 매치가 신청된 상태인지 확인
         MatchNotification matchNotification = matchNotificationRepository.findByMatchPostIdAndTeamName(dto.getMatchPostId(), dto.getTeamName());
         if(matchNotification != null){
             //신청 한 이력이 있으면 에러
+            log.warn("Match Notification Already Request");
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_ALREADY_REQUEST);
         }
 
@@ -59,9 +65,11 @@ public class APIMatchNotificationService {
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_INVALID_DATE);
         }
         if(matchPost.isEnd()){
+            log.warn("Match Post Is Already End");
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_POST_IS_END);
         }
         if(matchPost.getTeamA().getTeamName().equals(dto.getTeamName())){
+            log.warn("Can Not Request Same Team");
             throw new BusinessLogicException(MatchNotificationExceptionType.SAME_TEAM_MATCH_ERROR);
         }
 
@@ -81,6 +89,7 @@ public class APIMatchNotificationService {
 
             matchNotificationRepository.save(newMatchNotification);
         } catch(Exception e){
+            log.warn("Create Match Notification failed : {}", e.getMessage());
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_REQUEST_ERROR);
         }
     }
@@ -94,7 +103,10 @@ public class APIMatchNotificationService {
 
         //그 팀의 리더만이 매치 수락 가능
         boolean isLeader = apiTeamMemberService.isLeader(matchNotification.getMatchPostId().getTeamA(), memberId);
-        if(!isLeader) throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        if(!isLeader) {
+            log.warn("Not Allow Authority - Delete Match Notification");
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        }
 
         //매치 요청을 보낸 팀의 리더의 ID를 가져옴
         Long notificationMemberId = apiTeamMemberService.getLeaderId(matchNotification.getAppliTeamName());

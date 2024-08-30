@@ -19,6 +19,7 @@ import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionTyp
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APITeamJoinService {
     private final TeamJoinNotificationRepository teamJoinNotificationRepository;
     private final CommunityService communityService;
@@ -61,6 +63,7 @@ public class APITeamJoinService {
             joinNotification.updateRead();
             return;
         }
+        log.warn("Not Allow Authority - Update Read Team Join Notification");
         throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
     }
 
@@ -69,6 +72,7 @@ public class APITeamJoinService {
         try{
             teamJoinNotificationRepository.updateReadStatusByMemberId(memberId);
         } catch(Exception e){
+            log.warn("Team Join Notification Read Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_READ_ERROR);
         }
 
@@ -80,6 +84,7 @@ public class APITeamJoinService {
 
         // 모집 기간이 지난 커뮤니티 글이라면
         if (community.getRecruitDate().isBefore(LocalDateTime.now())) {
+            log.warn("Invalid Team Join Notification Date");
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_INVALID_DATE);
         }
 
@@ -87,15 +92,18 @@ public class APITeamJoinService {
         TeamMemberListDTO teamMembers = apiTeamMemberService.findMyTeam(memberId);
         for(TeamMemberDTO teamMember : teamMembers.getTeamMemberDTOList()){
             if(teamMember.getTeamName().equals(community.getTeam().getTeamName())){
+                log.warn("Team Member Already Join");
                 throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
             }
         }
 
         JoinNotification joinNotification = teamJoinNotificationRepository.findByMemberIdAndCommunityId(memberId, communityId);
         if (joinNotification != null) {
+            log.warn("Already Request Team Join Notification");
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_ALREADY_WAIT);
         }
         if(community.getWriter().getMemberId().equals(memberId)){
+            log.warn("Can Not Request Your Team");
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_OWN_ERROR);
         }
 
@@ -114,6 +122,7 @@ public class APITeamJoinService {
             Long subMemberId = community.getWriter().getMemberId();
             NotificationController.sendNotification(subMemberId, message);
         } catch(Exception e){
+            log.warn("Team Join Request Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_REQUEST_ERROR);
         }
 
@@ -144,6 +153,7 @@ public class APITeamJoinService {
         try{
             teamJoinNotificationRepository.deleteById(joinTeamDTO.getJoinNotificationId());
         } catch(Exception e){
+            log.warn("Team Join Notifcitaion Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_DELETE_ERROR);
         }
     }

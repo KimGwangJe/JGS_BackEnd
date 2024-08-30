@@ -10,11 +10,13 @@ import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APIMatchPostService {
     private final MatchPostRepository matchPostRepository;
     private final TeamService teamService;
@@ -34,6 +36,7 @@ public class APIMatchPostService {
                     .build();
             matchPostRepository.save(matchPost);
         } else {
+            log.warn("Not Allow Authority - Create Match Post");
             throw new BusinessLogicException(MatchPostException.MATCH_POST_SAVE_ERROR);
         }
     }
@@ -46,6 +49,7 @@ public class APIMatchPostService {
         if (isLeader) {
             matchPost.updateMatchPost(updateMatchPostDTO.getMatchDate(), updateMatchPostDTO.getLocation());
         } else{
+            log.warn("Not Allow Authority - Update Match Post");
             throw new BusinessLogicException(MatchPostException.NOT_ALLOW_AUTHORITY);
         }
     }
@@ -57,12 +61,14 @@ public class APIMatchPostService {
 
         boolean isLeader = apiTeamMemberService.isLeader(matchPost.getTeamA(), memberId);
         if (!isLeader) {
+            log.warn("Not Allow Authority - Delete Match Post");
             throw new BusinessLogicException(MatchPostException.NOT_ALLOW_AUTHORITY);
         }
 
         try {
             matchPostRepository.delete(matchPost);
         } catch (Exception e) {
+            log.warn("Match Post Delete Failed : {}", e.getMessage());
             throw new BusinessLogicException(MatchPostException.MATCH_POST_DELETE_ERROR);
         }
     }

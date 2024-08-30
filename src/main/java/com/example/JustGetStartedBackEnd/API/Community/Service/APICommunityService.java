@@ -13,6 +13,7 @@ import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APICommunityService {
     private final CommunityRepository communityRepository;
     private final TeamService teamService;
@@ -40,6 +42,7 @@ public class APICommunityService {
             boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
 
             if (!isLeader) {
+                log.warn("Not Allow Authority - Create Community Post");
                 throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
             }
 
@@ -68,6 +71,7 @@ public class APICommunityService {
             communityRepository.save(community);
             apiImageService.linkImagesToCommunity(community.getContent(),community);
         } catch (Exception e) {
+            log.warn("Create community failed : {}", e.getMessage());
             throw new BusinessLogicException(CommunityExceptionType.COMMUNITY_SAVE_ERROR);
         }
     }
@@ -78,6 +82,7 @@ public class APICommunityService {
         Community community = communityRepository.findById(updateCommunityDTO.getCommunityId())
                 .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
         if(!Objects.equals(community.getWriter().getMemberId(), memberId)){
+            log.warn("Not Allow Authority - Update Community Post");
             throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
         }
         community.updateContentAndTitle(updateCommunityDTO.getContent(), updateCommunityDTO.getTitle());
@@ -92,6 +97,7 @@ public class APICommunityService {
         if(Objects.equals(community.getWriter().getMemberId(), memberId)){
             communityRepository.delete(community);
         } else{
+            log.warn("Not Allow Authority - Delete Community Post");
             throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
         }
     }

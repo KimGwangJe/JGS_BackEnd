@@ -11,6 +11,7 @@ import com.example.JustGetStartedBackEnd.API.TeamReview.Repository.TeamReviewRep
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APITeamReviewService {
     private final TeamReviewRepository teamReviewRepository;
     private final MatchService matchService;
@@ -52,12 +54,14 @@ public class APITeamReviewService {
         }
 
         if(!isLeader){
+            log.warn("Not Allow Authority - Fill Team Review");
             throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         }
 
         try{
             teamReviewRepository.save(teamReview);
         } catch (Exception e){
+            log.warn("Team Review Save Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamReviewExceptionType.TEAM_REVIEW_SAVE_ERROR);
         }
     }

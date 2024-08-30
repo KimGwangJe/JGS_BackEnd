@@ -12,6 +12,7 @@ import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APITeamMemberService {
     private final TeamMemberRepository teamMemberRepository;
     private final TeamService teamService;
@@ -38,6 +40,7 @@ public class APITeamMemberService {
 
             teamMemberRepository.save(teamMember);
         } catch(Exception e){
+            log.warn("Team Leader Save Error : {}", e.getMessage());
             throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_SAVE_ERROR);
         }
     }
@@ -68,7 +71,8 @@ public class APITeamMemberService {
         // 팀원 삭제 요청을 보낸 사람이 그 팀의 리더여야됨
         for(TeamMember requestMember : teamMembers){
             //만약 자기자신을 방출 하려는 경우 에러
-            if(teamMember.getMember().getMemberId() == requestMember.getMember().getMemberId()){
+            if(Objects.equals(teamMember.getMember().getMemberId(), requestMember.getMember().getMemberId())){
+                log.warn("Can Not Delete Leader Of Team");
                 throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_DELETE_ME);
             }
             if(requestMember.getTeam().getTeamName().equals(teamMember.getTeam().getTeamName())
@@ -77,6 +81,7 @@ public class APITeamMemberService {
                 return;
             }
         }
+        log.warn("Not Allow Authority - Delete Team Member");
         throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
     }
 
@@ -87,6 +92,7 @@ public class APITeamMemberService {
 
         for(TeamMember teamMember :team.getTeamMembers()){
             if(Objects.equals(teamMember.getMember().getMemberId(), member.getMemberId())){
+                log.warn("Team Member Already Join");
                 throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
             }
         }
@@ -99,6 +105,7 @@ public class APITeamMemberService {
         try{
             teamMemberRepository.save(teamMember);
         } catch(Exception e){
+            log.warn("Team Member Save Error : {}", e.getMessage());
             throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_SAVE_ERROR);
         }
     }
@@ -117,6 +124,7 @@ public class APITeamMemberService {
             TeamMember leader = optionalLeader.get();
             return leader.getMember().getMemberId();
         } else {
+            log.warn("Not Allow Authority - Get Leader Id");
             throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         }
     }

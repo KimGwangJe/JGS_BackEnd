@@ -14,6 +14,7 @@ import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APITeamService {
     private final TeamRepository teamRepository;
     private final MemberService memberService;
@@ -46,6 +48,7 @@ public class APITeamService {
             teamRepository.save(newTeam);
             apiTeamMemberService.createLeaderTeamMember(member, newTeam);
         } catch(Exception e){
+            log.warn("Create Team Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
         }
     }
@@ -64,6 +67,7 @@ public class APITeamService {
             }
         }
 
+        log.warn("Not Allow Authority - Update Team Introduce");
         throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
     }
 }

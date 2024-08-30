@@ -11,6 +11,7 @@ import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APIMatchService {
     private final GameMatchRepository gameMatchRepository;
     private final TeamService teamService;
@@ -30,6 +32,7 @@ public class APIMatchService {
                 .teamA(teamService.findByTeamNameReturnEntity(createMatchDTO.getTeamA()))
                 .teamB(teamService.findByTeamNameReturnEntity(createMatchDTO.getTeamB()))
                 .build();
+        log.info("Match Team {} : {}", createMatchDTO.getTeamA(), createMatchDTO.getTeamB());
         gameMatchRepository.save(gameMatch);
     }
 
@@ -40,15 +43,18 @@ public class APIMatchService {
 
         // 그 경기의 심판만 점수 기입 가능
         if (!gameMatch.getReferee().getMemberId().equals(memberId)) {
+            log.warn("Not Allow Authority - Update Match Point");
             throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
         }
 
         if(gameMatch.getMatchDate().after(new Date())){
+            log.warn("Not Date Allow - Update Match Point");
             throw new BusinessLogicException(MatchExceptionType.MATCH_NOT_DATE_ALLOW);
         }
 
         // 이미 점수가 입력된 경우 예외 처리
         if (gameMatch.getTeamAScore() != 0 && gameMatch.getTeamBScore() != 0) {
+            log.warn("Match Point Already Filled Out");
             throw new BusinessLogicException(MatchExceptionType.MATCH_ALREADY_FILLED_OUT);
         }
 

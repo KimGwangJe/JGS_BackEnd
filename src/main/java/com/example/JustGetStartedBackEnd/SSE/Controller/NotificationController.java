@@ -2,6 +2,7 @@ package com.example.JustGetStartedBackEnd.SSE.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @RestController
+@Slf4j
 public class NotificationController {
 
     // 모든 사용자의 SseEmitter를 저장하는 Map
@@ -58,6 +60,7 @@ public class NotificationController {
         if (emitter != null) {
             executor.execute(() -> {
                 try {
+                    log.info("Notification To {}", userId);
                     emitter.send(SseEmitter.event()
                             .name("notification")
                             .data(message));
@@ -74,6 +77,7 @@ public class NotificationController {
         if (emitter != null) {
             executor.execute(() -> {
                 try {
+                    log.info("New Chat Room - ChatRoomId {}, Who Joined {}", chatRoomId, userId);
                     emitter.send(SseEmitter.event()
                             .name("newChatRoom")
                             .data(chatRoomId));
@@ -90,6 +94,7 @@ public class NotificationController {
         if (emitter != null) {
             executor.execute(() -> {
                 try {
+                    log.info("Chat From {}, To {}", responseChatDTO.getMemberId(), to);
                     emitter.send(SseEmitter.event()
                             .name("newChat")
                             .data(responseChatDTO));

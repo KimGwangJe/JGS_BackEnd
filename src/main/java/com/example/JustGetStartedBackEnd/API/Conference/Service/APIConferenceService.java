@@ -9,6 +9,7 @@ import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class APIConferenceService {
     private final ConferenceRepository conferenceRepository;
     private final MemberService memberService;
@@ -26,6 +28,7 @@ public class APIConferenceService {
     public void createConference(Long memberId, ConferenceInfoDTO conferenceInfoDTO) {
         Optional<Conference> conference = conferenceRepository.findById(conferenceInfoDTO.getConferenceName());
         if(conference.isPresent()){
+            log.warn("Duplicate Conference Name {}", conferenceInfoDTO.getConferenceName());
             throw new BusinessLogicException(ConferenceExceptionType.DUPLICATION_CONFERENCE_NAME);
         }
         Conference newConference = Conference.builder()
@@ -45,6 +48,7 @@ public class APIConferenceService {
         if(Objects.equals(conference.getOrganizer().getMemberId(), memberId)){
             conference.updateWinnerTeam(teamService.findByTeamNameReturnEntity(updateWinnerDTO.getWinnerTeam()));
         } else {
+            log.warn("Not Allow Authority - Update Conference Winner");
             throw new BusinessLogicException(ConferenceExceptionType.NOT_ALLOW_AUTHORITY);
         }
     }
@@ -56,6 +60,7 @@ public class APIConferenceService {
         if(Objects.equals(conference.getOrganizer().getMemberId(), memberId)){
             conference.udpateConferenceInfo(conferenceInfoDTO);
         } else{
+            log.warn("Not Allow Authority - Update Conference Info");
             throw new BusinessLogicException(ConferenceExceptionType.NOT_ALLOW_AUTHORITY);
         }
     }
