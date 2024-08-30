@@ -7,14 +7,12 @@ import com.example.JustGetStartedBackEnd.API.Chat.Service.ChatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
 public class MessageController {
-    private final SimpMessagingTemplate messagingTemplate;
     private final ChatService chatService;
     private final RedisPublisher redisPublisher;
 
