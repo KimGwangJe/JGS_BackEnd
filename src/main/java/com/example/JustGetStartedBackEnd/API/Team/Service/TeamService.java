@@ -9,6 +9,7 @@ import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionTyp
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -62,6 +63,8 @@ public class TeamService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "teamInfoCache", key = "'team/' + #teamName",
+            cacheManager = "cacheManager")
     public TeamInfoDTO findByTeamName(String teamName) {
         Team team = teamRepository.findByTeamName(teamName);
         if(team == null){

@@ -68,7 +68,7 @@ public class GameMatch {
         dto.setTeamB(this.teamB.getTeamName());
         dto.setTeamAScore(this.teamAScore);
         dto.setTeamBScore(this.teamBScore);
-        dto.setReferee(this.referee.getMemberId());
+        dto.setReferee(this.referee == null ? null : this.referee.getMemberId());
         return dto;
     }
 
@@ -80,7 +80,7 @@ public class GameMatch {
         dto.setTeamB(this.teamB.getTeamName());
         dto.setTeamAScore(this.teamAScore);
         dto.setTeamBScore(this.teamBScore);
-        dto.setReferee(this.referee.getMemberId());
+        dto.setReferee(this.referee == null ? null : this.referee.getMemberId());
         dto.setTeamATier(toATierDTO());
         dto.setTeamBTier(toBTierDTO());
         return dto;

@@ -8,6 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepos
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +48,8 @@ public class CommunityService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "communityInfoCache", key = "'community/' + #communityId",
+            cacheManager = "cacheManager")
     public CommunityInfoDTO findById(Long communityId){
         Community community = communityRepository.findById(communityId).orElseThrow(
                 () -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));

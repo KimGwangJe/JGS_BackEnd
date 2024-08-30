@@ -14,6 +14,7 @@ import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +51,7 @@ public class APITeamService {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "teamInfoCache", key = "'team/' + #updateIntroduceDTO.teamName", cacheManager = "cacheManager")
     public void updateIntroduce(Long memberId, UpdateIntroduceDTO updateIntroduceDTO){
         Member member = memberService.findByIdReturnEntity(memberId);
 

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -41,7 +42,7 @@ public class APIConferenceService {
     public void updateWinnerTeam(Long memberId, UpdateWinnerDTO updateWinnerDTO){
         Conference conference = conferenceRepository.findById(updateWinnerDTO.getConferenceName()).orElseThrow(
                 () -> new BusinessLogicException(ConferenceExceptionType.NOT_DUPLICATION_CONFERENCE_NAME));
-        if(conference.getOrganizer().getMemberId() == memberId){
+        if(Objects.equals(conference.getOrganizer().getMemberId(), memberId)){
             conference.updateWinnerTeam(teamService.findByTeamNameReturnEntity(updateWinnerDTO.getWinnerTeam()));
         } else {
             throw new BusinessLogicException(ConferenceExceptionType.NOT_ALLOW_AUTHORITY);
@@ -52,7 +53,7 @@ public class APIConferenceService {
     public void updateConference(Long memberId, ConferenceInfoDTO conferenceInfoDTO){
         Conference conference = conferenceRepository.findById(conferenceInfoDTO.getConferenceName()).orElseThrow(
                 () -> new BusinessLogicException(ConferenceExceptionType.NOT_DUPLICATION_CONFERENCE_NAME));
-        if(conference.getOrganizer().getMemberId() == memberId){
+        if(Objects.equals(conference.getOrganizer().getMemberId(), memberId)){
             conference.udpateConferenceInfo(conferenceInfoDTO);
         } else{
             throw new BusinessLogicException(ConferenceExceptionType.NOT_ALLOW_AUTHORITY);
