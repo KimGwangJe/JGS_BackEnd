@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamListPagingDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class TeamController {
         }
 
         @GetMapping("/info")
-        public ResponseEntity<?> getTeamInfo(@RequestParam("teamName") String teamName) {
+        public ResponseEntity<TeamInfoDTO> getTeamInfo(@RequestParam("teamName") String teamName) {
             return ResponseEntity.status(HttpStatus.OK).body(teamService.findByTeamName(teamName));
         }
 }

@@ -21,7 +21,7 @@ public class APITeamController {
     public ResponseEntity<Void> makeTeam(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                          @Valid @RequestBody CreateTeamDTO createTeamDTO){
         apiTeamService.makeTeam(customOAuth2User.getMemberId(), createTeamDTO);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping
