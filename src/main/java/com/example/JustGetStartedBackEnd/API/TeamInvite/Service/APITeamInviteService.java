@@ -18,6 +18,7 @@ import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
+import com.example.JustGetStartedBackEnd.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class APITeamInviteService {
     private final TeamInviteRepository teamInviteRepository;
     private final TeamService teamService;
     private final MemberService memberService;
-    private final NotificationController NotificationController;
+    private final NotificationService notificationService;
     private final APITeamMemberService apiTeamMemberService;
     private final APINotificationService apiNotificationService;
 
@@ -74,7 +75,7 @@ public class APITeamInviteService {
                     .build();
             teamInviteRepository.save(newTIN);
 
-            NotificationController.sendNotification(dto.getTo(), message);
+            notificationService.sendNotification(dto.getTo(), message);
         } catch( Exception e){
             log.warn("Create Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ERROR);
@@ -135,12 +136,12 @@ public class APITeamInviteService {
 
             //팀 가입 요청 승인 알림 SSO & DB 저장
             String message = memberName + "님이 " + teamInviteNotification.getTeam().getTeamName() + "팀에 가입하였습니다.";
-            NotificationController.sendNotification(notificationMemberId, message);
+            notificationService.sendNotification(notificationMemberId, message);
             apiNotificationService.saveNotification(message, notificationMemberId);
         } else {
             //팀 가입 요청 거부 알림 SSO & DB 저장
             String message = memberName + "님이 " + teamInviteNotification.getTeam().getTeamName() + "팀에 대한 가입 요청을 거절하였습니다.";
-            NotificationController.sendNotification(notificationMemberId, message);
+            notificationService.sendNotification(notificationMemberId, message);
             apiNotificationService.saveNotification(message, notificationMemberId);
         }
 

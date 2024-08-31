@@ -8,7 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Chat.Repository.ChatRoomRepository;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
+import com.example.JustGetStartedBackEnd.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class ChatRoomService {
     private final ChatRoomMemberService chatRoomMemberService;
     private final ChatRoomRepository chatRoomRepository;
     private final MemberService memberService;
-    private final NotificationController notificationController;
+    private final NotificationService notificationService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -56,7 +56,7 @@ public class ChatRoomService {
         chatRoomMemberService.createChatRoomMember(member, guest, chatRoom);
 
         // 초대 된 사람은 이 알림을 통해 구독 신청을 해야됨
-        notificationController.newChatRoom(guestId, chatRoom.getChatRoomId());
+        notificationService.newChatRoom(guestId, chatRoom.getChatRoomId());
 
         return chatRoom.getChatRoomId();
     }

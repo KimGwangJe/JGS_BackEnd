@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.SSE.Controller.DTO;
+package com.example.JustGetStartedBackEnd.SSE.DTO;
 
 import lombok.Getter;
 import lombok.Setter;

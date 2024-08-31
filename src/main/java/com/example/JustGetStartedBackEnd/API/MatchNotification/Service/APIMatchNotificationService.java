@@ -9,7 +9,6 @@ import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Service.MatchPostService;
 import com.example.JustGetStartedBackEnd.API.Notification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
-import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
@@ -18,6 +17,7 @@ import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMember
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
+import com.example.JustGetStartedBackEnd.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,9 +34,8 @@ import java.util.stream.Collectors;
 public class APIMatchNotificationService {
     private final MatchNotificationRepository matchNotificationRepository;
     private final TeamService teamService;
-    private final APITeamService apiTeamService;
     private final MatchPostService matchPostService;
-    private final NotificationController NotificationController;
+    private final NotificationService notificationService;
     private final APIMatchService matchService;
     private final APITeamMemberService apiTeamMemberService;
     private final APINotificationService apinotificationService;
@@ -77,7 +76,7 @@ public class APIMatchNotificationService {
             Long notificationMemberId = apiTeamMemberService.getLeaderId(matchPost.getTeamA());
             String message = dto.getTeamName() + "팀이 " +
                     matchPost.getTeamA().getTeamName() + "팀에 매치를 신청하였습니다.";
-            NotificationController.sendNotification(notificationMemberId, message);
+            notificationService.sendNotification(notificationMemberId, message);
 
             MatchNotification newMatchNotification = MatchNotification.builder()
                     .matchPost(matchPost)
@@ -123,7 +122,7 @@ public class APIMatchNotificationService {
                     matchNotification.getAppliTeamName().getTeamName() +
                     "팀의 매치가 성사 되었습니다.";
             //매치 성사 알림 SSO & DB 저장
-            NotificationController.sendNotification(notificationMemberId, message);
+            notificationService.sendNotification(notificationMemberId, message);
             apinotificationService.saveNotification(message, notificationMemberId);
 
             //두 팀의 마지막 매치 날짜 변경
@@ -143,7 +142,7 @@ public class APIMatchNotificationService {
                     matchNotification.getAppliTeamName().getTeamName() +
                     "팀의 매치가 상대팀의 팀장으로부터 거부되었습니다.";
             //매치 거부 알림 SSO & DB 저장
-            NotificationController.sendNotification(notificationMemberId, message);
+            notificationService.sendNotification(notificationMemberId, message);
             apinotificationService.saveNotification(message, notificationMemberId);
 
             matchNotificationRepository.deleteById(matchingDTO.getMatchNotificationId());

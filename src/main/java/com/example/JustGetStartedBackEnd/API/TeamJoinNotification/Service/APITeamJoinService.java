@@ -18,6 +18,7 @@ import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
+import com.example.JustGetStartedBackEnd.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class APITeamJoinService {
     private final TeamJoinNotificationRepository teamJoinNotificationRepository;
     private final CommunityService communityService;
     private final MemberService memberService;
-    private final NotificationController NotificationController;
+    private final NotificationService notificationService;
     private final APITeamMemberService apiTeamMemberService;
     private final APINotificationService apinotificationService;
 
@@ -120,7 +121,7 @@ public class APITeamJoinService {
             teamJoinNotificationRepository.save(newJoinNotification);
 
             Long subMemberId = community.getWriter().getMemberId();
-            NotificationController.sendNotification(subMemberId, message);
+            notificationService.sendNotification(subMemberId, message);
         } catch(Exception e){
             log.warn("Team Join Request Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_REQUEST_ERROR);
@@ -141,12 +142,12 @@ public class APITeamJoinService {
             apiTeamMemberService.joinTeamMember(joinNotification.getPubMember().getMemberId(), joinNotification.getCommunity().getTeam().getTeamName());
             String message = teamName + "팀에 보낸 가입 신청이 승인되었습니다.";
             //매치 가입 신청 승인 알림 SSO & DB 저장
-            NotificationController.sendNotification(notificationMemberId, message);
+            notificationService.sendNotification(notificationMemberId, message);
             apinotificationService.saveNotification(message, notificationMemberId);
         } else {
             String message = teamName + "팀에 보낸 가입 신청이 거부되었습니다.";
             //매치 가입 신청 거부 알림 SSO & DB 저장
-            NotificationController.sendNotification(notificationMemberId, message);
+            notificationService.sendNotification(notificationMemberId, message);
             apinotificationService.saveNotification(message, notificationMemberId);
         }
 
