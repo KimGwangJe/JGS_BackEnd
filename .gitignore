@@ -38,3 +38,5 @@ out/
 
 # Private application configuration
 application-private.properties
+
+*.log
