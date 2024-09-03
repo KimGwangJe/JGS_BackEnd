@@ -7,6 +7,7 @@ import com.example.JustGetStartedBackEnd.API.MatchPost.ExceptionType.MatchPostEx
 import com.example.JustGetStartedBackEnd.API.MatchPost.Repository.MatchPostRepository;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
+import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class APIMatchPostService {
             matchPostRepository.save(matchPost);
         } else {
             log.warn("Not Allow Authority - Create Match Post");
-            throw new BusinessLogicException(MatchPostException.MATCH_POST_SAVE_ERROR);
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         }
     }
 
@@ -50,7 +51,7 @@ public class APIMatchPostService {
             matchPost.updateMatchPost(updateMatchPostDTO.getMatchDate(), updateMatchPostDTO.getLocation());
         } else{
             log.warn("Not Allow Authority - Update Match Post");
-            throw new BusinessLogicException(MatchPostException.NOT_ALLOW_AUTHORITY);
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         }
     }
 
@@ -62,7 +63,7 @@ public class APIMatchPostService {
         boolean isLeader = apiTeamMemberService.isLeader(matchPost.getTeamA(), memberId);
         if (!isLeader) {
             log.warn("Not Allow Authority - Delete Match Post");
-            throw new BusinessLogicException(MatchPostException.NOT_ALLOW_AUTHORITY);
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         }
 
         try {
