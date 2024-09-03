@@ -17,7 +17,6 @@ import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.SSE.Controller.NotificationController;
 import com.example.JustGetStartedBackEnd.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -157,10 +156,5 @@ public class APITeamJoinService {
             log.warn("Team Join Notifcitaion Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_DELETE_ERROR);
         }
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteByCommunityID(Long communityId){
-        teamJoinNotificationRepository.deleteByCommunityId(communityId);
     }
 }

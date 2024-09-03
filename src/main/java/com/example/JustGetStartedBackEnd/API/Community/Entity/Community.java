@@ -70,9 +70,10 @@ public class Community {
         communityDTO.setTitle(this.title);
         communityDTO.setCommunityId(this.communityId);
         communityDTO.setRecruit(this.recruit);
-        communityDTO.setTeamName(this.team.getTeamName());
-        communityDTO.setRecruitDate(this.recruitDate);
-
+        if(this.recruit){
+            communityDTO.setTeamName(this.team.getTeamName());
+            communityDTO.setRecruitDate(this.recruitDate);
+        }
         return communityDTO;
     }
 
@@ -81,11 +82,16 @@ public class Community {
         communityInfoDTO.setTitle(this.title);
         communityInfoDTO.setCommunityId(this.communityId);
         communityInfoDTO.setRecruit(this.recruit);
-        communityInfoDTO.setTeamName(this.team.getTeamName());
         communityInfoDTO.setContent(this.content);
         communityInfoDTO.setMemberId(this.writer.getMemberId());
-        communityInfoDTO.setRecruitDate(this.recruitDate);
         communityInfoDTO.setWriteDate(this.writeDate);
+
+        //모집 글일 경우에만 팀이름과 모집 기간 데이터 있음
+        if(this.recruit){
+            communityInfoDTO.setTeamName(this.team.getTeamName());
+            communityInfoDTO.setRecruitDate(this.recruitDate);
+        }
+
         return communityInfoDTO;
     }
 
