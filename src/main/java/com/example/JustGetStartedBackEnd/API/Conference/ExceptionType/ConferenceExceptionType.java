@@ -3,7 +3,7 @@ package com.example.JustGetStartedBackEnd.API.Conference.ExceptionType;
 import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
 
 public enum ConferenceExceptionType implements ExceptionType {
-    NOT_DUPLICATION_CONFERENCE_NAME(404, "존재하지 않는 대회 이름입니다."),
+    CONFERENCE_NOT_FOUND(404, "존재하지 않는 대회 이름입니다."),
     NOT_ALLOW_AUTHORITY(401, "권한이 없는 요청입니다."),
     DUPLICATION_CONFERENCE_NAME(400, "이미 존재하는 대회 이름입니다.");
 

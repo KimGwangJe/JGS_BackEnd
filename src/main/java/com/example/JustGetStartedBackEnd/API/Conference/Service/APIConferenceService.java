@@ -44,7 +44,7 @@ public class APIConferenceService {
     @Transactional(rollbackFor = Exception.class)
     public void updateWinnerTeam(Long memberId, UpdateWinnerDTO updateWinnerDTO){
         Conference conference = conferenceRepository.findById(updateWinnerDTO.getConferenceName()).orElseThrow(
-                () -> new BusinessLogicException(ConferenceExceptionType.NOT_DUPLICATION_CONFERENCE_NAME));
+                () -> new BusinessLogicException(ConferenceExceptionType.CONFERENCE_NOT_FOUND));
         if(Objects.equals(conference.getOrganizer().getMemberId(), memberId)){
             conference.updateWinnerTeam(teamService.findByTeamNameReturnEntity(updateWinnerDTO.getWinnerTeam()));
         } else {
@@ -56,7 +56,7 @@ public class APIConferenceService {
     @Transactional(rollbackFor = Exception.class)
     public void updateConference(Long memberId, ConferenceInfoDTO conferenceInfoDTO){
         Conference conference = conferenceRepository.findById(conferenceInfoDTO.getConferenceName()).orElseThrow(
-                () -> new BusinessLogicException(ConferenceExceptionType.NOT_DUPLICATION_CONFERENCE_NAME));
+                () -> new BusinessLogicException(ConferenceExceptionType.CONFERENCE_NOT_FOUND));
         if(Objects.equals(conference.getOrganizer().getMemberId(), memberId)){
             conference.udpateConferenceInfo(conferenceInfoDTO);
         } else{
