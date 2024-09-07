@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class JoinNotificationDTO {
     private Long notificationId;
     private boolean isRead;
+    private Long memberId;
     private String memberName;
     private String teamName;
     private LocalDateTime date;

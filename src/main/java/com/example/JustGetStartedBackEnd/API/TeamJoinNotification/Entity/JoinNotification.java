@@ -47,6 +47,7 @@ public class JoinNotification {
         joinNotificationDTO.setNotificationId(this.getNotificationId());
         joinNotificationDTO.setTeamName(this.getCommunity().getTeam().getTeamName());
         joinNotificationDTO.setRead(this.isRead());
+        joinNotificationDTO.setMemberId(this.getPubMember().getMemberId());
         joinNotificationDTO.setMemberName(this.getPubMember().getName());
         joinNotificationDTO.setDate(this.date);
         return joinNotificationDTO;
