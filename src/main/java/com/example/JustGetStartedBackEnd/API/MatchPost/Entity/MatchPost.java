@@ -51,6 +51,8 @@ public class MatchPost {
         matchPostDTO.setMatchDate(this.matchDate);
         matchPostDTO.setLocation(this.location);
         matchPostDTO.setEnd(this.isEnd);
+        matchPostDTO.setTierId(this.getTeamA().getTier().getTierId());
+        matchPostDTO.setTierName(this.getTeamA().getTier().getTierName());
         return matchPostDTO;
     }
 

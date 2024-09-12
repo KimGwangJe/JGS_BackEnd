@@ -13,4 +13,6 @@ public class MatchPostDTO {
     private boolean isEnd;
     private LocalDateTime matchDate;
     private String location;
+    private Long tierId;
+    private String tierName;
 }
