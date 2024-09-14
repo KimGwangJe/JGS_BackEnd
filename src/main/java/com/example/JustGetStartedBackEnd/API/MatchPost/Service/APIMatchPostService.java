@@ -23,7 +23,7 @@ public class APIMatchPostService {
     private final TeamService teamService;
     private final APITeamMemberService apiTeamMemberService;
 
-    @Transactional(readOnly = true)
+    @Transactional(rollbackFor = Exception.class)
     public void createMatchPost(Long memberId, CreateMatchPostDTO createMatchPostDTO) {
         Team team = teamService.findByTeamNameReturnEntity(createMatchPostDTO.getTeamName());
 
