@@ -17,6 +17,6 @@ public interface MatchNotificationRepository extends JpaRepository<MatchNotifica
     @Query("DELETE FROM MatchNotification mn WHERE mn.matchPostId.matchPostId = :matchPostId")
     void deleteAllByMatchPostId(@Param("matchPostId") Long matchPostId);
 
-    @Query("SELECT mn FROM MatchNotification mn WHERE mn.appliTeamName.teamName = :teamName")
+    @Query("SELECT mn FROM MatchNotification mn WHERE mn.matchPostId.teamA.teamName = :teamName")
     List<MatchNotification> findByTeamName(@Param("teamName") String teamName);
 }

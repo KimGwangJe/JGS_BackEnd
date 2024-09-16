@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Controller;
 
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchNotificationDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Service.APIMatchNotificationService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class APIMatchNotificationController {
     private final APIMatchNotificationService apiMatchNotificationService;
+
+    @GetMapping
+    public ResponseEntity<MatchNotificationListDTO> getMatchNotificationList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        return ResponseEntity.status(HttpStatus.OK).body(apiMatchNotificationService.getAllMatchNotifications(customOAuth2User.getMemberId()));
+    }
 
     @PostMapping
     public ResponseEntity<Void> createMatchNotification(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
