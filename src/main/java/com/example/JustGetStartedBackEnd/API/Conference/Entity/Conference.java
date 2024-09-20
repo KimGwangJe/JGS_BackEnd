@@ -57,7 +57,9 @@ public class Conference {
     public ConferenceDTO toConferenceDTO() {
         ConferenceDTO dto = new ConferenceDTO();
         dto.setConferenceName(this.conferenceName);
-        dto.setWinnerTeam(this.winnerTeam.getTeamName());
+        if(this.winnerTeam != null){
+            dto.setWinnerTeam(this.winnerTeam.getTeamName());
+        }
         dto.setConferenceDate(this.conferenceDate);
         dto.setOrganizer(this.organizer.getMemberId());
         dto.setContent(this.content);
