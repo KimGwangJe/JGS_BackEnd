@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Team.Service;
 
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamRequestDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.Request.TeamRequestDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;

@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Controller;
 
-import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.CreateTeamInviteDTO;
-import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.JoinTeamDTO;
+import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.CreateTeamInviteDTO;
+import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteInfoDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Service.APITeamInviteService;

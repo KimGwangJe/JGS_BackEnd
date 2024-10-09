@@ -1,8 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Service;
 
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.RequestChatDTO;
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatListDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Request.RequestChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatListDTO;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.Chat;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoom;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoomMember;

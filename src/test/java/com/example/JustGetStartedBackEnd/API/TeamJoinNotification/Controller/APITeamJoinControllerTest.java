@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Controller;
 
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
-import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinTeamDTO;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.Request.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service.APITeamJoinService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;

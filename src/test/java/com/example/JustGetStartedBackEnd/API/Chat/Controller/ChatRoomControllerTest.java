@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Chat.DTO.ChatRoomDTO;
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ChatRoomListDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ChatRoomListDTO;
 import com.example.JustGetStartedBackEnd.API.Chat.Service.ChatRoomService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;

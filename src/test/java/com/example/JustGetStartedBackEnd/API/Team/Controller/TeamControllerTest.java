@@ -1,14 +1,14 @@
 package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceListDTO;
-import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchListDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.Response.ConferenceListDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.Response.MatchListDTO;
 import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.Response.TeamInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TierDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewListDTO;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;

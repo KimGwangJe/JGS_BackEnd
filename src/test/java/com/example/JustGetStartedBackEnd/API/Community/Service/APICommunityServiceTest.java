@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Community.Service;
 
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CreateCommunityDTO;
-import com.example.JustGetStartedBackEnd.API.Community.DTO.UpdateCommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.CreateCommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.UpdateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;

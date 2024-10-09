@@ -3,7 +3,7 @@ package com.example.JustGetStartedBackEnd.API.TeamMember.Service;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;

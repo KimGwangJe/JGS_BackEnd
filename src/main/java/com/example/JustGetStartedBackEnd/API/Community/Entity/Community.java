@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Community.Entity;
 
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Response.CommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Response.CommunityInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Image.Entity.Image;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;

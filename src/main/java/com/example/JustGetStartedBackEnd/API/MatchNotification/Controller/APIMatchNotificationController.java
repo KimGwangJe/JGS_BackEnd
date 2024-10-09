@@ -1,8 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Controller;
 
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchNotificationDTO;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationListDTO;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchingDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.CreateMatchNotificationDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Response.MatchNotificationListDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.MatchingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Service.APIMatchNotificationService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
@@ -45,7 +45,7 @@ public class APIMatchNotificationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping("/{matchNotificationId}")
+    @PatchMapping("/{matchNotificationId}")
     public ResponseEntity<Void> updateMatchNotification(
             @NotNull @Min(value = 1, message = "매치 알림 ID는 1 이상이어야 됩니다.")
             @PathVariable("matchNotificationId")Long matchNotificationId){

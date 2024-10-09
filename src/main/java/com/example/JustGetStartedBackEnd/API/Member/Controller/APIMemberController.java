@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Member.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Member.DTO.UpdateMemberDTO;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.Request.UpdateMemberDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Service.APIMemberService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class APIMemberController {
     private final APIMemberService apiMemberService;
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Void> updateMember(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                              @Valid @RequestBody UpdateMemberDTO updateMemberDTO
                                              ){

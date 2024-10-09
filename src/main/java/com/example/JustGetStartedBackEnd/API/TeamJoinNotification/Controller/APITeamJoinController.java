@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Controller;
 
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
-import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinTeamDTO;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.Request.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service.APITeamJoinService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class APITeamJoinController {
         return ResponseEntity.status(HttpStatus.OK).body(joinNotificationListDTO);
     }
 
-    @PutMapping("/{joinNotificationId}")
+    @PatchMapping("/{joinNotificationId}")
     public ResponseEntity<Void> updateRead(
             @NotNull @Min(value = 1, message = "초대 알림 ID는 1 이상이어야 됩니다.")
             @PathVariable(name = "joinNotificationId") Long joinNotificationId,
@@ -41,7 +41,7 @@ public class APITeamJoinController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Void> updateReadAll(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         apiTeamJoinService.updateReadAll(customOAuth2User.getMemberId());
         return ResponseEntity.status(HttpStatus.OK).build();

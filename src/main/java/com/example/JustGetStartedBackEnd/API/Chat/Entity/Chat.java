@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Entity;
 
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

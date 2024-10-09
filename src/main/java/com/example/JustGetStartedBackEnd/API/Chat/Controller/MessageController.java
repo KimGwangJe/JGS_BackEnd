@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.RequestChatDTO;
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Request.RequestChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
 import com.example.JustGetStartedBackEnd.API.Chat.RedisMessage.RedisPublisher;
 import com.example.JustGetStartedBackEnd.API.Chat.Service.ChatService;
 import jakarta.validation.Valid;

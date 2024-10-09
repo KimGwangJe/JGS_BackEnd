@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.Team.Service;
 
 import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.Response.TeamInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;

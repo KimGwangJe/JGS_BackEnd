@@ -1,8 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Community.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Response.CommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Response.CommunityInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Service.CommunityService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;

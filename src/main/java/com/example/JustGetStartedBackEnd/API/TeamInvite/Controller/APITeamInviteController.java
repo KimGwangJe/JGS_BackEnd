@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Controller;
 
-import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.CreateTeamInviteDTO;
-import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.JoinTeamDTO;
+import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.CreateTeamInviteDTO;
+import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Service.APITeamInviteService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
@@ -39,7 +39,7 @@ public class APITeamInviteController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{inviteId}")
+    @PatchMapping("/{inviteId}")
     public ResponseEntity<Void> readTeamInvite(@NotNull @Min(value=1, message="초대 ID는 1 이상이어야 됩니다.")
                                                @PathVariable(name = "inviteId") Long inviteId,
                                                @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
@@ -47,7 +47,7 @@ public class APITeamInviteController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Void> readAllTeamInvite(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         apiTeamInviteService.readAllTeamInvite(customOAuth2User.getMemberId());
         return ResponseEntity.status(HttpStatus.OK).build();

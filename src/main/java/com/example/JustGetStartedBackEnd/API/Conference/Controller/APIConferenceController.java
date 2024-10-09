@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Conference.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.UpdateWinnerDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.ConferenceInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.UpdateWinnerDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.Service.APIConferenceService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class APIConferenceController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/winner")
+    @PatchMapping("/winner")
     public ResponseEntity<Void> updateWinnerTeam(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                  @Valid @RequestBody UpdateWinnerDTO updateWinnerDTO) {
         apiConferenceService.updateWinnerTeam(customOAuth2User.getMemberId(), updateWinnerDTO);

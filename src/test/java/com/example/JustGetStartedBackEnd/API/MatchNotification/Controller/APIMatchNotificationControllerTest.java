@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Controller;
 
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchNotificationDTO;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchingDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.CreateMatchNotificationDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.MatchingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Service.APIMatchNotificationService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;

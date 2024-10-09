@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.Member.Service;
 
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberListDTO;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.Response.MemberListDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Repository.MemberRepository;

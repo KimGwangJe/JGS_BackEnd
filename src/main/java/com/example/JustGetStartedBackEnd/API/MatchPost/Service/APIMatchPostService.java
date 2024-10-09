@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.MatchPost.Service;
 
-import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.CreateMatchPostDTO;
-import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.UpdateMatchPostDTO;
+import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.Request.CreateMatchPostDTO;
+import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.Request.UpdateMatchPostDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.ExceptionType.MatchPostException;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Repository.MatchPostRepository;

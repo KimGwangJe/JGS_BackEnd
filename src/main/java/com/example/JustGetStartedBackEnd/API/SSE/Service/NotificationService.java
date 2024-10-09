@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.SSE.Service;
 
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

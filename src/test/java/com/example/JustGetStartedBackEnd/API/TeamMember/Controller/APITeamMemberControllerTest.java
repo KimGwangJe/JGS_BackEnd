@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.TeamMember.Controller;
 
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;

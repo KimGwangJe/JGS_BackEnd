@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Community.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CreateCommunityDTO;
-import com.example.JustGetStartedBackEnd.API.Community.DTO.UpdateCommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.CreateCommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.UpdateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Service.APICommunityService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;

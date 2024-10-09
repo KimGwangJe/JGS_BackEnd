@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Match.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Match.DTO.EnterScoreDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.Request.EnterScoreDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Service.APIMatchService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;

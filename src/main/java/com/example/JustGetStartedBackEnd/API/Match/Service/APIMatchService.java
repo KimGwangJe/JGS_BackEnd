@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Match.Service;
 
-import com.example.JustGetStartedBackEnd.API.Match.DTO.EnterScoreDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.Request.EnterScoreDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.ExceptionType.MatchExceptionType;
 import com.example.JustGetStartedBackEnd.API.Match.Repository.GameMatchRepository;

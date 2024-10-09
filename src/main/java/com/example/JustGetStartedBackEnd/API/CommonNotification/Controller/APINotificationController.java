@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class APINotificationController {
     private final APINotificationService notificationService;
 
-    @PutMapping("/{notificationId}")
+    @PatchMapping("/{notificationId}")
     public ResponseEntity<Void> readNotification(
             @NotNull @Min(value=1, message="읽을려는 알림의 ID는 0보다 작을 수 없습니다.")
             @PathVariable("notificationId") Long notificationId) {

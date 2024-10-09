@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatListDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatListDTO;
 import com.example.JustGetStartedBackEnd.API.Chat.Service.ChatService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.anyLong;

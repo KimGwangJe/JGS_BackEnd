@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatListDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatListDTO;
 import com.example.JustGetStartedBackEnd.API.Chat.Service.ChatService;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

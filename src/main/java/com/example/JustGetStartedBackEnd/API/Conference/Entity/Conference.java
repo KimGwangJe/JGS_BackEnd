@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Conference.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.ConferenceInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import jakarta.persistence.*;

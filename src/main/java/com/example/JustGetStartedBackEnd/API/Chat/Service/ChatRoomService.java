@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Service;
 
 import com.example.JustGetStartedBackEnd.API.Chat.DTO.ChatRoomDTO;
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ChatRoomListDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ChatRoomListDTO;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoom;
 import com.example.JustGetStartedBackEnd.API.Chat.ExceptionType.ChatRoomExceptionType;
 import com.example.JustGetStartedBackEnd.API.Chat.Repository.ChatRoomRepository;

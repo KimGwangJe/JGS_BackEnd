@@ -4,7 +4,7 @@ import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.FillReviewDTO;
+import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.Request.FillReviewDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
 import com.example.JustGetStartedBackEnd.API.TeamReview.ExceptionType.TeamReviewExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Repository.TeamReviewRepository;

@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Chat.RedisMessage;
 
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.ResponseChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

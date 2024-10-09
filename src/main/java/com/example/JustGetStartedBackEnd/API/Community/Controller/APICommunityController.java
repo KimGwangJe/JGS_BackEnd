@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Community.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CreateCommunityDTO;
-import com.example.JustGetStartedBackEnd.API.Community.DTO.UpdateCommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.CreateCommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.UpdateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Service.APICommunityService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ public class APICommunityController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Void> updateCommunityPost(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                 @Valid @RequestBody UpdateCommunityDTO updateCommunityDTO) {
         apiCommunityService.updateCommunityPost(customOAuth2User.getMemberId(), updateCommunityDTO);

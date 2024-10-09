@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamMember.Controller;
 
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.constraints.Min;

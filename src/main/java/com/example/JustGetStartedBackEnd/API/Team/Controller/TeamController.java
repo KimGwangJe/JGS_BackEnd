@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.Response.TeamInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

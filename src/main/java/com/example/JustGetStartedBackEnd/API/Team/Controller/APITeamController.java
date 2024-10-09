@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamRequestDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.Request.TeamRequestDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class APITeamController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Void> updateIntroduce(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                 @Valid @RequestBody TeamRequestDTO dto) {
         apiTeamService.updateIntroduce(customOAuth2User.getMemberId(), dto);

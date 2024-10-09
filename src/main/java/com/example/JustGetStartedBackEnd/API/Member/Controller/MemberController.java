@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Member.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberListDTO;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.Response.MemberListDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

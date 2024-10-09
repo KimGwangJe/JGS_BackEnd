@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamReview.Controller;
 
-import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.FillReviewDTO;
+import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.Request.FillReviewDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Service.APITeamReviewService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;

@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Member.Service;
 
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.UpdateMemberDTO;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.Request.UpdateMemberDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Repository.MemberRepository;

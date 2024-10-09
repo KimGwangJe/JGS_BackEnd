@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.CommonNotification.Entity;
 
-import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.NotificationDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request.NotificationDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;

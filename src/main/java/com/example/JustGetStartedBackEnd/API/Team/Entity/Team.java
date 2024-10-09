@@ -1,16 +1,16 @@
 package com.example.JustGetStartedBackEnd.API.Team.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceListDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.Response.ConferenceListDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchDTO;
-import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchListDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.Response.MatchListDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.Response.TeamInfoDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewListDTO;

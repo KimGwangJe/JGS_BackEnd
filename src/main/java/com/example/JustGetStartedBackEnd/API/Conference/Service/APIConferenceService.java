@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Conference.Service;
 
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.UpdateWinnerDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.ConferenceInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.UpdateWinnerDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Conference.ExceptionType.ConferenceExceptionType;
 import com.example.JustGetStartedBackEnd.API.Conference.Repository.ConferenceRepository;
