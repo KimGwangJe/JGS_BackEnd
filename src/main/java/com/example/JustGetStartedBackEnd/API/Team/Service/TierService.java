@@ -3,7 +3,7 @@ package com.example.JustGetStartedBackEnd.API.Team.Service;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TierExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TierRepository;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

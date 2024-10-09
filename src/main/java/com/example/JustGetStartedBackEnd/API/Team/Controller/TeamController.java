@@ -1,7 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamListPagingDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,11 @@ public class TeamController {
 
         //페이징 처리
         @GetMapping("/all")
-        public ResponseEntity<TeamListPagingDTO> getAllTeams(@RequestParam(defaultValue = "0") int page,
-                                                             @RequestParam(required = false) String keyword,
-                                                             @RequestParam(required = false) String tier
+        public ResponseEntity<PagingResponseDTO<TeamDTO>> getAllTeams(@RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(required = false) String keyword,
+                                                                      @RequestParam(required = false) String tier
                                                        ) {
-            TeamListPagingDTO teamListPagingDTO = teamService.findAll(page, SIZE, keyword, tier);
-
-            return ResponseEntity.status(HttpStatus.OK).body(teamListPagingDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(teamService.findAll(page, SIZE, keyword, tier));
         }
 
         @GetMapping("/info")

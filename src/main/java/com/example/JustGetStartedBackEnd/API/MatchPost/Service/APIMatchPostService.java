@@ -9,7 +9,7 @@ import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

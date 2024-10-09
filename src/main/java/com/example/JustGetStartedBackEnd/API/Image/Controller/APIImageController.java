@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.Image.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Image.ExceptionType.ImageExceptionType;
 import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,9 @@
 package com.example.JustGetStartedBackEnd.API.Match.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchListPagingDTO;
-import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchPagingDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -10,15 +11,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,7 +38,7 @@ class MatchControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void getAllMatch() throws Exception {
-        MatchListPagingDTO matchListPagingDTO = makeMatchListPagingDTO();
+        PagingResponseDTO<MatchInfoDTO> matchListPagingDTO = makeMatchListPagingDTO();
 
         given(matchService.findAll(anyInt(), anyInt(), anyString(), anyString())).willReturn(matchListPagingDTO);
 
@@ -52,18 +55,11 @@ class MatchControllerTest {
                 .andExpect(content().json(jsonString));
     }
 
-    private MatchListPagingDTO makeMatchListPagingDTO(){
-        MatchListPagingDTO matchListPagingDTO = new MatchListPagingDTO();
-        MatchPagingDTO matchPagingDTO = new MatchPagingDTO();
-        ArrayList<MatchPagingDTO> matchDTOArrayList = new ArrayList<>();
-        matchDTOArrayList.add(matchPagingDTO);
-        matchListPagingDTO.setTotalPages(0);
-        matchListPagingDTO.setTotalElements(0);
-        matchListPagingDTO.setLast(false);
-        matchListPagingDTO.setMatchListDTOList(matchDTOArrayList);
-        matchListPagingDTO.setPageNo(0);
-        matchListPagingDTO.setPageSize(10);
-
-        return matchListPagingDTO;
+    private PagingResponseDTO<MatchInfoDTO> makeMatchListPagingDTO(){
+        MatchInfoDTO matchInfoDTO = new MatchInfoDTO();
+        ArrayList<MatchInfoDTO> matchDTOArrayList = new ArrayList<>();
+        matchDTOArrayList.add(matchInfoDTO);
+        Page<GameMatch> matchPage = new PageImpl<>(new ArrayList<>());
+        return new PagingResponseDTO<>(matchPage, matchDTOArrayList);
     }
 }

@@ -2,10 +2,11 @@ package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceListDTO;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchListDTO;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamListPagingDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TierDTO;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewListDTO;
@@ -16,10 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -42,7 +44,7 @@ class TeamControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void getAllTeams() throws Exception{
-        TeamListPagingDTO teamListPagingDTO = makeTeamListPagingDTO();
+        PagingResponseDTO<TeamDTO> teamListPagingDTO = makeTeamListPagingDTO();
 
         given(teamService.findAll(anyInt(), anyInt(), anyString(), anyString())).willReturn(teamListPagingDTO);
 
@@ -78,8 +80,7 @@ class TeamControllerTest {
                 .andExpect(content().json(jsonString));
     }
 
-    private TeamListPagingDTO makeTeamListPagingDTO(){
-        TeamListPagingDTO teamListPagingDTO = new TeamListPagingDTO();
+    private PagingResponseDTO<TeamDTO> makeTeamListPagingDTO(){
         ArrayList<TeamDTO> teamDTOS = new ArrayList<>();
         TeamDTO teamDTO = new TeamDTO();
         teamDTO.setTeamName("mir");
@@ -88,7 +89,11 @@ class TeamControllerTest {
         teamDTO.setTierPoint(0);
         teamDTOS.add(teamDTO);
 
-        teamListPagingDTO.setTeamInfoList(teamDTOS);
+        Page<Team> teamPage = new PageImpl<>(new ArrayList<>());
+
+        PagingResponseDTO<TeamDTO> teamListPagingDTO = new PagingResponseDTO(teamPage, teamDTOS);
+
+        teamListPagingDTO.setContent(teamDTOS);
         teamListPagingDTO.setPageNo(0);
         teamListPagingDTO.setPageSize(0);
         teamListPagingDTO.setTotalPages(0);

@@ -1,7 +1,6 @@
 package com.example.JustGetStartedBackEnd.Config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -12,11 +11,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker //웹소켓 활성화
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-    @Value("${redis.host}")
-    private String redisHost;
-    @Value("${redis.port}")
-    private int redisPort;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {

@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Notification.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum NotificationExceptionType implements ExceptionType {
     NOTIFICATION_NOT_FOUND(404, "해당 알림을 찾는데 실패하였습니다."),

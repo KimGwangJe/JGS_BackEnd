@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.JWT;
 
-import com.example.JustGetStartedBackEnd.Member.DTO.MemberDTO;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

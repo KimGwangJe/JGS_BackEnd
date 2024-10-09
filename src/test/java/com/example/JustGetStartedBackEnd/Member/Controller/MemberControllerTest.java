@@ -1,9 +1,10 @@
 package com.example.JustGetStartedBackEnd.Member.Controller;
 
-import com.example.JustGetStartedBackEnd.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.Member.DTO.MemberListDTO;
-import com.example.JustGetStartedBackEnd.Member.Entity.MemberRole;
-import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
+import com.example.JustGetStartedBackEnd.API.Member.Controller.MemberController;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberListDTO;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.MemberRole;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

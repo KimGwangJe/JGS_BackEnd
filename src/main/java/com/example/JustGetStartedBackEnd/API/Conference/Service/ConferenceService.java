@@ -1,9 +1,9 @@
 package com.example.JustGetStartedBackEnd.API.Conference.Service;
 
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferencePagingDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Conference.Repository.ConferenceRepository;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +20,7 @@ public class ConferenceService {
     private final ConferenceRepository conferenceRepository;
 
     @Transactional(readOnly = true)
-    public ConferencePagingDTO getConferenceList(int page, int size, String keyword){
+    public PagingResponseDTO<ConferenceDTO> getConferenceList(int page, int size, String keyword){
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Conference> conferencePage = (keyword == null || keyword.isEmpty())
@@ -31,14 +31,6 @@ public class ConferenceService {
                 .map(Conference::toConferenceDTO)
                 .collect(Collectors.toList());
 
-        ConferencePagingDTO pagingDTO = new ConferencePagingDTO();
-        pagingDTO.setConferenceDTOList(conferenceDTOList);
-        pagingDTO.setPageNo(conferencePage.getNumber());
-        pagingDTO.setPageSize(conferencePage.getSize());
-        pagingDTO.setTotalElements(conferencePage.getTotalElements());
-        pagingDTO.setTotalPages(conferencePage.getTotalPages());
-        pagingDTO.setLast(conferencePage.isLast());
-
-        return pagingDTO;
+        return new PagingResponseDTO<>(conferencePage, conferenceDTOList);
     }
 }

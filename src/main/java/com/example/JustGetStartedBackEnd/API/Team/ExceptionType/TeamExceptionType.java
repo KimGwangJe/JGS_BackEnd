@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Team.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum TeamExceptionType implements ExceptionType {
     TEAM_SAVE_ERROR(400, "팀을 생성하는데 실패하였습니다."),

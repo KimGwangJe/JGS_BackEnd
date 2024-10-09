@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum TeamInviteExceptionType implements ExceptionType {
     TEAM_INVITE_NOT_FOUND(404, "초대 알림을 찾는데 실패하였습니다."),

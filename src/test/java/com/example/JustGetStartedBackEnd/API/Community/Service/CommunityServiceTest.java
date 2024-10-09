@@ -1,12 +1,13 @@
 package com.example.JustGetStartedBackEnd.API.Community.Service;
 
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityListPageDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,10 +56,10 @@ class CommunityServiceTest {
     void findAll_With_Keyword() {
         when(communityRepository.findByTeamNameAndTitle(anyString(), any(Pageable.class))).thenReturn(communityPage);
 
-        CommunityListPageDTO result = communityService.findAll(0,10, "keyword");
+        PagingResponseDTO<CommunityDTO> result = communityService.findAll(0,10, "keyword");
 
         assertNotNull(result);
-        assertEquals(1, result.getCommunityDTOList().size());
+        assertEquals(1, result.getContent().size());
         verify(communityRepository, times(1)).findByTeamNameAndTitle(anyString(), any(Pageable.class));
     }
 
@@ -67,10 +68,10 @@ class CommunityServiceTest {
     void findAll_WithOut_any_keyword() {
         when(communityRepository.findAll(any(Pageable.class))).thenReturn(communityPage);
 
-        CommunityListPageDTO result = communityService.findAll(0,10, "");
+        PagingResponseDTO<CommunityDTO> result = communityService.findAll(0,10, "");
 
         assertNotNull(result);
-        assertEquals(1, result.getCommunityDTOList().size());
+        assertEquals(1, result.getContent().size());
         verify(communityRepository, times(1)).findAll(any(Pageable.class));
     }
 

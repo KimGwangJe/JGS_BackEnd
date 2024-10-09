@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Image.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum ImageExceptionType implements ExceptionType {
     IMAGE_SAVE_ERROR(400, "이미지를 저장하는데 실패하였습니다."),

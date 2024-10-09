@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum TeamJoinExceptionType implements ExceptionType {
     TEAM_JOIN_NOT_FOUND(404, "팀 가입 요청을 찾을 수 없습니다."),

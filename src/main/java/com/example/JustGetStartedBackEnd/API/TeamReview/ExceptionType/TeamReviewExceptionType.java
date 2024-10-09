@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamReview.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum TeamReviewExceptionType implements ExceptionType {
     TEAM_REVIEW_INVALID_DATE_ERROR(400, "팀 리뷰를 작성하기 위해서는 매치가 이미 진행된 상태여야 됩니다."),

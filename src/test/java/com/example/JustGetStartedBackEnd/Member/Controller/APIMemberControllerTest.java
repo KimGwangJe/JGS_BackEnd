@@ -1,7 +1,8 @@
 package com.example.JustGetStartedBackEnd.Member.Controller;
 
-import com.example.JustGetStartedBackEnd.Member.DTO.UpdateMemberDTO;
-import com.example.JustGetStartedBackEnd.Member.Service.APIMemberService;
+import com.example.JustGetStartedBackEnd.API.Member.Controller.APIMemberController;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.UpdateMemberDTO;
+import com.example.JustGetStartedBackEnd.API.Member.Service.APIMemberService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

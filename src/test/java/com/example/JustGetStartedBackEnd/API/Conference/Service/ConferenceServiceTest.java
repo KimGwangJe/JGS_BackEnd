@@ -1,10 +1,11 @@
 package com.example.JustGetStartedBackEnd.API.Conference.Service;
 
-import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferencePagingDTO;
+import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Conference.Repository.ConferenceRepository;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
-import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,10 +52,10 @@ class ConferenceServiceTest {
     void findAll_With_Keyword() {
         when(conferenceRepository.findByConferenceNameKeyword(anyString(), any(Pageable.class))).thenReturn(conferencePage);
 
-        ConferencePagingDTO result = conferenceService.getConferenceList(0,10, "keyword");
+        PagingResponseDTO<ConferenceDTO> result = conferenceService.getConferenceList(0,10, "keyword");
 
         assertNotNull(result);
-        assertEquals(1, result.getConferenceDTOList().size());
+        assertEquals(1, result.getContent().size());
         verify(conferenceRepository, times(1)).findByConferenceNameKeyword(anyString(), any(Pageable.class));
     }
 
@@ -63,10 +64,10 @@ class ConferenceServiceTest {
     void findAll_WithOut_any_keyword_And_Tier() {
         when(conferenceRepository.findAll(any(Pageable.class))).thenReturn(conferencePage);
 
-        ConferencePagingDTO result = conferenceService.getConferenceList(0,10, "");
+        PagingResponseDTO<ConferenceDTO> result = conferenceService.getConferenceList(0,10, "");
 
         assertNotNull(result);
-        assertEquals(1, result.getConferenceDTOList().size());
+        assertEquals(1, result.getContent().size());
         verify(conferenceRepository, times(1)).findAll(any(Pageable.class));
     }
 }

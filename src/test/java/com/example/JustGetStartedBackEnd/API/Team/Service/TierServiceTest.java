@@ -3,7 +3,7 @@ package com.example.JustGetStartedBackEnd.API.Team.Service;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TierExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TierRepository;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

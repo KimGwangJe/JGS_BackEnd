@@ -8,7 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
-import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

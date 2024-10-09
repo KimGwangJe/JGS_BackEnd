@@ -8,7 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Image.Entity.Image;
 import com.example.JustGetStartedBackEnd.API.Image.ExceptionType.ImageExceptionType;
 import com.example.JustGetStartedBackEnd.API.Image.Repository.ImageRepository;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

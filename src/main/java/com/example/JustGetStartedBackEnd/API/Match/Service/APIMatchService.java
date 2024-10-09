@@ -8,8 +8,8 @@ import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchDT
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.Member.ExceptionType.MemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum TeamMemberExceptionType implements ExceptionType {
     TEAM_MEMBER_NOT_FOUND(404, "존재하지 않는 팀 멤버 ID입니다."),

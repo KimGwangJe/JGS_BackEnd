@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Conference.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum ConferenceExceptionType implements ExceptionType {
     CONFERENCE_NOT_FOUND(404, "존재하지 않는 대회 이름입니다."),

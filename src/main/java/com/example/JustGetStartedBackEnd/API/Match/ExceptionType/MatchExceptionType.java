@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Match.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum MatchExceptionType implements ExceptionType {
     MATCH_ALREADY_FILLED_OUT(400, "이미 점수가 기입된 매치입니다."),

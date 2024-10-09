@@ -5,8 +5,8 @@ import com.example.JustGetStartedBackEnd.API.Notification.DTO.NotificationListDT
 import com.example.JustGetStartedBackEnd.API.Notification.Entity.Notification;
 import com.example.JustGetStartedBackEnd.API.Notification.ExceptionType.NotificationExceptionType;
 import com.example.JustGetStartedBackEnd.API.Notification.Repository.NotificationRepository;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.Member.Service.MemberService;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

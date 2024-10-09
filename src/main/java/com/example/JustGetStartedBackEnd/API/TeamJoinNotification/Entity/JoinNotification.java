@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
-import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

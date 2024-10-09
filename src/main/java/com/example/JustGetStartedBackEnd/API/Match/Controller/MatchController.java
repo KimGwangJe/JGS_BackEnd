@@ -1,7 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Match.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchListPagingDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,9 @@ public class MatchController {
     private final int SIZE = 20;
 
     @GetMapping
-    public ResponseEntity<MatchListPagingDTO> getAllMatch(@RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(required = false) String keyword,
-                                                          @RequestParam(required = false) String tier){
-        MatchListPagingDTO matchListPagingDTO = matchService.findAll(page, SIZE, keyword, tier);
-        return ResponseEntity.status(HttpStatus.OK).body(matchListPagingDTO);
+    public ResponseEntity<PagingResponseDTO<MatchInfoDTO>> getAllMatch(@RequestParam(defaultValue = "0") int page,
+                                                                       @RequestParam(required = false) String keyword,
+                                                                       @RequestParam(required = false) String tier){
+        return ResponseEntity.status(HttpStatus.OK).body(matchService.findAll(page, SIZE, keyword, tier));
     }
 }

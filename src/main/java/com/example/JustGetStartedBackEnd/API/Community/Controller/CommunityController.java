@@ -1,8 +1,9 @@
 package com.example.JustGetStartedBackEnd.API.Community.Controller;
 
+import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityListPageDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Service.CommunityService;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ public class CommunityController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<CommunityListPageDTO> getCommunityList(@RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(required = false) String keyword){
+    public ResponseEntity<PagingResponseDTO<CommunityDTO>> getCommunityList(@RequestParam(defaultValue = "0") int page,
+                                                                            @RequestParam(required = false) String keyword){
         return ResponseEntity.status(HttpStatus.OK).body(communityService.findAll(page, SIZE, keyword));
     }
 }

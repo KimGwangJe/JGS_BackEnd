@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.TeamMember.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
-import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

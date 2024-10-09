@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Team.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum TierExceptionType implements ExceptionType {
     INVALID_TIER_ID(404, "존재하지 않는 티어 ID입니다."),

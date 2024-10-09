@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Chat.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum ChatRoomExceptionType implements ExceptionType {
     CHAT_ROOM_NOT_FOUND_ERROR(400, "해당 채팅방을 조회하는데 실패하였습니다."),

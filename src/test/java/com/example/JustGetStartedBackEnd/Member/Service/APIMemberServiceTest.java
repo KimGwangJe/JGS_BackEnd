@@ -1,10 +1,11 @@
 package com.example.JustGetStartedBackEnd.Member.Service;
 
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.Member.DTO.UpdateMemberDTO;
-import com.example.JustGetStartedBackEnd.Member.Entity.Member;
-import com.example.JustGetStartedBackEnd.Member.Entity.MemberRole;
-import com.example.JustGetStartedBackEnd.Member.Repository.MemberRepository;
+import com.example.JustGetStartedBackEnd.API.Member.Service.APIMemberService;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.UpdateMemberDTO;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.MemberRole;
+import com.example.JustGetStartedBackEnd.API.Member.Repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

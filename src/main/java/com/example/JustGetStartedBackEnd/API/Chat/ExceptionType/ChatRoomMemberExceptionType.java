@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Chat.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum ChatRoomMemberExceptionType implements ExceptionType {
     CHAT_ROOM_MEMBER_FOUND_ERROR(404, "채팅 멤버를 찾는데 실패 하였습니다."),

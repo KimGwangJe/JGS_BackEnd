@@ -1,13 +1,13 @@
 package com.example.JustGetStartedBackEnd.API.Team.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamListPagingDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,7 +28,7 @@ public class TeamService {
     private final TierService tierService;
 
     @Transactional(readOnly = true)
-    public TeamListPagingDTO findAll(int page, int size, String keyword, String tier) {
+    public PagingResponseDTO<TeamDTO> findAll(int page, int size, String keyword, String tier) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Team> teamPage;
 
@@ -48,20 +48,11 @@ public class TeamService {
             teamPage = teamRepository.findByTierAndKeyword(tierEntity.getTierId(), keyword, pageable);
         }
 
-
         List<TeamDTO> teamDTOs = teamPage.getContent().stream()
                 .map(Team::toTeamDTO)
                 .collect(Collectors.toList());
 
-        TeamListPagingDTO teamListPagingDTO = new TeamListPagingDTO();
-        teamListPagingDTO.setTeamInfoList(teamDTOs);
-        teamListPagingDTO.setPageNo(teamPage.getNumber());
-        teamListPagingDTO.setPageSize(teamPage.getSize());
-        teamListPagingDTO.setTotalElements(teamPage.getTotalElements());
-        teamListPagingDTO.setTotalPages(teamPage.getTotalPages());
-        teamListPagingDTO.setLast(teamPage.isLast());
-
-        return teamListPagingDTO;
+        return new PagingResponseDTO<>(teamPage, teamDTOs);
     }
 
     @Transactional(readOnly = true)
@@ -69,20 +60,14 @@ public class TeamService {
             cacheManager = "cacheManager")
     public TeamInfoDTO findByTeamName(String teamName) {
         Team team = teamRepository.findByTeamName(teamName);
-        if(team == null){
-            log.warn("Team Not Found : {}", teamName);
-            throw new BusinessLogicException(TeamExceptionType.TEAM_NOT_FOUND);
-        }
+        validateTeamExists(team, teamName);
         return team.toTeamInfoDTO();
     }
 
     @Transactional(readOnly = true)
     public Team findByTeamNameReturnEntity(String teamName) {
         Team team = teamRepository.findByTeamName(teamName);
-        if(team == null){
-            log.warn("Team Not Found : {}", teamName);
-            throw new BusinessLogicException(TeamExceptionType.TEAM_NOT_FOUND);
-        }
+        validateTeamExists(team, teamName);
         return team;
     }
 
@@ -95,4 +80,12 @@ public class TeamService {
             throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
         }
     }
+
+    private void validateTeamExists(Team team, String teamName) {
+        if (team == null) {
+            log.warn("Team Not Found : {}", teamName);
+            throw new BusinessLogicException(TeamExceptionType.TEAM_NOT_FOUND);
+        }
+    }
+
 }

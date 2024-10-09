@@ -5,7 +5,7 @@ import com.example.JustGetStartedBackEnd.API.Community.DTO.CommunityInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Image.Entity.Image;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
-import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

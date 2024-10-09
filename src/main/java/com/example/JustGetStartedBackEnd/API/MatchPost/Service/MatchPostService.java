@@ -1,13 +1,13 @@
 package com.example.JustGetStartedBackEnd.API.MatchPost.Service;
 
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.MatchPostDTO;
-import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.MatchPostPagingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.ExceptionType.MatchPostException;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Repository.MatchPostRepository;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
-import com.example.JustGetStartedBackEnd.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +24,7 @@ public class MatchPostService {
     private final TierService tierService;
 
     @Transactional(readOnly = true)
-    public MatchPostPagingDTO getMatchPostList(int page, int size, String keyword, String tier){
+    public PagingResponseDTO<MatchPostDTO> getMatchPostList(int page, int size, String keyword, String tier){
         Pageable pageable = PageRequest.of(page,size);
         Page<MatchPost> matchPost;
 
@@ -44,15 +44,7 @@ public class MatchPostService {
                 .map(MatchPost::toMatchPostDTO)
                 .toList();
 
-        MatchPostPagingDTO matchPostPagingDTO = new MatchPostPagingDTO();
-        matchPostPagingDTO.setMatchPostDTOList(matchDTOs);
-        matchPostPagingDTO.setPageNo(matchPost.getNumber());
-        matchPostPagingDTO.setPageSize(matchPost.getSize());
-        matchPostPagingDTO.setTotalElements(matchPost.getTotalElements());
-        matchPostPagingDTO.setTotalPages(matchPost.getTotalPages());
-        matchPostPagingDTO.setLast(matchPost.isLast());
-
-        return matchPostPagingDTO;
+        return new PagingResponseDTO<>(matchPost, matchDTOs);
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum MatchNotificationExceptionType implements ExceptionType {
     MATCH_NOTIFICATION_INVALID_DATE(400, "이미 종료된 매치입니다."),

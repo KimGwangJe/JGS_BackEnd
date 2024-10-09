@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.TestCustomOAuth2User;
 
-import com.example.JustGetStartedBackEnd.Member.DTO.MemberDTO;
+import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

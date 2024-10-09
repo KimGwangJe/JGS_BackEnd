@@ -1,10 +1,10 @@
 package com.example.JustGetStartedBackEnd.API.Match.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchDTO;
-import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchPagingDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TierDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
-import com.example.JustGetStartedBackEnd.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,8 +72,8 @@ public class GameMatch {
         return dto;
     }
 
-    public MatchPagingDTO toMatchPagingDTO() {
-        MatchPagingDTO dto = new MatchPagingDTO();
+    public MatchInfoDTO toMatchPagingDTO() {
+        MatchInfoDTO dto = new MatchInfoDTO();
         dto.setMatchId(this.matchId);
         dto.setMatchDate(this.matchDate);
         dto.setTeamA(this.teamA.getTeamName());

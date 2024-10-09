@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Chat.ExceptionType;
 
-import com.example.JustGetStartedBackEnd.Exception.ExceptionType;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 
 public enum ChatExceptionType implements ExceptionType {
     CHAT_SAVE_ERROR(400, "채팅을 저장하는데 실패하였습니다.");

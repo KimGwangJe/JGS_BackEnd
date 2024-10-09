@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @Setter
 public class ConferenceListDTO {
-    List<ConferenceDTO> conferenceDTOList;
+    private List<ConferenceDTO> conferenceDTOList;
 }
