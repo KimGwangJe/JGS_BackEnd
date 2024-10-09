@@ -6,8 +6,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateTeamDTO {
-    @NotBlank
+public class TeamRequestDTO {
+
+    @NotBlank(message = "팀명은 비어 있을 수 없습니다.")
     private String teamName;
+
     private String introduce;
+
 }

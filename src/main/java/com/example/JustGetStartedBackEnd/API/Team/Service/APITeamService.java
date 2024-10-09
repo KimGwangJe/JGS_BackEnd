@@ -1,7 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Team.Service;
 
-import com.example.JustGetStartedBackEnd.API.Team.DTO.CreateTeamDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.UpdateIntroduceDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamRequestDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
@@ -30,17 +29,17 @@ public class APITeamService {
     private final APITeamMemberService apiTeamMemberService;
 
     @Transactional(rollbackFor = Exception.class)
-    public void makeTeam(Long memberId, CreateTeamDTO createTeamDTO){
+    public void makeTeam(Long memberId, TeamRequestDTO dto){
         Member member = memberService.findByIdReturnEntity(memberId);
-        Team team = teamRepository.findByTeamName(createTeamDTO.getTeamName());
+        Team team = teamRepository.findByTeamName(dto.getTeamName());
         if(team != null){
             throw new BusinessLogicException(TeamExceptionType.DUPLICATION_TEAM_NAME);
         }
         Team newTeam = Team.builder()
-                .teamName(createTeamDTO.getTeamName())
+                .teamName(dto.getTeamName())
                 .tier(Tier.builder().tierId(1L).tierName("Bronze").build())
                 .createDate(new Date())
-                .introduce(createTeamDTO.getIntroduce())
+                .introduce(dto.getIntroduce())
                 .tierPoint(0)
                 .lastMatchDate(null)
                 .build();
@@ -55,14 +54,14 @@ public class APITeamService {
 
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "teamInfoCache", key = "'team/' + #updateIntroduceDTO.teamName", cacheManager = "cacheManager")
-    public void updateIntroduce(Long memberId, UpdateIntroduceDTO updateIntroduceDTO){
+    public void updateIntroduce(Long memberId, TeamRequestDTO dto){
         Member member = memberService.findByIdReturnEntity(memberId);
 
         for(TeamMember teamMember : member.getTeamMembers()){
             // 받아온 팀명과 같고 그 팀의 리더여야됨
-            if(teamMember.getTeam().getTeamName().equals(updateIntroduceDTO.getTeamName())
+            if(teamMember.getTeam().getTeamName().equals(dto.getTeamName())
                     && teamMember.getRole().equals(TeamMemberRole.Leader)){
-                teamMember.getTeam().updateIntroduce(updateIntroduceDTO.getIntroduce());
+                teamMember.getTeam().updateIntroduce(dto.getIntroduce());
                 return;
             }
         }

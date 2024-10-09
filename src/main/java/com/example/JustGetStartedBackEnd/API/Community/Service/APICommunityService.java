@@ -36,7 +36,7 @@ public class APICommunityService {
         Member member = memberService.findByIdReturnEntity(memberId);
         Community community;
 
-        if (!createCommunityDTO.getTeamName().isEmpty()) {
+        if (createCommunityDTO.getTeamName() != null && !createCommunityDTO.getTeamName().isBlank()) {
             Team team = teamService.findByTeamNameReturnEntity(createCommunityDTO.getTeamName());
 
             boolean isLeader = apiTeamMemberService.isLeader(team, memberId);

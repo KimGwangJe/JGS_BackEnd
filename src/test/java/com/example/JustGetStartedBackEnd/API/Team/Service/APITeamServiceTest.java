@@ -1,7 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Team.Service;
 
-import com.example.JustGetStartedBackEnd.API.Team.DTO.CreateTeamDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.UpdateIntroduceDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamRequestDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
@@ -49,12 +48,12 @@ class APITeamServiceTest {
 
         when(teamRepository.findByTeamName(anyString())).thenReturn(new Team());
 
-        CreateTeamDTO createTeamDTO = new CreateTeamDTO();
-        createTeamDTO.setTeamName("mir");
-        createTeamDTO.setIntroduce("introduce");
+        TeamRequestDTO dto = new TeamRequestDTO();
+        dto.setTeamName("mir");
+        dto.setIntroduce("introduce");
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
-                () -> apiTeamService.makeTeam(1L, createTeamDTO));
+                () -> apiTeamService.makeTeam(1L, dto));
 
         assertEquals(TeamExceptionType.DUPLICATION_TEAM_NAME, exception.getExceptionType());
     }
@@ -66,11 +65,11 @@ class APITeamServiceTest {
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
         when(teamRepository.findByTeamName(anyString())).thenReturn(null);
 
-        CreateTeamDTO createTeamDTO = new CreateTeamDTO();
-        createTeamDTO.setTeamName("mir");
-        createTeamDTO.setIntroduce("introduce");
+        TeamRequestDTO dto = new TeamRequestDTO();
+        dto.setTeamName("mir");
+        dto.setIntroduce("introduce");
 
-        apiTeamService.makeTeam(anyLong(), createTeamDTO);
+        apiTeamService.makeTeam(anyLong(), dto);
 
         verify(teamRepository, times(1)).save(any(Team.class));
         verify(apiTeamMemberService, times(1)).createLeaderTeamMember(eq(member), any(Team.class));
@@ -92,11 +91,11 @@ class APITeamServiceTest {
         teamMembers.add(teamMember);
         when(member.getTeamMembers()).thenReturn(teamMembers);
 
-        UpdateIntroduceDTO updateIntroduceDTO = new UpdateIntroduceDTO();
-        updateIntroduceDTO.setTeamName("mir");
-        updateIntroduceDTO.setIntroduce("introduce");
+        TeamRequestDTO dto = new TeamRequestDTO();
+        dto.setTeamName("mir");
+        dto.setIntroduce("introduce");
 
-        apiTeamService.updateIntroduce(1L, updateIntroduceDTO);
+        apiTeamService.updateIntroduce(1L, dto);
 
         verify(team, times(1)).updateIntroduce("introduce");
     }

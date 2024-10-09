@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.DTO;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,8 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JoinTeamDTO {
-    @NotNull
+
+    @NotNull(message = "초대 알림 ID는 비어 있을 수 없습니다.")
+    @Min(value = 1, message = "초대 알림 ID는 1보다 커야됩니다.")
     private Long inviteId;
-    @NotNull
+
+    @NotNull(message = "isJoin은 null일 수 없습니다.")
     private Boolean isJoin;
+
 }

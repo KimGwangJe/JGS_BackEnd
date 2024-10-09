@@ -1,7 +1,5 @@
 package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Team.DTO.CreateTeamDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.UpdateIntroduceDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;

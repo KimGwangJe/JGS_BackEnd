@@ -6,15 +6,19 @@ import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Service.APIMatchNotificationService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/match-notification")
 @RequiredArgsConstructor
+@Validated
 public class APIMatchNotificationController {
     private final APIMatchNotificationService apiMatchNotificationService;
 
@@ -43,6 +47,7 @@ public class APIMatchNotificationController {
 
     @PutMapping("/{matchNotificationId}")
     public ResponseEntity<Void> updateMatchNotification(
+            @NotNull @Min(value = 1, message = "매치 알림 ID는 1 이상이어야 됩니다.")
             @PathVariable("matchNotificationId")Long matchNotificationId){
         apiMatchNotificationService.updateRead(matchNotificationId);
         return ResponseEntity.status(HttpStatus.OK).build();

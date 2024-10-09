@@ -1,6 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Common.Exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,8 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,15 +26,35 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(final MethodArgumentNotValidException e) {
-        Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach((error) -> {
-            String fieldName = error.getField();
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(final MethodArgumentNotValidException e) {
+        List<String> errorMessages = new ArrayList<>();
+
+        // 필드 오류를 반복하며 메시지를 수집
+        e.getBindingResult().getFieldErrors().forEach(error -> {
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+            errorMessages.add(errorMessage);
         });
+
+        String combinedErrorMessage = String.join(", ", errorMessages);
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(errors);
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), combinedErrorMessage));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        List<String> errorMessages = new ArrayList<>();
+
+        // ConstraintViolation 목록을 반복하며 오류 메시지를 수집
+        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+            String errorMessage = violation.getMessage();
+            errorMessages.add(errorMessage);
+        }
+
+        String combinedErrorMessage = String.join(", ", errorMessages);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), combinedErrorMessage));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

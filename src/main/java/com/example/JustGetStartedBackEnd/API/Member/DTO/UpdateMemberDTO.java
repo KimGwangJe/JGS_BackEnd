@@ -7,9 +7,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateMemberDTO {
-    @NotBlank
+
+    @NotBlank(message = "회원의 이름은 비어 있을 수 없습니다.")
     private String name;
-    @NotBlank
+
+    @NotBlank(message = "회원의 프로필 이미지는 비어 있을 수 없습니다.")
     private String profileImage;
+
     private String introduce;
+
 }
