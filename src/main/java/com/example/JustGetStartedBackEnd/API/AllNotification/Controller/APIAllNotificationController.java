@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/notification/all")
+@RequestMapping("/api/notification")
 public class APIAllNotificationController {
     private final APIAllNotificationService apiAllNotificationService;
 
     @GetMapping
-    public ResponseEntity<AllNotificationDTO> getAllNotification(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
+    public ResponseEntity<AllNotificationDTO> getAllNotification(
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(apiAllNotificationService.getAllNotificationDTO(customOAuth2User.getMemberId()));
     }

@@ -20,7 +20,7 @@ public class TeamController {
         private final int SIZE = 10;
 
         //페이징 처리
-        @GetMapping("/all")
+        @GetMapping
         public ResponseEntity<PagingResponseDTO<TeamDTO>> getAllTeams(@RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(required = false) String keyword,
                                                                       @RequestParam(required = false) String tier

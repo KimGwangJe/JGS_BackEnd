@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.AllNotification.Service;
 
 import com.example.JustGetStartedBackEnd.API.AllNotification.DTO.AllNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Service.APIMatchNotificationService;
-import com.example.JustGetStartedBackEnd.API.Notification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Service.APITeamInviteService;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service.APITeamJoinService;
 import lombok.RequiredArgsConstructor;

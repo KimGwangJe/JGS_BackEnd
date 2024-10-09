@@ -74,8 +74,7 @@ class APITeamInviteControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void readTeamInvite() throws Exception {
-        mockMvc.perform(put("/api/team-invite")
-                        .param("inviteId","1")
+        mockMvc.perform(put("/api/team-invite/1")
                         .with(csrf())
                         .contentType("application/json"))
                 .andExpect(status().isOk());
@@ -85,7 +84,7 @@ class APITeamInviteControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void readAllTeamInvite() throws Exception{
-        mockMvc.perform(put("/api/team-invite/read-all")
+        mockMvc.perform(put("/api/team-invite")
                         .with(csrf())
                         .contentType("application/json"))
                 .andExpect(status().isOk());

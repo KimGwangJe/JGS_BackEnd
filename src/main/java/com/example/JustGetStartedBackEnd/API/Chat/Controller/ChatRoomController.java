@@ -16,13 +16,16 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     @GetMapping
-    public ResponseEntity<ChatRoomListDTO> getChatRoom(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
-        return ResponseEntity.status(HttpStatus.OK).body(chatRoomService.getChatRoom(customOAuth2User.getMemberId()));
+    public ResponseEntity<ChatRoomListDTO> getChatRoom(
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(chatRoomService.getChatRoom(customOAuth2User.getMemberId()));
     }
 
     @PostMapping
     public ResponseEntity<Long> createChatRoom(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                @RequestParam("guestId") Long guestId){
-        return ResponseEntity.status(HttpStatus.OK).body(chatRoomService.createChatRoom(customOAuth2User.getMemberId(), guestId));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(chatRoomService.createChatRoom(customOAuth2User.getMemberId(), guestId));
     }
 }

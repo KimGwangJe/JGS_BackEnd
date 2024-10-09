@@ -4,8 +4,8 @@ import com.example.JustGetStartedBackEnd.API.AllNotification.DTO.AllNotification
 import com.example.JustGetStartedBackEnd.API.AllNotification.Service.APIAllNotificationService;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationListDTO;
-import com.example.JustGetStartedBackEnd.API.Notification.DTO.NotificationDTO;
-import com.example.JustGetStartedBackEnd.API.Notification.DTO.NotificationListDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.NotificationDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.NotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteInfoDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
@@ -51,7 +51,7 @@ class APIAllNotificationControllerTest {
 
         when(apiAllNotificationService.getAllNotificationDTO(any())).thenReturn(allNotificationDTO);
 
-        mockMvc.perform(get("/api/notification/all")
+        mockMvc.perform(get("/api/notification")
                         .with(csrf())
                         .contentType("application/json"))
                 .andExpect(status().isOk())

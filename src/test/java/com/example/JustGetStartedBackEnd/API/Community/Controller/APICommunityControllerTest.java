@@ -75,10 +75,9 @@ class APICommunityControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void deleteCommunityPost() throws Exception{
-        mockMvc.perform(delete("/api/community")
+        mockMvc.perform(delete("/api/community/1")
                         .contentType("application/json")
                         .with(csrf())
-                        .param("communityId","1")
                 )
                 .andExpect(status().isOk());
     }

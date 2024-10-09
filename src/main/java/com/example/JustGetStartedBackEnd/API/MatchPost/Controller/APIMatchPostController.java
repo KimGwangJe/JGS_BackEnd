@@ -31,9 +31,9 @@ public class APIMatchPostController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{matchPostId}")
     public ResponseEntity<Void> deleteMatchPost(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                @RequestParam("matchPostId") Long matchPostId){
+                                                @PathVariable("matchPostId") Long matchPostId){
         apiMatchPostService.deleteMatchPost(customOAuth2User.getMemberId(), matchPostId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

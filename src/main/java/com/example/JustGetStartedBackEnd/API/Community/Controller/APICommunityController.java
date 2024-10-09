@@ -31,9 +31,9 @@ public class APICommunityController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{communityId}")
     public ResponseEntity<Void> deleteCommunityPost(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                    @RequestParam("communityId") Long communityId) {
+                                                    @PathVariable("communityId") Long communityId) {
         apiCommunityService.deleteCommunityPost(customOAuth2User.getMemberId(), communityId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

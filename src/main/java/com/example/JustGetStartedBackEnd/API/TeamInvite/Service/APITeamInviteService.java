@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Service;
 
-import com.example.JustGetStartedBackEnd.API.Notification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.CreateTeamInviteDTO;

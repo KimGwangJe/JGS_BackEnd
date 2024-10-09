@@ -70,9 +70,8 @@ class APIMatchPostControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void deleteMatchPost() throws Exception {
-        mockMvc.perform(delete("/api/match-post")
+        mockMvc.perform(delete("/api/match-post/1")
                         .with(csrf())
-                        .param("matchPostId","1")
                         .contentType("application/json"))
                 .andExpect(status().isOk());
     }

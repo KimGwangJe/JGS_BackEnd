@@ -6,10 +6,7 @@ import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/member")
@@ -25,8 +22,8 @@ public class MemberController {
         return ResponseEntity.ok(memberListDTO);
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<MemberDTO> getMember(@RequestParam("memberId") Long memberId){
+    @GetMapping("/info/{memberId}")
+    public ResponseEntity<MemberDTO> getMember(@PathVariable("memberId") Long memberId){
         return ResponseEntity.status(HttpStatus.OK).body(memberService.findById(memberId));
     }
 }

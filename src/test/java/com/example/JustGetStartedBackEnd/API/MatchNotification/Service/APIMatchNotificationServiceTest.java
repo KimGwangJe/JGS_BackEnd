@@ -7,7 +7,7 @@ import com.example.JustGetStartedBackEnd.API.MatchNotification.ExceptionType.Mat
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.MatchNotificationRepository;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Service.MatchPostService;
-import com.example.JustGetStartedBackEnd.API.Notification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;

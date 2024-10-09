@@ -51,7 +51,7 @@ class TeamControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(teamListPagingDTO);
 
-        mockMvc.perform(get("/team/all")
+        mockMvc.perform(get("/team")
                 .with(csrf())
                 .param("page","0")
                 .param("keyword","")

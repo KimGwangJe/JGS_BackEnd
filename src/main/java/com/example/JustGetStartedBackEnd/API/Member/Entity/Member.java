@@ -4,7 +4,7 @@ import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoomMember;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
-import com.example.JustGetStartedBackEnd.API.Notification.Entity.Notification;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Entity.Notification;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;

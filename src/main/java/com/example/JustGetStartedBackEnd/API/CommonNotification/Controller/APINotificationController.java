@@ -1,6 +1,6 @@
-package com.example.JustGetStartedBackEnd.API.Notification.Controller;
+package com.example.JustGetStartedBackEnd.API.CommonNotification.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Notification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,25 +9,28 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/notification")
+@RequestMapping("/api/common-notification")
 @RequiredArgsConstructor
 public class APINotificationController {
     private final APINotificationService notificationService;
 
-    @PutMapping
-    public ResponseEntity<Void> readNotification(@RequestParam("notificationId") Long notificationId) {
+    @PutMapping("/{notificationId}")
+    public ResponseEntity<Void> readNotification(
+            @PathVariable("notificationId") Long notificationId) {
         notificationService.readNotification(notificationId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteNotification(@RequestParam("notificationId") Long notificationId) {
+    @DeleteMapping("/{notificationId}")
+    public ResponseEntity<Void> deleteNotification(
+            @PathVariable("notificationId") Long notificationId) {
         notificationService.deleteNotification(notificationId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/all")
-    public ResponseEntity<Void> deleteNotification(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteNotification(
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         notificationService.deleteAllNotification(customOAuth2User.getMemberId());
         return ResponseEntity.status(HttpStatus.OK).build();
     }

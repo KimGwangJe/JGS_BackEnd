@@ -1,6 +1,6 @@
-package com.example.JustGetStartedBackEnd.API.Notification.Controller;
+package com.example.JustGetStartedBackEnd.API.CommonNotification.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Notification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,9 +27,8 @@ class APINotificationControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void readNotification() throws Exception {
-        mockMvc.perform(put("/api/notification")
+        mockMvc.perform(put("/api/common-notification/1")
                 .contentType("application/json")
-                .param("notificationId","1")
                 .with(csrf()))
                 .andExpect(status().isOk());
     }
@@ -38,9 +37,8 @@ class APINotificationControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void deleteNotification() throws Exception {
-        mockMvc.perform(delete("/api/notification")
+        mockMvc.perform(delete("/api/common-notification/1")
                         .contentType("application/json")
-                        .param("notificationId","1")
                         .with(csrf()))
                 .andExpect(status().isOk());
     }
@@ -49,7 +47,7 @@ class APINotificationControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void testDeleteNotification()throws Exception {
-        mockMvc.perform(delete("/api/notification/all")
+        mockMvc.perform(delete("/api/common-notification")
                         .contentType("application/json")
                         .with(csrf()))
                 .andExpect(status().isOk());

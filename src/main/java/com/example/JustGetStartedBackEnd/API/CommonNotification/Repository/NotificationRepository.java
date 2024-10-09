@@ -1,6 +1,6 @@
-package com.example.JustGetStartedBackEnd.API.Notification.Repository;
+package com.example.JustGetStartedBackEnd.API.CommonNotification.Repository;
 
-import com.example.JustGetStartedBackEnd.API.Notification.Entity.Notification;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

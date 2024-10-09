@@ -34,14 +34,14 @@ public class APITeamInviteController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> readTeamInvite(@RequestParam(name = "inviteId") Long inviteId,
+    @PutMapping("/{inviteId}")
+    public ResponseEntity<Void> readTeamInvite(@PathVariable(name = "inviteId") Long inviteId,
                                                @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         apiTeamInviteService.readTeamInvite(inviteId, customOAuth2User.getMemberId());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping("/read-all")
+    @PutMapping
     public ResponseEntity<Void> readAllTeamInvite(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         apiTeamInviteService.readAllTeamInvite(customOAuth2User.getMemberId());
         return ResponseEntity.status(HttpStatus.OK).build();

@@ -38,7 +38,7 @@ class APIMatchNotificationControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(createMatchNotificationDTO);
 
-        mockMvc.perform(post("/api/match/notification")
+        mockMvc.perform(post("/api/match-notification")
                         .with(csrf())
                         .content(jsonString)
                         .contentType("application/json"))
@@ -56,7 +56,7 @@ class APIMatchNotificationControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(matchingDTO);
 
-        mockMvc.perform(delete("/api/match/notification")
+        mockMvc.perform(delete("/api/match-notification")
                         .with(csrf())
                         .content(jsonString)
                         .contentType("application/json"))
@@ -67,9 +67,8 @@ class APIMatchNotificationControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateMatchNotification() throws Exception{
-        mockMvc.perform(put("/api/match/notification")
+        mockMvc.perform(put("/api/match-notification/1")
                         .with(csrf())
-                        .param("matchNotificationId","1")
                         .contentType("application/json"))
                 .andExpect(status().isOk());
     }

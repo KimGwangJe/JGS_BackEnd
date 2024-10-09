@@ -1,10 +1,10 @@
-package com.example.JustGetStartedBackEnd.API.Notification.Service;
+package com.example.JustGetStartedBackEnd.API.CommonNotification.Service;
 
-import com.example.JustGetStartedBackEnd.API.Notification.DTO.NotificationDTO;
-import com.example.JustGetStartedBackEnd.API.Notification.DTO.NotificationListDTO;
-import com.example.JustGetStartedBackEnd.API.Notification.Entity.Notification;
-import com.example.JustGetStartedBackEnd.API.Notification.ExceptionType.NotificationExceptionType;
-import com.example.JustGetStartedBackEnd.API.Notification.Repository.NotificationRepository;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.NotificationDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.NotificationListDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Entity.Notification;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.ExceptionType.NotificationExceptionType;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Repository.NotificationRepository;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.API.Notification.ExceptionType;
+package com.example.JustGetStartedBackEnd.API.CommonNotification.ExceptionType;
 
 import com.example.JustGetStartedBackEnd.API.Common.Exception.ExceptionType;
 

@@ -71,8 +71,7 @@ class MemberControllerTest {
 
         given(memberService.findById(anyLong())).willReturn(memberDTO);
 
-        mockMvc.perform(get("/member/info")
-                        .param("memberId", "1"))
+        mockMvc.perform(get("/member/info/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
     }
