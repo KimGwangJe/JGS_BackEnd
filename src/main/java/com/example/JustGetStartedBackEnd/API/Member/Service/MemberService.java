@@ -1,8 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Member.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.Response.MemberListDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Repository.MemberRepository;
@@ -25,7 +25,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public MemberListDTO getMemberList(int page, int size, String keyword){
+    public PagingResponseDTO<MemberDTO> getMemberList(int page, int size, String keyword){
         Pageable pageable = PageRequest.of(page, size);
         Page<Member> memberPage;
         if (keyword == null || keyword.isEmpty()) {
@@ -37,15 +37,7 @@ public class MemberService {
                 .map(Member::toMemberDTO)
                 .collect(Collectors.toList());
 
-        MemberListDTO memberListDTO = new MemberListDTO();
-        memberListDTO.setMemberDTOList(memberDTOS);
-        memberListDTO.setPageNo(memberPage.getNumber());
-        memberListDTO.setPageSize(memberPage.getSize());
-        memberListDTO.setTotalElements(memberPage.getTotalElements());
-        memberListDTO.setTotalPages(memberPage.getTotalPages());
-        memberListDTO.setLast(memberPage.isLast());
-
-        return memberListDTO;
+        return new PagingResponseDTO<>(memberPage, memberDTOS);
     }
 
     @Transactional(readOnly = true)

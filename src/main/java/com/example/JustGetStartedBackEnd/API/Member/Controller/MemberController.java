@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Member.Controller;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.Response.MemberListDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -20,10 +20,9 @@ public class MemberController {
     private final int SIZE = 30;
 
     @GetMapping
-    public ResponseEntity<MemberListDTO> getMemberList(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(required = false) String keyword){
-        MemberListDTO memberListDTO = memberService.getMemberList(page, SIZE, keyword);
-        return ResponseEntity.ok(memberListDTO);
+    public ResponseEntity<PagingResponseDTO<MemberDTO>> getMemberList(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(required = false) String keyword){
+        return ResponseEntity.ok(memberService.getMemberList(page, SIZE, keyword));
     }
 
     @GetMapping("/info/{memberId}")

@@ -6,8 +6,10 @@ import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
 import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
+import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
@@ -83,7 +85,7 @@ class APICommunityServiceTest {
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiCommunityService.createCommunity(anyLong(), createCommunityDTO));
 
-        assert(exception.getExceptionType()).equals(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
+        assert(exception.getExceptionType()).equals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
     }
 
     @Test
@@ -140,7 +142,7 @@ class APICommunityServiceTest {
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiCommunityService.updateCommunityPost(1L, updateCommunityDTO));
 
-        assert(exception.getExceptionType()).equals(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
+        assert(exception.getExceptionType()).equals(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
     }
 
 
@@ -183,6 +185,6 @@ class APICommunityServiceTest {
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiCommunityService.deleteCommunityPost(2L, 1L));
 
-        assert(exception.getExceptionType()).equals(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
+        assert(exception.getExceptionType()).equals(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
     }
 }

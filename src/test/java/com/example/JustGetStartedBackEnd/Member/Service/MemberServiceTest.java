@@ -1,13 +1,13 @@
 package com.example.JustGetStartedBackEnd.Member.Service;
 
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.Response.MemberListDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.MemberRole;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Repository.MemberRepository;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,10 +68,10 @@ class MemberServiceTest {
     void getMemberList_WithKeyword() {
         when(memberRepository.findByNameAndEmail(anyString(), any(Pageable.class))).thenReturn(memberPage);
 
-        MemberListDTO result = memberService.getMemberList(0,10,"Kim");
+        PagingResponseDTO<MemberDTO> result = memberService.getMemberList(0,10,"Kim");
 
         assertNotNull(result);
-        assertEquals(1, result.getMemberDTOList().size());
+        assertEquals(1, result.getContent().size());
         verify(memberRepository, times(1)).findByNameAndEmail(anyString(), any(Pageable.class));
     }
 
@@ -80,10 +80,10 @@ class MemberServiceTest {
     void getMemberList_WithOutKeyword() {
         when(memberRepository.findAll(any(Pageable.class))).thenReturn(memberPage);
 
-        MemberListDTO result = memberService.getMemberList(0,10, "");
+        PagingResponseDTO<MemberDTO> result = memberService.getMemberList(0,10, "");
 
         assertNotNull(result);
-        assertEquals(1, result.getMemberDTOList().size());
+        assertEquals(1, result.getContent().size());
         verify(memberRepository, times(1)).findAll(any(Pageable.class));
     }
 

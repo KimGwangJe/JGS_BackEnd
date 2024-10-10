@@ -40,25 +40,7 @@ public class APIMatchService {
 
     @Transactional(rollbackFor = Exception.class)
     public void updatePoint(Long memberId, EnterScoreDTO enterScoreDTO) {
-        GameMatch gameMatch = gameMatchRepository.findById(enterScoreDTO.getMatchId())
-                .orElseThrow(() -> new BusinessLogicException(MatchExceptionType.MATCH_NOT_FOUND));
-
-        // 그 경기의 심판만 점수 기입 가능
-        if (!gameMatch.getReferee().getMemberId().equals(memberId)) {
-            log.warn("Not Allow Authority - Update Match Point");
-            throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
-        }
-
-        if(gameMatch.getMatchDate().after(new Date())){
-            log.warn("Not Date Allow - Update Match Point");
-            throw new BusinessLogicException(MatchExceptionType.MATCH_NOT_DATE_ALLOW);
-        }
-
-        // 이미 점수가 입력된 경우 예외 처리
-        if (gameMatch.getTeamAScore() != 0 && gameMatch.getTeamBScore() != 0) {
-            log.warn("Match Point Already Filled Out");
-            throw new BusinessLogicException(MatchExceptionType.MATCH_ALREADY_FILLED_OUT);
-        }
+        GameMatch gameMatch = makeGameMatch(enterScoreDTO, memberId);
 
         // 점수 수정
         gameMatch.updateTeamAScore(enterScoreDTO.getScoreA());
@@ -157,5 +139,28 @@ public class APIMatchService {
         // 업데이트된 팀 정보로 설정
         teamA.updateTier(tierService.getTierById(teamATier), teamAPoints);
         teamB.updateTier(tierService.getTierById(teamBTier), teamBPoints);
+    }
+
+    private GameMatch makeGameMatch(EnterScoreDTO enterScoreDTO, Long memberId){
+        GameMatch gameMatch = gameMatchRepository.findById(enterScoreDTO.getMatchId())
+                .orElseThrow(() -> new BusinessLogicException(MatchExceptionType.MATCH_NOT_FOUND));
+
+        // 그 경기의 심판만 점수 기입 가능
+        if (!gameMatch.getReferee().getMemberId().equals(memberId)) {
+            log.warn("Not Allow Authority - Update Match Point");
+            throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
+        }
+
+        if(gameMatch.getMatchDate().after(new Date())){
+            log.warn("Not Date Allow - Update Match Point");
+            throw new BusinessLogicException(MatchExceptionType.MATCH_NOT_DATE_ALLOW);
+        }
+
+        // 이미 점수가 입력된 경우 예외 처리
+        if (gameMatch.getTeamAScore() != 0 && gameMatch.getTeamBScore() != 0) {
+            log.warn("Match Point Already Filled Out");
+            throw new BusinessLogicException(MatchExceptionType.MATCH_ALREADY_FILLED_OUT);
+        }
+        return gameMatch;
     }
 }

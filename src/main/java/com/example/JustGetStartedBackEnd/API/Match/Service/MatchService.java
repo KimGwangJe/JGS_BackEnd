@@ -35,7 +35,7 @@ public class MatchService {
             // tier만 존재할 경우, 해당 tier의 팀 검색
             Tier tierEntity = tierService.getTierByName(tier);
             matchPage = gameMatchRepository.findByTier(tierEntity.getTierId(), pageable);
-        } else if ((tier == null || tier.isEmpty()) && keyword != null && !keyword.isEmpty()) {
+        } else if (tier == null || tier.isEmpty()) {
             // keyword만 존재할 경우, 팀 이름으로 검색
             matchPage = gameMatchRepository.findByTeamNameKeyword(keyword, pageable);
         } else {

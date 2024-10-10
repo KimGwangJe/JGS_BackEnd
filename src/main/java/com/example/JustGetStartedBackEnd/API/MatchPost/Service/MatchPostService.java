@@ -33,7 +33,7 @@ public class MatchPostService {
         } else if (tier != null && !tier.isEmpty() && (keyword == null || keyword.isEmpty())) {
             Tier tierEntity = tierService.getTierByName(tier);
             matchPost = matchPostRepository.findByTier(tierEntity.getTierId(), pageable);
-        } else if ((tier == null || tier.isEmpty()) && keyword != null && !keyword.isEmpty()) {
+        } else if (tier == null || tier.isEmpty()) {
             matchPost = matchPostRepository.findByTeamNameKeyword(keyword, pageable);
         } else {
             Tier tierEntity = tierService.getTierByName(tier);

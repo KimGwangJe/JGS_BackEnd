@@ -1,8 +1,9 @@
 package com.example.JustGetStartedBackEnd.Member.Controller;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Controller.MemberController;
 import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.Response.MemberListDTO;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.MemberRole;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -35,13 +38,14 @@ class MemberControllerTest {
     @WithMockUser(username = "test@gmail.com", password = "0000")
     @Test
     void getMemberList() throws Exception {
-        MemberListDTO memberListDTO = new MemberListDTO();
-
         MemberDTO memberDTO = makeMemberDTO();
         ArrayList<MemberDTO> memberDTOArrayList = new ArrayList<>();
         memberDTOArrayList.add(memberDTO);
 
-        memberListDTO.setMemberDTOList(memberDTOArrayList);
+        Page<Member> memberPage = new PageImpl<>(new ArrayList<>());
+        PagingResponseDTO<MemberDTO> memberListDTO = new PagingResponseDTO<>(memberPage, memberDTOArrayList);
+
+        memberListDTO.setContent(memberDTOArrayList);
         memberListDTO.setLast(true);
         memberListDTO.setTotalPages(0);
         memberListDTO.setTotalElements(1);

@@ -6,8 +6,10 @@ import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
 import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
+import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
@@ -56,10 +58,7 @@ public class APICommunityService {
     public void updateCommunityPost(Long memberId, UpdateCommunityDTO updateCommunityDTO){
         Community community = findCommunityById(updateCommunityDTO.getCommunityId());
 
-        if(!Objects.equals(community.getWriter().getMemberId(), memberId)){
-            log.warn("Not Allow Authority - Update Community Post");
-            throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
-        }
+        validateMemberAuthority(community.getWriter(), memberId);
 
         community.updateContentAndTitle(updateCommunityDTO.getContent(), updateCommunityDTO.getTitle());
         apiImageService.linkImagesToCommunity(community.getContent(),community);
@@ -70,11 +69,15 @@ public class APICommunityService {
     public void deleteCommunityPost(Long memberId, Long communityId){
         Community community = findCommunityById(communityId);
 
-        if(Objects.equals(community.getWriter().getMemberId(), memberId)){
-            communityRepository.delete(community);
-        } else{
-            log.warn("Not Allow Authority - Delete Community Post");
-            throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
+        validateMemberAuthority(community.getWriter(), memberId);
+
+        communityRepository.delete(community);
+    }
+
+    private void validateMemberAuthority(Member member, Long memberId){
+        if(!Objects.equals(member.getMemberId(), memberId)){
+            log.warn("Not Allow Authority - Community");
+            throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
         }
     }
 
@@ -90,7 +93,7 @@ public class APICommunityService {
 
         if (!isLeader) {
             log.warn("Not Allow Authority - Create Community Post");
-            throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         }
 
         return Community.builder()

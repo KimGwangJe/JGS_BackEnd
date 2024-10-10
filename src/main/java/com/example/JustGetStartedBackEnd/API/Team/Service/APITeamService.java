@@ -54,7 +54,7 @@ public class APITeamService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(value = "teamInfoCache", key = "'team/' + #updateIntroduceDTO.teamName", cacheManager = "cacheManager")
+    @CacheEvict(value = "teamInfoCache", key = "'team/' + #dto.teamName", cacheManager = "cacheManager")
     public void updateIntroduce(Long memberId, TeamRequestDTO dto){
         Team team = teamRepository.findByTeamName(dto.getTeamName());
 

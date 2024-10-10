@@ -38,8 +38,7 @@ public class APINotificationService {
 
     @Transactional(rollbackFor = Exception.class)
     public void readNotification(Long memberId, Long notificationId){
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new BusinessLogicException(NotificationExceptionType.NOTIFICATION_NOT_FOUND));
+        Notification notification = getNotificationById(notificationId);
 
         validMemberId(memberId, notification);
 
@@ -48,8 +47,7 @@ public class APINotificationService {
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteNotification(Long memberId, Long notificationId) {
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new BusinessLogicException(NotificationExceptionType.NOTIFICATION_NOT_FOUND));
+        Notification notification = getNotificationById(notificationId);
 
         validMemberId(memberId, notification);
 
@@ -86,6 +84,11 @@ public class APINotificationService {
         notificationListDTO.setNotificationDTOList(notificationDTOList);
 
         return notificationListDTO;
+    }
+
+    private Notification getNotificationById(Long notificationId){
+        return notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new BusinessLogicException(NotificationExceptionType.NOTIFICATION_NOT_FOUND));
     }
 
     private void validMemberId(Long memberId, Notification notification){
