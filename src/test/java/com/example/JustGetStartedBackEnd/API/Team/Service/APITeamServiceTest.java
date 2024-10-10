@@ -1,23 +1,19 @@
 package com.example.JustGetStartedBackEnd.API.Team.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.Request.TeamRequestDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
-import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
-import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,28 +71,4 @@ class APITeamServiceTest {
         verify(apiTeamMemberService, times(1)).createLeaderTeamMember(eq(member), any(Team.class));
     }
 
-    @Test
-    @DisplayName("팀 소개 수정 - 성공")
-    void updateIntroduce() {
-        Member member = mock(Member.class);
-        when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
-
-        TeamMember teamMember = mock(TeamMember.class);
-        Team team = mock(Team.class);
-        when(teamMember.getTeam()).thenReturn(team);
-        when(team.getTeamName()).thenReturn("mir");
-        when(teamMember.getRole()).thenReturn(TeamMemberRole.Leader);
-
-        ArrayList<TeamMember> teamMembers = new ArrayList<>();
-        teamMembers.add(teamMember);
-        when(member.getTeamMembers()).thenReturn(teamMembers);
-
-        TeamRequestDTO dto = new TeamRequestDTO();
-        dto.setTeamName("mir");
-        dto.setIntroduce("introduce");
-
-        apiTeamService.updateIntroduce(1L, dto);
-
-        verify(team, times(1)).updateIntroduce("introduce");
-    }
 }

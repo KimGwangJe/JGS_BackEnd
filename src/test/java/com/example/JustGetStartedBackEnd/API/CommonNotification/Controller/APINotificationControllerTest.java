@@ -10,8 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(APINotificationController.class)
@@ -27,7 +26,7 @@ class APINotificationControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void readNotification() throws Exception {
-        mockMvc.perform(put("/api/common-notification/1")
+        mockMvc.perform(patch("/api/common-notification/1")
                 .contentType("application/json")
                 .with(csrf()))
                 .andExpect(status().isOk());

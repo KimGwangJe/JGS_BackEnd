@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,7 +67,7 @@ class APIMatchNotificationControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateMatchNotification() throws Exception{
-        mockMvc.perform(put("/api/match-notification/1")
+        mockMvc.perform(patch("/api/match-notification/1")
                         .with(csrf())
                         .contentType("application/json"))
                 .andExpect(status().isOk());

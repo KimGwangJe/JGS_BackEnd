@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
+import com.example.JustGetStartedBackEnd.API.Team.DTO.Request.TeamRequestDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(APITeamController.class)
@@ -27,7 +27,7 @@ class APITeamControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void makeTeam() throws Exception{
-        CreateTeamDTO createTeamDTO = new CreateTeamDTO();
+        TeamRequestDTO createTeamDTO = new TeamRequestDTO();
         createTeamDTO.setTeamName("미르");
         createTeamDTO.setIntroduce("introduce");
 
@@ -45,14 +45,14 @@ class APITeamControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateIntroduce() throws Exception{
-        UpdateIntroduceDTO updateIntroduceDTO = new UpdateIntroduceDTO();
+        TeamRequestDTO updateIntroduceDTO = new TeamRequestDTO();
         updateIntroduceDTO.setIntroduce("introduce");
         updateIntroduceDTO.setTeamName("mir");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(updateIntroduceDTO);
 
-        mockMvc.perform(put("/api/team")
+        mockMvc.perform(patch("/api/team")
                         .contentType("application/json")
                         .with(csrf())
                         .content(jsonString))

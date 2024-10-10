@@ -1,15 +1,16 @@
 package com.example.JustGetStartedBackEnd.API.Match.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.Request.EnterScoreDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.ExceptionType.MatchExceptionType;
 import com.example.JustGetStartedBackEnd.API.Match.Repository.GameMatchRepository;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchDTO;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.Date;
 public class APIMatchService {
     private final GameMatchRepository gameMatchRepository;
     private final TeamService teamService;
+    private final APITeamService apiTeamService;
     private final TierService tierService;
 
     @Transactional(rollbackFor = Exception.class)
@@ -69,8 +71,8 @@ public class APIMatchService {
         updateTierPoints(teamA, teamB, gameMatch.getTeamAScore(), gameMatch.getTeamBScore());
 
         // 변경된 팀 정보를 데이터베이스에 반영
-        teamService.save(teamA);
-        teamService.save(teamB);
+        apiTeamService.save(teamA);
+        apiTeamService.save(teamB);
     }
 
     private void updateTierPoints(Team teamA, Team teamB, int ATeamScore, int BTeamScore) {

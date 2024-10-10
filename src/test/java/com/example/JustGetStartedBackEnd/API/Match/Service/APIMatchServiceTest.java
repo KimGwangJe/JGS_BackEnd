@@ -6,6 +6,7 @@ import com.example.JustGetStartedBackEnd.API.Match.Repository.GameMatchRepositor
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
+import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
@@ -34,8 +35,13 @@ class APIMatchServiceTest {
     @Mock
     private TierService tierService;
 
+    @Mock
+    private APITeamService apiTeamService;
+
     @InjectMocks
     private APIMatchService apiMatchService;
+
+
 
     @Test
     void createMatch() {
@@ -87,6 +93,6 @@ class APIMatchServiceTest {
         verify(gameMatchRepository, times(1)).findById(enterScoreDTO.getMatchId());
         verify(gameMatch, times(1)).updateTeamAScore(enterScoreDTO.getScoreA());
         verify(gameMatch, times(1)).updateTeamBScore(enterScoreDTO.getScoreB());
-        verify(teamService, times(2)).save(any(Team.class));
+        verify(apiTeamService, times(2)).save(any(Team.class));
     }
 }

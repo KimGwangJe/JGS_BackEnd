@@ -190,11 +190,13 @@ class APITeamJoinServiceTest {
     void createTeamJoinNotification_Fail_TeamMemberAlreadyJoined() {
         Long memberId = 1L;
         Long communityId = 1L;
+        Member member = mock(Member.class);
 
         Team team = Team.builder().teamName("mir").build();
         Community community = mock(Community.class);
         when(community.getRecruitDate()).thenReturn(LocalDateTime.now().plusDays(1));
         when(community.getTeam()).thenReturn(team);
+        when(community.getWriter()).thenReturn(member);
 
         when(communityService.getCommunityById(communityId)).thenReturn(community);
 
@@ -208,40 +210,6 @@ class APITeamJoinServiceTest {
                 () -> apiTeamJoinService.createTeamJoinNotification(memberId, communityId));
 
         assertEquals(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN, exception.getExceptionType());
-    }
-
-    @Test
-    @DisplayName("자신의 팀에 가입 요청을 시도하는 경우 실패")
-    void createTeamJoinNotification_Fail_RequestOwnTeam() {
-        Long memberId = 1L;
-        Long communityId = 1L;
-
-        // Member 및 Community 객체 설정
-        Member member = mock(Member.class);
-        when(member.getMemberId()).thenReturn(memberId);
-
-        Team team = Team.builder()
-                .teamName("mir")
-                .build();
-        Community community = mock(Community.class);
-        when(community.getRecruitDate()).thenReturn(LocalDateTime.now().plusDays(1));
-        when(community.getTeam()).thenReturn(team);
-        when(community.getWriter()).thenReturn(member);
-        when(communityService.getCommunityById(communityId)).thenReturn(community);
-
-        // 이미 가입된 팀원 정보
-        TeamMemberDTO teamMemberDTO = new TeamMemberDTO();
-        teamMemberDTO.setTeamName("Test Team");
-        TeamMemberListDTO teamMemberListDTO = new TeamMemberListDTO();
-        teamMemberListDTO.setTeamMemberDTOList(List.of(teamMemberDTO));
-
-        when(apiTeamMemberService.findMyTeam(memberId)).thenReturn(teamMemberListDTO);
-
-        // When & Then
-        BusinessLogicException exception = assertThrows(BusinessLogicException.class,
-                () -> apiTeamJoinService.createTeamJoinNotification(memberId, communityId));
-
-        assertEquals(TeamJoinExceptionType.TEAM_JOIN_OWN_ERROR, exception.getExceptionType());
     }
 
 

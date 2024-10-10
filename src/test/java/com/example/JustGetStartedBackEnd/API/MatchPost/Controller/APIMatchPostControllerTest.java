@@ -35,7 +35,7 @@ class APIMatchPostControllerTest {
         CreateMatchPostDTO createMatchPostDTO = new CreateMatchPostDTO();
         createMatchPostDTO.setLocation("location");
         createMatchPostDTO.setTeamName("mir");
-        createMatchPostDTO.setMatchDate(LocalDateTime.now());
+        createMatchPostDTO.setMatchDate(LocalDateTime.now().plusMonths(1));
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -55,8 +55,10 @@ class APIMatchPostControllerTest {
         UpdateMatchPostDTO updateMatchPostDTO = new UpdateMatchPostDTO();
         updateMatchPostDTO.setMatchPostId(1L);
         updateMatchPostDTO.setLocation("location");
+        updateMatchPostDTO.setMatchDate(LocalDateTime.now().plusMonths(1));
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         String jsonString = objectMapper.writeValueAsString(updateMatchPostDTO);
 
         mockMvc.perform(put("/api/match-post")

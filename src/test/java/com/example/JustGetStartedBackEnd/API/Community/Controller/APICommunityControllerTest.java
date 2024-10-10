@@ -63,7 +63,7 @@ class APICommunityControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(updateCommunityDTO);
 
-        mockMvc.perform(put("/api/community")
+        mockMvc.perform(patch("/api/community")
                         .contentType("application/json")
                         .with(csrf())
                         .content(jsonString)

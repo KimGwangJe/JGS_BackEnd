@@ -54,7 +54,7 @@ class APITeamJoinControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateRead() throws Exception{
-        mockMvc.perform(put("/api/team-join/1")
+        mockMvc.perform(patch("/api/team-join/1")
                 .contentType("application/json")
                 .with(csrf()))
                 .andExpect(status().isOk());
@@ -64,7 +64,7 @@ class APITeamJoinControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateReadAll() throws Exception {
-        mockMvc.perform(put("/api/team-join")
+        mockMvc.perform(patch("/api/team-join")
                         .contentType("application/json")
                         .with(csrf()))
                 .andExpect(status().isOk());

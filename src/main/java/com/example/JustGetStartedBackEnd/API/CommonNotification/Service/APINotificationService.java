@@ -6,6 +6,7 @@ import com.example.JustGetStartedBackEnd.API.CommonNotification.Entity.Notificat
 import com.example.JustGetStartedBackEnd.API.CommonNotification.ExceptionType.NotificationExceptionType;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Repository.NotificationRepository;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,14 +37,22 @@ public class APINotificationService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void readNotification(Long notificationId){
+    public void readNotification(Long memberId, Long notificationId){
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new BusinessLogicException(NotificationExceptionType.NOTIFICATION_NOT_FOUND));
+
+        validMemberId(memberId, notification);
+
         notification.updateIsRead();
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteNotification(Long notificationId) {
+    public void deleteNotification(Long memberId, Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new BusinessLogicException(NotificationExceptionType.NOTIFICATION_NOT_FOUND));
+
+        validMemberId(memberId, notification);
+
         try {
             notificationRepository.deleteById(notificationId);
         } catch (Exception e) {
@@ -76,5 +86,11 @@ public class APINotificationService {
         notificationListDTO.setNotificationDTOList(notificationDTOList);
 
         return notificationListDTO;
+    }
+
+    private void validMemberId(Long memberId, Notification notification){
+        if(!Objects.equals(notification.getMember().getMemberId(), memberId)){
+            throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
+        }
     }
 }

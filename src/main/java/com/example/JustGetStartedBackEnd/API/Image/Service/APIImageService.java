@@ -77,11 +77,6 @@ public class APIImageService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteImageByCommunityId(Long communityId){
-        imageRepository.deleteByCommunityId(communityId);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
     public void linkImagesToCommunity(String html, Community community) {
         List<String> srcList = new ArrayList<>();
         Pattern pattern = Pattern.compile("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
@@ -102,7 +97,7 @@ public class APIImageService {
             }
             // 이미 노트와 관련된 이미지가 아니거나 HTML에 없는 경우, 새로운 이미지 생성 및 관계 맺기
             assert image != null;
-            image.updateCommnunity(community);
+            image.updateCommunity(community);
         }
 
         // HTML에는 없지만 이미 노트와 관련된 이미지들을 찾아서 끊기
@@ -115,7 +110,6 @@ public class APIImageService {
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteImageCommunityByNull(){
-        //여기에서 삭제한 URL에 대해서 URL에 대해서 S3에서도 삭제가 필요함
         List<Image> images = imageRepository.findByCommunityId(null);
         for(Image image : images){
             s3Client.deleteObject(new DeleteObjectRequest(bucket, image.getImageName()));

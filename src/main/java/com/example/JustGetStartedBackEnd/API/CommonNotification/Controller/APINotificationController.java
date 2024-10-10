@@ -21,16 +21,18 @@ public class APINotificationController {
     @PatchMapping("/{notificationId}")
     public ResponseEntity<Void> readNotification(
             @NotNull @Min(value=1, message="읽을려는 알림의 ID는 0보다 작을 수 없습니다.")
-            @PathVariable("notificationId") Long notificationId) {
-        notificationService.readNotification(notificationId);
+            @PathVariable("notificationId") Long notificationId,
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        notificationService.readNotification(customOAuth2User.getMemberId(),notificationId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{notificationId}")
     public ResponseEntity<Void> deleteNotification(
             @NotNull @Min(value=1, message="삭제하려는 알림의 ID는 0보다 작을 수 없습니다.")
-            @PathVariable("notificationId") Long notificationId) {
-        notificationService.deleteNotification(notificationId);
+            @PathVariable("notificationId") Long notificationId,
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        notificationService.deleteNotification(customOAuth2User.getMemberId(), notificationId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

@@ -5,6 +5,7 @@ import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.UpdateWinner
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Conference.ExceptionType.ConferenceExceptionType;
 import com.example.JustGetStartedBackEnd.API.Conference.Repository.ConferenceRepository;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
@@ -124,7 +125,7 @@ class APIConferenceServiceTest {
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiConferenceService.updateWinnerTeam(memberId, updateWinnerDTO));
 
-        assert(exception.getExceptionType()).equals(ConferenceExceptionType.NOT_ALLOW_AUTHORITY);
+        assert(exception.getExceptionType()).equals(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
     }
 
     @Test
@@ -182,6 +183,6 @@ class APIConferenceServiceTest {
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiConferenceService.updateConference(memberId, conferenceInfoDTO));
 
-        assert (exception.getExceptionType()).equals(ConferenceExceptionType.NOT_ALLOW_AUTHORITY);
+        assert (exception.getExceptionType()).equals(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
     }
 }

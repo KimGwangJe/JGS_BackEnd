@@ -12,10 +12,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(APIConferenceController.class)
@@ -32,7 +35,11 @@ class APIConferenceControllerTest {
     @Test
     void createConference() throws Exception{
         ConferenceInfoDTO conferenceInfoDTO = new ConferenceInfoDTO();
-        conferenceInfoDTO.setConferenceDate(new Date());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date()); // 현재 날짜 설정
+        calendar.add(Calendar.MONTH, 1); // 한 달 추가
+        Date oneMonthLater = calendar.getTime();
+        conferenceInfoDTO.setConferenceDate(oneMonthLater);
         conferenceInfoDTO.setConferenceName("conference");
         conferenceInfoDTO.setContent("content");
 
@@ -57,7 +64,7 @@ class APIConferenceControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(updateWinnerDTO);
 
-        mockMvc.perform(put("/api/conference/winner")
+        mockMvc.perform(patch("/api/conference/winner")
                         .with(csrf())
                         .content(jsonString)
                         .contentType("application/json"))
@@ -70,7 +77,11 @@ class APIConferenceControllerTest {
     void updateConference() throws Exception{
         ConferenceInfoDTO conferenceInfoDTO  = new ConferenceInfoDTO();
         conferenceInfoDTO.setContent("content");
-        conferenceInfoDTO.setConferenceDate(new Date());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date()); // 현재 날짜 설정
+        calendar.add(Calendar.MONTH, 1); // 한 달 추가
+        Date oneMonthLater = calendar.getTime();
+        conferenceInfoDTO.setConferenceDate(oneMonthLater);
         conferenceInfoDTO.setConferenceName("conference");
 
         ObjectMapper objectMapper = new ObjectMapper();

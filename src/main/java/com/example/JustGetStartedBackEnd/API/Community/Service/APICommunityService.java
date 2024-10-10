@@ -37,34 +37,9 @@ public class APICommunityService {
         Community community;
 
         if (createCommunityDTO.getTeamName() != null && !createCommunityDTO.getTeamName().isBlank()) {
-            Team team = teamService.findByTeamNameReturnEntity(createCommunityDTO.getTeamName());
-
-            boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-
-            if (!isLeader) {
-                log.warn("Not Allow Authority - Create Community Post");
-                throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
-            }
-
-            community = Community.builder()
-                    .content(createCommunityDTO.getContent())
-                    .title(createCommunityDTO.getTitle())
-                    .recruit(true)
-                    .recruitDate(createCommunityDTO.getRecruitDate())
-                    .team(team)
-                    .writer(member)
-                    .writeDate(new Date())
-                    .build();
+            community = createTeamRecruitmentCommunityPost(createCommunityDTO, member);
         } else {
-            community = Community.builder()
-                    .content(createCommunityDTO.getContent())
-                    .title(createCommunityDTO.getTitle())
-                    .recruit(false)
-                    .writeDate(new Date())
-                    .team(null)
-                    .writer(member)
-                    .recruitDate(null)
-                    .build();
+            community = createNonTeamRecruitmentCommunityPost(createCommunityDTO, member);
         }
 
         try {
@@ -79,12 +54,13 @@ public class APICommunityService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "communityInfoCache", key = "'community/' + #updateCommunityDTO.communityId", cacheManager = "cacheManager")
     public void updateCommunityPost(Long memberId, UpdateCommunityDTO updateCommunityDTO){
-        Community community = communityRepository.findById(updateCommunityDTO.getCommunityId())
-                .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
+        Community community = findCommunityById(updateCommunityDTO.getCommunityId());
+
         if(!Objects.equals(community.getWriter().getMemberId(), memberId)){
             log.warn("Not Allow Authority - Update Community Post");
             throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
         }
+
         community.updateContentAndTitle(updateCommunityDTO.getContent(), updateCommunityDTO.getTitle());
         apiImageService.linkImagesToCommunity(community.getContent(),community);
     }
@@ -92,13 +68,51 @@ public class APICommunityService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "communityInfoCache", key = "'community/' + #communityId", cacheManager = "cacheManager")
     public void deleteCommunityPost(Long memberId, Long communityId){
-        Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
+        Community community = findCommunityById(communityId);
+
         if(Objects.equals(community.getWriter().getMemberId(), memberId)){
             communityRepository.delete(community);
         } else{
             log.warn("Not Allow Authority - Delete Community Post");
             throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
         }
+    }
+
+    private Community findCommunityById(Long communityId){
+        return communityRepository.findById(communityId)
+                .orElseThrow(() -> new BusinessLogicException(CommunityExceptionType.COMMUNITY_NOT_FOUND));
+    }
+
+    private Community createTeamRecruitmentCommunityPost(CreateCommunityDTO dto, Member member){
+        Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
+
+        boolean isLeader = apiTeamMemberService.isLeader(team, member.getMemberId());
+
+        if (!isLeader) {
+            log.warn("Not Allow Authority - Create Community Post");
+            throw new BusinessLogicException(CommunityExceptionType.NOT_ALLOW_AUTHORITY);
+        }
+
+        return Community.builder()
+                .content(dto.getContent())
+                .title(dto.getTitle())
+                .recruit(true)
+                .recruitDate(dto.getRecruitDate())
+                .team(team)
+                .writer(member)
+                .writeDate(new Date())
+                .build();
+    }
+
+    private Community createNonTeamRecruitmentCommunityPost(CreateCommunityDTO dto, Member member){
+        return Community.builder()
+                .content(dto.getContent())
+                .title(dto.getTitle())
+                .recruit(false)
+                .writeDate(new Date())
+                .team(null)
+                .writer(member)
+                .recruitDate(null)
+                .build();
     }
 }

@@ -27,44 +27,35 @@ public class APIMatchPostService {
     public void createMatchPost(Long memberId, CreateMatchPostDTO createMatchPostDTO) {
         Team team = teamService.findByTeamNameReturnEntity(createMatchPostDTO.getTeamName());
 
-        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-        if (isLeader) {
-            MatchPost matchPost = MatchPost.builder()
-                    .teamA(team)
-                    .isEnd(false)
-                    .location(createMatchPostDTO.getLocation())
-                    .matchDate(createMatchPostDTO.getMatchDate())
-                    .build();
+        validateLeaderAuthority(team, memberId);
+
+        MatchPost matchPost = MatchPost.builder()
+                .teamA(team)
+                .isEnd(false)
+                .location(createMatchPostDTO.getLocation())
+                .matchDate(createMatchPostDTO.getMatchDate())
+                .build();
+
+        try{
             matchPostRepository.save(matchPost);
-        } else {
-            log.warn("Not Allow Authority - Create Match Post");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        } catch(Exception e){
+            throw new BusinessLogicException(MatchPostException.MATCH_POST_SAVE_ERROR);
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void updateMatchPost(Long memberId, UpdateMatchPostDTO updateMatchPostDTO){
-        MatchPost matchPost = matchPostRepository.findById(updateMatchPostDTO.getMatchPostId()).orElseThrow(
-                () -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
-        boolean isLeader = apiTeamMemberService.isLeader(matchPost.getTeamA(), memberId);
-        if (isLeader) {
-            matchPost.updateMatchPost(updateMatchPostDTO.getMatchDate(), updateMatchPostDTO.getLocation());
-        } else{
-            log.warn("Not Allow Authority - Update Match Post");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
+        MatchPost matchPost = getMatchPostById(updateMatchPostDTO.getMatchPostId());
+        validateLeaderAuthority(matchPost.getTeamA(), memberId);
+
+        matchPost.updateMatchPost(updateMatchPostDTO.getMatchDate(), updateMatchPostDTO.getLocation());
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteMatchPost(Long memberId, Long matchPostId) {
-        MatchPost matchPost = matchPostRepository.findById(matchPostId)
-                .orElseThrow(() -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
+        MatchPost matchPost = getMatchPostById(matchPostId);
 
-        boolean isLeader = apiTeamMemberService.isLeader(matchPost.getTeamA(), memberId);
-        if (!isLeader) {
-            log.warn("Not Allow Authority - Delete Match Post");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
+        validateLeaderAuthority(matchPost.getTeamA(), memberId);
 
         try {
             matchPostRepository.delete(matchPost);
@@ -77,6 +68,19 @@ public class APIMatchPostService {
     @Transactional(rollbackFor = Exception.class)
     public void updateMatchPostsToEnd(){
         matchPostRepository.updateMatchPostsToEnd();
+    }
+
+    private MatchPost getMatchPostById(Long matchPostId) {
+        return matchPostRepository.findById(matchPostId)
+                .orElseThrow(() -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
+    }
+
+    private void validateLeaderAuthority(Team team, Long memberId){
+        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
+        if(!isLeader){
+            log.warn("Not Allow Authority - Match Post");
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        }
     }
 
 }

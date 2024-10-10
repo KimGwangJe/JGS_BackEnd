@@ -36,7 +36,7 @@ class APIMatchControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(enterScoreDTO);
 
-        mockMvc.perform(put("/api/match")
+        mockMvc.perform(patch("/api/match")
                 .with(csrf())
                 .contentType("application/json")
                 .content(jsonString))

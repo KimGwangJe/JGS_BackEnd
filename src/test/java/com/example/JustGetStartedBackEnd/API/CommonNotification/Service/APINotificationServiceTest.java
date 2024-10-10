@@ -49,9 +49,12 @@ class APINotificationServiceTest {
     @DisplayName("일반 알림 읽음 처리 - 성공")
     void readNotification_Success() {
         Notification notification = mock(Notification.class);
+        Member member = mock(Member.class);
         when(notificationRepository.findById(anyLong())).thenReturn(Optional.of(notification));
+        when(notification.getMember()).thenReturn(member);
+        when(member.getMemberId()).thenReturn(1L);
 
-        apiNotificationService.readNotification(1L);
+        apiNotificationService.readNotification(1L, 1L);
         verify(notificationRepository, times(1)).findById(anyLong());
     }
 
@@ -61,17 +64,23 @@ class APINotificationServiceTest {
         when(notificationRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
-                () -> apiNotificationService.readNotification(anyLong()));
+                () -> apiNotificationService.readNotification(1L, 2L));
 
-        assert(exception.getExceptionType()).equals(NotificationExceptionType.NOTIFICATION_NOT_FOUND);
+        assertEquals(NotificationExceptionType.NOTIFICATION_NOT_FOUND, exception.getExceptionType());
     }
 
     @Test
     @DisplayName("알림 삭제 - 성공")
     void deleteNotification() {
         Long notificationId = 1L;
+        Long memberId = 1L;
+        Notification notification = mock(Notification.class);
+        Member member = mock(Member.class);
+        when(notificationRepository.findById(anyLong())).thenReturn(Optional.of(notification));
+        when(notification.getMember()).thenReturn(member);
+        when(member.getMemberId()).thenReturn(1L);
 
-        apiNotificationService.deleteNotification(notificationId);
+        apiNotificationService.deleteNotification(memberId, notificationId);
 
         verify(notificationRepository, times(1)).deleteById(notificationId);
     }
@@ -80,10 +89,16 @@ class APINotificationServiceTest {
     @DisplayName("알림 삭제 - 실패 (예외 발생)")
     void deleteNotification_Failure() {
         Long notificationId = 1L;
+        Long memberId = 1L;
+        Notification notification = mock(Notification.class);
+        Member member = mock(Member.class);
+        when(notificationRepository.findById(anyLong())).thenReturn(Optional.of(notification));
+        when(notification.getMember()).thenReturn(member);
+        when(member.getMemberId()).thenReturn(1L);
         doThrow(new RuntimeException("Delete failed")).when(notificationRepository).deleteById(notificationId);
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class, () -> {
-            apiNotificationService.deleteNotification(notificationId);
+            apiNotificationService.deleteNotification(memberId, notificationId);
         });
 
         assertEquals(NotificationExceptionType.NOTIFICATION_DELETE_ERROR, exception.getExceptionType());

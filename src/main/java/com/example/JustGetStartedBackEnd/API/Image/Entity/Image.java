@@ -29,7 +29,7 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     private Community community;
 
-    public void updateCommnunity(Community community) {
+    public void updateCommunity(Community community) {
         this.community = community;
     }
     public void unLinkCommunity(){

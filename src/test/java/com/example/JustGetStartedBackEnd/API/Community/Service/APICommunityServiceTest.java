@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -58,12 +59,13 @@ class APICommunityServiceTest {
 
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(team, anyLong())).thenReturn(true);
+        when(apiTeamMemberService.isLeader(eq(team), anyLong())).thenReturn(true);
 
         apiCommunityService.createCommunity(anyLong(), createCommunityDTO);
 
         verify(communityRepository, times(1)).save(any(Community.class));
     }
+
 
     @Test
     @DisplayName("커뮤니티 작성 - 실패(리더 아님)")
@@ -76,7 +78,7 @@ class APICommunityServiceTest {
 
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(team, anyLong())).thenReturn(false);
+        when(apiTeamMemberService.isLeader(eq(team), anyLong())).thenReturn(false);
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiCommunityService.createCommunity(anyLong(), createCommunityDTO));
@@ -112,13 +114,13 @@ class APICommunityServiceTest {
         updateCommunityDTO.setCommunityId(1L);
         updateCommunityDTO.setTitle("title");
         updateCommunityDTO.setContent("content");
-        apiCommunityService.updateCommunityPost(1L, updateCommunityDTO);
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiCommunityService.updateCommunityPost(1L, updateCommunityDTO));
 
-        assert(exception.getExceptionType()).equals(CommunityExceptionType.COMMUNITY_NOT_FOUND);
+        assertEquals(CommunityExceptionType.COMMUNITY_NOT_FOUND, exception.getExceptionType());
     }
+
 
     @Test
     @DisplayName("커뮤니티 글 수정 - 실패(권한 없음)")

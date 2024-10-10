@@ -13,7 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(APIMemberController.class)
@@ -36,7 +36,7 @@ class APIMemberControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(updateMemberDTO);
 
-        mockMvc.perform(put("/api/member")
+        mockMvc.perform(patch("/api/member")
                         .contentType("application/json")
                         .content(jsonString)
                         .with(csrf())

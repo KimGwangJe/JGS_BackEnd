@@ -46,11 +46,7 @@ public class APIMatchNotificationService {
     public void createMatchNotification(Long memberId, CreateMatchNotificationDTO dto){
         //신청자의 팀
         Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
-        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-        if(!isLeader) {
-            log.warn("Not Allow Authority - Create Match Notification");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
+        validateLeaderAuthority(team, memberId);
 
         //이미 매치가 신청된 상태인지 확인
         MatchNotification matchNotification = matchNotificationRepository.findByMatchPostIdAndTeamName(dto.getMatchPostId(), dto.getTeamName());
@@ -60,19 +56,7 @@ public class APIMatchNotificationService {
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_ALREADY_REQUEST);
         }
 
-        // 매치 글에 등록된 매치 날짜보다 이후라면 신청 불가
-        MatchPost matchPost = matchPostService.findMatchPostById(dto.getMatchPostId());
-        if(matchPost.getMatchDate().isBefore(LocalDateTime.now())){
-            throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_INVALID_DATE);
-        }
-        if(matchPost.isEnd()){
-            log.warn("Match Post Is Already End");
-            throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_POST_IS_END);
-        }
-        if(matchPost.getTeamA().getTeamName().equals(dto.getTeamName())){
-            log.warn("Can Not Request Same Team");
-            throw new BusinessLogicException(MatchNotificationExceptionType.SAME_TEAM_MATCH_ERROR);
-        }
+        MatchPost matchPost = getValidatedMatchPost(dto);
 
         try{
             Long notificationMemberId = apiTeamMemberService.getLeaderId(matchPost.getTeamA());
@@ -103,11 +87,7 @@ public class APIMatchNotificationService {
                 .orElseThrow(() -> new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_NOT_FOUND));
 
         //그 팀의 리더만이 매치 수락 가능
-        boolean isLeader = apiTeamMemberService.isLeader(matchNotification.getMatchPostId().getTeamA(), memberId);
-        if(!isLeader) {
-            log.warn("Not Allow Authority - Delete Match Notification");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
+        validateLeaderAuthority(matchNotification.getMatchPostId().getTeamA(), memberId);
 
         //매치 요청을 보낸 팀의 리더의 ID를 가져옴
         Long notificationMemberId = apiTeamMemberService.getLeaderId(matchNotification.getAppliTeamName());
@@ -178,5 +158,29 @@ public class APIMatchNotificationService {
         MatchNotificationListDTO matchNotificationListDTO = new MatchNotificationListDTO();
         matchNotificationListDTO.setMatchNotificationDTOList(matchNotificationDTOList);
         return matchNotificationListDTO;
+    }
+
+    private void validateLeaderAuthority(Team team, Long memberId){
+        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
+        if(!isLeader) {
+            log.warn("Not Allow Authority - Match Notification");
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        }
+    }
+
+    private MatchPost getValidatedMatchPost(CreateMatchNotificationDTO dto){
+        MatchPost matchPost = matchPostService.findMatchPostById(dto.getMatchPostId());
+        if(matchPost.getMatchDate().isBefore(LocalDateTime.now())){
+            throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_INVALID_DATE);
+        }
+        if(matchPost.isEnd()){
+            log.warn("Match Post Is Already End");
+            throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_POST_IS_END);
+        }
+        if(matchPost.getTeamA().getTeamName().equals(dto.getTeamName())){
+            log.warn("Can Not Request Same Team");
+            throw new BusinessLogicException(MatchNotificationExceptionType.SAME_TEAM_MATCH_ERROR);
+        }
+        return matchPost;
     }
 }

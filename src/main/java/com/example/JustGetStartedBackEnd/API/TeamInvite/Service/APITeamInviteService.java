@@ -100,15 +100,8 @@ public class APITeamInviteService {
 
     @Transactional(rollbackFor = Exception.class)
     public void readTeamInvite(Long inviteId, Long memberId){
-        TeamInviteNotification teamInviteNotification = teamInviteRepository.findById(inviteId)
-                .orElseThrow(() -> new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_NOT_FOUND));
-        if(teamInviteNotification.getMember().getMemberId().equals(memberId)){
-            teamInviteNotification.updateRead();
-            return;
-        }
-        log.warn("Not Allow Authority - Read Team Invite");
-        throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
-
+        TeamInviteNotification teamInviteNotification = findTeamInviteNotificationById(memberId, inviteId);
+        teamInviteNotification.updateRead();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -124,24 +117,23 @@ public class APITeamInviteService {
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteTeamInvite(Long memberId, JoinTeamDTO joinTeamDTO){
-        TeamInviteNotification teamInviteNotification = teamInviteRepository.findById(joinTeamDTO.getInviteId())
-                .orElseThrow(() -> new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_NOT_FOUND));
+        TeamInviteNotification teamInviteNotification = findTeamInviteNotificationById(memberId, joinTeamDTO.getInviteId());
 
         String memberName = memberService.findById(memberId).getName();
-        Long notificationMemberId = apiTeamMemberService.getLeaderId(teamInviteNotification.getTeam());
+        Long teamLeaderId = apiTeamMemberService.getLeaderId(teamInviteNotification.getTeam());
         if(joinTeamDTO.getIsJoin()){
             //멤버 가입 처리
             apiTeamMemberService.joinTeamMember(memberId, teamInviteNotification.getTeam().getTeamName());
 
             //팀 가입 요청 승인 알림 SSO & DB 저장
             String message = memberName + "님이 " + teamInviteNotification.getTeam().getTeamName() + "팀에 가입하였습니다.";
-            notificationService.sendNotification(notificationMemberId, message);
-            apiNotificationService.saveNotification(message, notificationMemberId);
+            notificationService.sendNotification(teamLeaderId, message);
+            apiNotificationService.saveNotification(message, teamLeaderId);
         } else {
             //팀 가입 요청 거부 알림 SSO & DB 저장
             String message = memberName + "님이 " + teamInviteNotification.getTeam().getTeamName() + "팀에 대한 가입 요청을 거절하였습니다.";
-            notificationService.sendNotification(notificationMemberId, message);
-            apiNotificationService.saveNotification(message, notificationMemberId);
+            notificationService.sendNotification(teamLeaderId, message);
+            apiNotificationService.saveNotification(message, teamLeaderId);
         }
 
         try{
@@ -150,5 +142,15 @@ public class APITeamInviteService {
             log.warn("Delete Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_DELETE_ERROR);
         }
+    }
+
+    private TeamInviteNotification findTeamInviteNotificationById(Long memberId, Long inviteId) {
+        TeamInviteNotification teamInviteNotification = teamInviteRepository.findById(inviteId)
+                .orElseThrow(() -> new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_NOT_FOUND));
+        if (!teamInviteNotification.getMember().getMemberId().equals(memberId)) {
+            log.warn("Not Allow Authority - Team Invite");
+            throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
+        }
+        return teamInviteNotification;
     }
 }

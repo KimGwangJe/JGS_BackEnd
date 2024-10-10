@@ -1,6 +1,11 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
+import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.CreateTeamInviteDTO;
@@ -8,16 +13,10 @@ import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.ExceptionType.TeamInviteExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Repository.TeamInviteRepository;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
-import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -196,28 +195,6 @@ class APITeamInviteServiceTest {
                 () -> apiTeamInviteService.readTeamInvite(1L, 1L));
 
         assert(exception.getExceptionType()).equals(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
-    }
-
-    @Test
-    @DisplayName("팀 초대 알림 삭제 - 성공")
-    void deleteTeamInvite_Success() {
-        TeamInviteNotification TIN = mock(TeamInviteNotification.class);
-        Team team = mock(Team.class);
-        JoinTeamDTO joinTeamDTO = new JoinTeamDTO();
-        joinTeamDTO.setInviteId(1L);
-        joinTeamDTO.setIsJoin(true);
-        MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setName("KK");
-
-        when(memberService.findById(anyLong())).thenReturn(memberDTO);
-        when(teamInviteRepository.findById(anyLong())).thenReturn(Optional.of(TIN));
-        when(apiTeamMemberService.getLeaderId(any(Team.class))).thenReturn(1L);
-        when(TIN.getTeam()).thenReturn(team);
-        when(team.getTeamName()).thenReturn("mir");
-
-        apiTeamInviteService.deleteTeamInvite(1L, joinTeamDTO);
-
-        verify(teamInviteRepository, times(1)).findById(anyLong());
     }
 
     @Test

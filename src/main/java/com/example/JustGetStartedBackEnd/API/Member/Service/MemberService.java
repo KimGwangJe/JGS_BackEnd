@@ -50,23 +50,20 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberDTO findById(Long id){
-        Optional<Member> member = memberRepository.findById(id);
-        if(member.isPresent()){
-            return member.map(Member::toMemberDTO).orElse(null);
-        } else{
-            log.warn("Member Not Found : {}", id);
-            throw new BusinessLogicException(MemberExceptionType.MEMBER_NOT_FOUND);
-        }
+        Optional<Member> member = getMemberById(id);
+        return member.map(Member::toMemberDTO).orElse(null);
     }
 
     @Transactional(readOnly = true)
     public Member findByIdReturnEntity(Long id){
+        return getMemberById(id).get();
+    }
+
+    private Optional<Member> getMemberById(Long id){
         Optional<Member> member = memberRepository.findById(id);
-        if(member.isPresent()){
-            return member.get();
-        } else{
-            log.warn("Member Not Found : {}", id);
+        if(member.isEmpty()){
             throw new BusinessLogicException(MemberExceptionType.MEMBER_NOT_FOUND);
         }
+        return member;
     }
 }

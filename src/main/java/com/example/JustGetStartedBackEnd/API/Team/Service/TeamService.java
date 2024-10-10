@@ -71,16 +71,6 @@ public class TeamService {
         return team;
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void save(Team team){
-        try{
-            teamRepository.save(team);
-        } catch(Exception e){
-            log.warn("Team Save Failed : {}", e.getMessage());
-            throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
-        }
-    }
-
     private void validateTeamExists(Team team, String teamName) {
         if (team == null) {
             log.warn("Team Not Found : {}", teamName);

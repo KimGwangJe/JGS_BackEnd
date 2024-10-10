@@ -2,6 +2,7 @@ package com.example.JustGetStartedBackEnd.API.TeamReview.Service;
 
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.Request.FillReviewDTO;
@@ -28,34 +29,16 @@ public class APITeamReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void fillReview(Long memberId,FillReviewDTO fillReviewDTO){
-        GameMatch gameMatch = matchService.findByMatchById(fillReviewDTO.getMatchId());
+        GameMatch gameMatch = getGameMatch(fillReviewDTO.getMatchId());
+
         TeamReview teamReview;
-        if(gameMatch.getMatchDate().after(new Date())){
-            throw new BusinessLogicException(TeamReviewExceptionType.TEAM_REVIEW_INVALID_DATE_ERROR);
-        }
-        boolean isLeader = true;
         //A팀과 같은 이름이라면 B팀에 대한 리뷰 작성임
         if(gameMatch.getTeamA().getTeamName().equals(fillReviewDTO.getTeamName())){
-            isLeader = apiTeamMemberService.isLeader(gameMatch.getTeamA(), memberId);
-            teamReview = TeamReview.builder()
-                    .team(gameMatch.getTeamB())
-                    .content(fillReviewDTO.getContent())
-                    .rating(fillReviewDTO.getRating())
-                    .writter(memberService.findByIdReturnEntity(memberId))
-                    .build();
+            validateLeaderAuthority(gameMatch.getTeamA(), memberId);
+            teamReview = makeTeamReview(gameMatch.getTeamB(), fillReviewDTO, memberId);
         } else {
-            isLeader = apiTeamMemberService.isLeader(gameMatch.getTeamA(), memberId);
-            teamReview = TeamReview.builder()
-                    .team(gameMatch.getTeamA())
-                    .content(fillReviewDTO.getContent())
-                    .rating(fillReviewDTO.getRating())
-                    .writter(memberService.findByIdReturnEntity(memberId))
-                    .build();
-        }
-
-        if(!isLeader){
-            log.warn("Not Allow Authority - Fill Team Review");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+            validateLeaderAuthority(gameMatch.getTeamB(), memberId);
+            teamReview = makeTeamReview(gameMatch.getTeamA(), fillReviewDTO, memberId);
         }
 
         try{
@@ -65,4 +48,30 @@ public class APITeamReviewService {
             throw new BusinessLogicException(TeamReviewExceptionType.TEAM_REVIEW_SAVE_ERROR);
         }
     }
+
+    private void validateLeaderAuthority(Team team, Long memberId){
+        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
+        if(!isLeader){
+            log.warn("Not Allow Authority - Team");
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        }
+    }
+
+    private TeamReview makeTeamReview(Team team, FillReviewDTO fillReviewDTO, Long memberId){
+        return TeamReview.builder()
+                .team(team)
+                .content(fillReviewDTO.getContent())
+                .rating(fillReviewDTO.getRating())
+                .writter(memberService.findByIdReturnEntity(memberId))
+                .build();
+    }
+
+    private GameMatch getGameMatch(Long matchId){
+        GameMatch gameMatch = matchService.findByMatchById(matchId);
+        if(gameMatch.getMatchDate().after(new Date())){
+            throw new BusinessLogicException(TeamReviewExceptionType.TEAM_REVIEW_INVALID_DATE_ERROR);
+        }
+        return gameMatch;
+    }
+
 }

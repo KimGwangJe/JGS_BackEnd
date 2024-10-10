@@ -31,13 +31,12 @@ public class APITeamMemberService {
 
     @Transactional(rollbackFor = Exception.class)
     public void createLeaderTeamMember(Member member, Team team){
+        TeamMember teamMember = TeamMember.builder()
+                .member(member)
+                .team(team)
+                .role(TeamMemberRole.Leader)
+                .build();
         try{
-            TeamMember teamMember = TeamMember.builder()
-                    .member(member)
-                    .team(team)
-                    .role(TeamMemberRole.Leader)
-                    .build();
-
             teamMemberRepository.save(teamMember);
         } catch(Exception e){
             log.warn("Team Leader Save Error : {}", e.getMessage());
