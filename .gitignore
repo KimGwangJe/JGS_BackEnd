@@ -38,5 +38,6 @@ out/
 
 # Private application configuration
 application-private.properties
+generated
 
 *.log

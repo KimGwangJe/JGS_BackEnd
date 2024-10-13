@@ -5,7 +5,6 @@ import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ChatRoomListDTO;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoom;
 import com.example.JustGetStartedBackEnd.API.Chat.ExceptionType.ChatRoomExceptionType;
 import com.example.JustGetStartedBackEnd.API.Chat.Repository.ChatRoomRepository;
-import com.example.JustGetStartedBackEnd.API.Chat.Repository.QueryDSLChatRoomRepo;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
@@ -30,7 +29,6 @@ public class ChatRoomService {
     private final NotificationService notificationService;
 
     private final ChatRoomRepository chatRoomRepository;
-    private final QueryDSLChatRoomRepo queryDSLChatRoomRepo;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -66,7 +64,7 @@ public class ChatRoomService {
 
     @Transactional(readOnly = true)
     public ChatRoomListDTO getChatRoom(Long memberId){
-        List<ChatRoom> chatRoomList = queryDSLChatRoomRepo.findByMemberId(memberId);
+        List<ChatRoom> chatRoomList = chatRoomRepository.findByMemberId(memberId);
 
         ChatRoomListDTO chatRoomListDTO = new ChatRoomListDTO();
         List<ChatRoomDTO> chatRoomDTOS = new ArrayList<>();
