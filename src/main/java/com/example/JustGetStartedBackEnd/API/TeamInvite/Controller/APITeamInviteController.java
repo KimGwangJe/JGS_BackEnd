@@ -26,10 +26,8 @@ public class APITeamInviteController {
 
     @GetMapping
     public ResponseEntity<TeamInviteListDTO> getTeamInvite(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
-        TeamInviteListDTO teamInviteListDTO = apiTeamInviteService.getTeamInvite(customOAuth2User.getMemberId());
-        if(teamInviteListDTO.getTeamInviteInfoDTOList().isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        return ResponseEntity.status(HttpStatus.OK).body(teamInviteListDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                apiTeamInviteService.getTeamInvite(customOAuth2User.getMemberId()));
     }
 
     @PostMapping

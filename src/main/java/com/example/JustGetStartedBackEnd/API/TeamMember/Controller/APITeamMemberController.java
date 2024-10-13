@@ -21,10 +21,8 @@ public class APITeamMemberController {
 
     @GetMapping
     public ResponseEntity<TeamMemberListDTO> getTeamList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
-        TeamMemberListDTO teamMemberListDTO = apiTeamMemberService.findMyTeam(customOAuth2User.getMemberId());
-        if(teamMemberListDTO.getTeamMemberDTOList().isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        return ResponseEntity.status(HttpStatus.OK).body(teamMemberListDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                apiTeamMemberService.findMyTeam(customOAuth2User.getMemberId()));
     }
 
     @DeleteMapping

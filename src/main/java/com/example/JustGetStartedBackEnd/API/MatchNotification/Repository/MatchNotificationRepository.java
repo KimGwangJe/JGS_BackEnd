@@ -1,22 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Repository;
 
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotification;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.QueryDSL.MatchNotificationQueryDSL;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
-public interface MatchNotificationRepository extends JpaRepository<MatchNotification, Long> {
-
-    @Query("SELECT mn FROM MatchNotification mn WHERE mn.appliTeamName.teamName = :teamName And mn.matchPostId.matchPostId = :matchPostId")
-    MatchNotification findByMatchPostIdAndTeamName(@Param("matchPostId") Long matchPostId, @Param("teamName") String teamName);
-
-    @Modifying
-    @Query("DELETE FROM MatchNotification mn WHERE mn.matchPostId.matchPostId = :matchPostId")
-    void deleteAllByMatchPostId(@Param("matchPostId") Long matchPostId);
-
-    @Query("SELECT mn FROM MatchNotification mn WHERE mn.matchPostId.teamA.teamName = :teamName")
-    List<MatchNotification> findByTeamName(@Param("teamName") String teamName);
+public interface MatchNotificationRepository extends JpaRepository<MatchNotification, Long>, MatchNotificationQueryDSL {
 }

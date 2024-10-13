@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Image.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -25,6 +26,7 @@ public class Image {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @JsonIgnore
     @JoinColumn(name = "community_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Community community;

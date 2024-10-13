@@ -25,11 +25,8 @@ public class APITeamJoinController {
 
     @GetMapping
     public ResponseEntity<JoinNotificationListDTO> getTeamJoinList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        JoinNotificationListDTO joinNotificationListDTO = apiTeamJoinService.getTeamJoinList(customOAuth2User.getMemberId());
-        if(joinNotificationListDTO.getJoinNotifications().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(joinNotificationListDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                apiTeamJoinService.getTeamJoinList(customOAuth2User.getMemberId()));
     }
 
     @PatchMapping("/{joinNotificationId}")
