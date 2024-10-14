@@ -126,7 +126,7 @@ public class APITeamJoinService {
         Long notificationMemberId = joinNotification.getPubMember().getMemberId();
         if(joinTeamDTO.getIsJoin()){
             //팀 가입 처리
-            apiTeamMemberService.joinTeamMember(joinNotification.getPubMember().getMemberId(), joinNotification.getCommunity().getTeam().getTeamName());
+            apiTeamMemberService.joinTeamMember(notificationMemberId, teamName);
             String message = teamName + "팀에 보낸 가입 신청이 승인되었습니다.";
             //매치 가입 신청 승인 알림 SSO & DB 저장
             notificationService.sendNotification(notificationMemberId, message);
@@ -141,7 +141,7 @@ public class APITeamJoinService {
         try{
             teamJoinNotificationRepository.deleteById(joinTeamDTO.getJoinNotificationId());
         } catch(Exception e){
-            log.warn("Team Join Notifcitaion Fail : {}", e.getMessage());
+            log.warn("Team Join Notification Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_DELETE_ERROR);
         }
     }

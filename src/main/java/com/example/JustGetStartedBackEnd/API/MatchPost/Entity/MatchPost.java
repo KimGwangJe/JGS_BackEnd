@@ -37,7 +37,7 @@ public class MatchPost {
     private String location;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "matchPostId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "matchPost", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<MatchNotification> matchNotifications;
 
     public void updateIsEnd() {

@@ -28,16 +28,17 @@ public class APIConferenceService {
 
     @Transactional(rollbackFor = Exception.class)
     public void createConference(Long memberId, ConferenceInfoDTO conferenceInfoDTO) {
-        Optional<Conference> conference = conferenceRepository.findById(conferenceInfoDTO.getConferenceName());
+        String conferenceName = conferenceInfoDTO.getConferenceName();
+        Optional<Conference> conference = conferenceRepository.findById(conferenceName);
 
         if(conference.isPresent()){
-            log.warn("Duplicate Conference Name {}", conferenceInfoDTO.getConferenceName());
+            log.warn("Duplicate Conference Name {}", conferenceName);
             throw new BusinessLogicException(ConferenceExceptionType.DUPLICATION_CONFERENCE_NAME);
         }
 
         Conference newConference = Conference.builder()
                 .organizer(memberService.findByIdReturnEntity(memberId))
-                .conferenceName(conferenceInfoDTO.getConferenceName())
+                .conferenceName(conferenceName)
                 .conferenceDate(conferenceInfoDTO.getConferenceDate())
                 .content(conferenceInfoDTO.getContent())
                 .winnerTeam(null)
@@ -64,7 +65,7 @@ public class APIConferenceService {
         Conference conference = getByConferenceName(conferenceInfoDTO.getConferenceName());
         validConferenceOrganizer(conference, memberId);
 
-        conference.udpateConferenceInfo(conferenceInfoDTO);
+        conference.updateConferenceInfo(conferenceInfoDTO);
     }
 
     private Conference getByConferenceName(String conferenceName){

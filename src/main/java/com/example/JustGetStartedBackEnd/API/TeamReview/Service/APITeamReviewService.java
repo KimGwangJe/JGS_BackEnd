@@ -62,7 +62,7 @@ public class APITeamReviewService {
                 .team(team)
                 .content(fillReviewDTO.getContent())
                 .rating(fillReviewDTO.getRating())
-                .writter(memberService.findByIdReturnEntity(memberId))
+                .writer(memberService.findByIdReturnEntity(memberId))
                 .build();
     }
 

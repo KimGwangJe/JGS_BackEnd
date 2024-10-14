@@ -79,7 +79,7 @@ public class Member {
     private List<TeamMember> teamMembers = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "writter", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
     private List<TeamReview> teamReviews = new ArrayList<>();
 
     @JsonIgnore

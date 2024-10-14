@@ -205,9 +205,9 @@ class APIMatchNotificationServiceTest {
 
         when(matchNotificationRepository.findById(anyLong())).thenReturn(Optional.of(matchNotification));
         when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
-        when(matchNotification.getMatchPostId()).thenReturn(matchPost);
         when(matchPost.getTeamA()).thenReturn(teamA);
-        when(matchNotification.getAppliTeamName()).thenReturn(appliTeam);
+        when(matchNotification.getApplicantTeam()).thenReturn(appliTeam);
+        when(matchNotification.getMatchPost()).thenReturn(matchPost);
         when(matchPost.getMatchDate()).thenReturn(LocalDateTime.MAX);
         when(teamA.getTeamName()).thenReturn("Team A");
         when(appliTeam.getTeamName()).thenReturn("Team B");
@@ -234,7 +234,7 @@ class APIMatchNotificationServiceTest {
 
         when(matchNotificationRepository.findById(anyLong())).thenReturn(Optional.of(matchNotification));
         when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(false); // simulate non-leader scenario
-        when(matchNotification.getMatchPostId()).thenReturn(matchPost);
+        when(matchNotification.getMatchPost()).thenReturn(matchPost);
         when(matchPost.getTeamA()).thenReturn(teamA);
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,

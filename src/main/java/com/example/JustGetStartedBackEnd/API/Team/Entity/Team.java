@@ -73,7 +73,7 @@ public class Team {
     @OneToMany(mappedBy = "teamA", fetch = FetchType.LAZY)
     private List<MatchPost> matchPostsAsTeamA;
 
-    @OneToMany(mappedBy = "appliTeamName", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "applicantTeam", fetch = FetchType.LAZY)
     private List<MatchNotification> matchNotifications;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)

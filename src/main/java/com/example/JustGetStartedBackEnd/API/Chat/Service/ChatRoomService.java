@@ -47,7 +47,7 @@ public class ChatRoomService {
         Member member = memberService.findByIdReturnEntity(memberId);
         Member guest = memberService.findByIdReturnEntity(guestId);
 
-        log.info("Create Room Member {}, {}", member.getMemberId(), guest.getMemberId());
+        log.info("Create Room Member {}, {}", memberId, guestId);
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomName(member.getName() + "&" + guest.getName())

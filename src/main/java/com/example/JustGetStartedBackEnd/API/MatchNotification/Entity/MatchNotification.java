@@ -23,11 +23,11 @@ public class MatchNotification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "match_post_id")
-    private MatchPost matchPostId;
+    private MatchPost matchPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appli_team_name")
-    private Team appliTeamName;
+    private Team applicantTeam;
 
     @Column(name = "content")
     private String content;
@@ -40,11 +40,11 @@ public class MatchNotification {
 
     public MatchNotificationDTO toDTO() {
         MatchNotificationDTO matchNotificationDTO = new MatchNotificationDTO();
-        matchNotificationDTO.setMatchPostId(this.getMatchPostId().getMatchPostId());
+        matchNotificationDTO.setMatchPostId(this.getMatchPost().getMatchPostId());
         matchNotificationDTO.setMatchNotificationId(this.getMatchNotifiId());
         matchNotificationDTO.setRead(this.isRead());
         matchNotificationDTO.setContent(this.getContent());
-        matchNotificationDTO.setTeamName(this.getAppliTeamName().getTeamName());
+        matchNotificationDTO.setTeamName(this.getApplicantTeam().getTeamName());
         matchNotificationDTO.setDate(this.date);
         return matchNotificationDTO;
     }
@@ -55,8 +55,8 @@ public class MatchNotification {
 
     @Builder
     public MatchNotification(MatchPost matchPost, Team team, String content, boolean isRead, LocalDateTime date) {
-        this.matchPostId = matchPost;
-        this.appliTeamName = team;
+        this.matchPost = matchPost;
+        this.applicantTeam = team;
         this.content = content;
         this.isRead = isRead;
         this.date = date;

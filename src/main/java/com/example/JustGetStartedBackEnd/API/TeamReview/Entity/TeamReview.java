@@ -30,15 +30,15 @@ public class TeamReview {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="writter")
-    private Member writter;
+    @JoinColumn(name="writer")
+    private Member writer;
 
     @Builder
-    TeamReview(Team team, float rating, String content, Member writter) {
+    TeamReview(Team team, float rating, String content, Member writer) {
         this.team = team;
         this.rating = rating;
         this.content = content;
-        this.writter = writter;
+        this.writer = writer;
     }
 
     public TeamReviewDTO toTeamReviewDTO() {
@@ -46,7 +46,7 @@ public class TeamReview {
         dto.setTeamName(this.team.getTeamName());
         dto.setTeamReviewID(this.teamReviewId);
         dto.setContent(this.content);
-        dto.setWritter(this.writter.getMemberId());
+        dto.setWriter(this.writer.getMemberId());
         dto.setRating(this.rating);
         return dto;
     }

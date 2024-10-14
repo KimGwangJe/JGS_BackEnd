@@ -61,7 +61,7 @@ public class APICommunityService {
         validateMemberAuthority(community.getWriter(), memberId);
 
         community.updateContentAndTitle(updateCommunityDTO.getContent(), updateCommunityDTO.getTitle());
-        apiImageService.linkImagesToCommunity(community.getContent(),community);
+        apiImageService.linkImagesToCommunity(community.getContent(), community);
     }
 
     @Transactional(rollbackFor = Exception.class)

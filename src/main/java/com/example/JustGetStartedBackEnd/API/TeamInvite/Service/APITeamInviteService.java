@@ -40,41 +40,43 @@ public class APITeamInviteService {
 
     @Transactional(rollbackFor = Exception.class)
     public void createTeamInvite(Long memberId, CreateTeamInviteDTO dto){
-        Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
+        String teamName = dto.getTeamName();
+        Long inviteMemberId = dto.getTo();
+        Team team = teamService.findByTeamNameReturnEntity(teamName);
 
         boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-
         if(!isLeader) {
             log.warn("Not Allow Authority - Create Team Invite");
             throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         }
-        TeamInviteNotification TIN = teamInviteRepository.findByMemberIdAndTeamName(dto.getTo(), dto.getTeamName());
+
+        TeamInviteNotification TIN = teamInviteRepository.findByMemberIdAndTeamName(inviteMemberId, teamName);
         if(TIN != null){
             log.warn("Team Invite Already Request");
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ALREADY_REQUEST);
         }
 
         //이미 가입된 사용자인지 확인
-        TeamMemberListDTO teamMemberListDTO = apiTeamMemberService.findMyTeam(dto.getTo());
+        TeamMemberListDTO teamMemberListDTO = apiTeamMemberService.findMyTeam(inviteMemberId);
         for(TeamMemberDTO teamMember : teamMemberListDTO.getTeamMemberDTOList()){
-            if(teamMember.getTeamName().equals(dto.getTeamName())){
+            if(teamMember.getTeamName().equals(teamName)){
                 log.warn("Team Member Already Join");
                 throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
             }
         }
 
         try{
-            String message = dto.getTeamName() + "팀으로 부터 초대가 왔습니다.";
+            String message = teamName + "팀으로 부터 초대가 왔습니다.";
             TeamInviteNotification newTIN = TeamInviteNotification.builder()
                     .team(team)
-                    .member(memberService.findByIdReturnEntity(dto.getTo()))
+                    .member(memberService.findByIdReturnEntity(inviteMemberId))
                     .isRead(false)
                     .inviteDate(LocalDateTime.now())
                     .content(message)
                     .build();
             teamInviteRepository.save(newTIN);
 
-            notificationService.sendNotification(dto.getTo(), message);
+            notificationService.sendNotification(inviteMemberId, message);
         } catch( Exception e){
             log.warn("Create Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ERROR);
@@ -116,29 +118,30 @@ public class APITeamInviteService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteTeamInvite(Long memberId, JoinTeamDTO joinTeamDTO){
+    public void deleteTeamInvite(Long memberId, JoinTeamDTO joinTeamDTO) {
         TeamInviteNotification teamInviteNotification = findTeamInviteNotificationById(memberId, joinTeamDTO.getInviteId());
 
         String memberName = memberService.findById(memberId).getName();
         Long teamLeaderId = apiTeamMemberService.getLeaderId(teamInviteNotification.getTeam());
-        if(joinTeamDTO.getIsJoin()){
+        String teamName = teamInviteNotification.getTeam().getTeamName();
+        if (joinTeamDTO.getIsJoin()) {
             //멤버 가입 처리
-            apiTeamMemberService.joinTeamMember(memberId, teamInviteNotification.getTeam().getTeamName());
+            apiTeamMemberService.joinTeamMember(memberId, teamName);
 
             //팀 가입 요청 승인 알림 SSO & DB 저장
-            String message = memberName + "님이 " + teamInviteNotification.getTeam().getTeamName() + "팀에 가입하였습니다.";
+            String message = memberName + "님이 " + teamName + "팀에 가입하였습니다.";
             notificationService.sendNotification(teamLeaderId, message);
             apiNotificationService.saveNotification(message, teamLeaderId);
         } else {
             //팀 가입 요청 거부 알림 SSO & DB 저장
-            String message = memberName + "님이 " + teamInviteNotification.getTeam().getTeamName() + "팀에 대한 가입 요청을 거절하였습니다.";
+            String message = memberName + "님이 " + teamName + "팀에 대한 가입 요청을 거절하였습니다.";
             notificationService.sendNotification(teamLeaderId, message);
             apiNotificationService.saveNotification(message, teamLeaderId);
         }
 
-        try{
+        try {
             teamInviteRepository.deleteById(joinTeamDTO.getInviteId());
-        } catch(Exception e){
+        } catch (Exception e) {
             log.warn("Delete Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_DELETE_ERROR);
         }

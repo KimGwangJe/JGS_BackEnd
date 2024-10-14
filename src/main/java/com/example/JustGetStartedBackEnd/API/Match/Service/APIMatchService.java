@@ -29,13 +29,18 @@ public class APIMatchService {
 
     @Transactional(rollbackFor = Exception.class)
     public void createMatch(CreateMatchDTO createMatchDTO){
+        String teamA = createMatchDTO.getTeamA();
+        String teamB = createMatchDTO.getTeamB();
+
         GameMatch gameMatch = GameMatch.builder()
                 .matchDate(createMatchDTO.getMatchDate())
-                .teamA(teamService.findByTeamNameReturnEntity(createMatchDTO.getTeamA()))
-                .teamB(teamService.findByTeamNameReturnEntity(createMatchDTO.getTeamB()))
+                .teamA(teamService.findByTeamNameReturnEntity(teamA))
+                .teamB(teamService.findByTeamNameReturnEntity(teamB))
                 .build();
-        log.info("Match Team {} : {}", createMatchDTO.getTeamA(), createMatchDTO.getTeamB());
+
+        log.info("Match Team {} : {}", teamA, teamB);
         gameMatchRepository.save(gameMatch);
+
     }
 
     @Transactional(rollbackFor = Exception.class)

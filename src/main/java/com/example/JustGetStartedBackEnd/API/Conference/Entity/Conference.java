@@ -39,7 +39,7 @@ public class Conference {
         this.winnerTeam = winnerTeam;
     }
 
-    public void udpateConferenceInfo(ConferenceInfoDTO conferenceInfoDTO){
+    public void updateConferenceInfo(ConferenceInfoDTO conferenceInfoDTO){
         this.conferenceName = conferenceInfoDTO.getConferenceName();
         this.content = conferenceInfoDTO.getContent();
         this.conferenceDate = conferenceInfoDTO.getConferenceDate();

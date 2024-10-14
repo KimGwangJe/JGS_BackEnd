@@ -16,8 +16,8 @@ public class MatchNotificationQueryDSLImpl implements MatchNotificationQueryDSL 
     public MatchNotification findByMatchPostIdAndTeamName(Long matchPostId, String teamName) {
         return queryFactory
                 .selectFrom(matchNotification)
-                .where(matchNotification.appliTeamName.teamName.eq(teamName)
-                        .and(matchNotification.matchPostId.matchPostId.eq(matchPostId)))
+                .where(matchNotification.applicantTeam.teamName.eq(teamName)
+                        .and(matchNotification.matchPost.matchPostId.eq(matchPostId)))
                 .fetchOne();
     }
 
@@ -25,7 +25,7 @@ public class MatchNotificationQueryDSLImpl implements MatchNotificationQueryDSL 
     public void deleteAllByMatchPostId(Long matchPostId) {
         queryFactory
                 .delete(matchNotification)
-                .where(matchNotification.matchPostId.matchPostId.eq(matchPostId))
+                .where(matchNotification.matchPost.matchPostId.eq(matchPostId))
                 .execute();
     }
 
@@ -33,7 +33,7 @@ public class MatchNotificationQueryDSLImpl implements MatchNotificationQueryDSL 
     public List<MatchNotification> findByTeamName(String teamName) {
         return queryFactory
                 .selectFrom(matchNotification)
-                .where(matchNotification.matchPostId.teamA.teamName.eq(teamName))
+                .where(matchNotification.matchPost.teamA.teamName.eq(teamName))
                 .fetch();
     }
 }

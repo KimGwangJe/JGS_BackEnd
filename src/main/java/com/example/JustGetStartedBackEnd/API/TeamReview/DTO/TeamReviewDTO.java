@@ -10,5 +10,5 @@ public class TeamReviewDTO {
     private String teamName;
     private float rating;
     private String content;
-    private Long writter;
+    private Long writer;
 }
