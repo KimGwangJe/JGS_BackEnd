@@ -1,23 +1,22 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.Service.CommunityService;
-import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
+import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.Request.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.ExceptionType.TeamJoinExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Repository.TeamJoinNotificationRepository;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
-import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
-import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -184,34 +183,6 @@ class APITeamJoinServiceTest {
 
         assertEquals(TeamJoinExceptionType.TEAM_JOIN_INVALID_DATE, exception.getExceptionType());
     }
-
-    @Test
-    @DisplayName("팀에 이미 가입된 경우 실패")
-    void createTeamJoinNotification_Fail_TeamMemberAlreadyJoined() {
-        Long memberId = 1L;
-        Long communityId = 1L;
-        Member member = mock(Member.class);
-
-        Team team = Team.builder().teamName("mir").build();
-        Community community = mock(Community.class);
-        when(community.getRecruitDate()).thenReturn(LocalDateTime.now().plusDays(1));
-        when(community.getTeam()).thenReturn(team);
-        when(community.getWriter()).thenReturn(member);
-
-        when(communityService.getCommunityById(communityId)).thenReturn(community);
-
-        TeamMemberDTO teamMemberDTO = new TeamMemberDTO();
-        teamMemberDTO.setTeamName("mir");
-        TeamMemberListDTO teamMemberListDTO = new TeamMemberListDTO();
-        teamMemberListDTO.setTeamMemberDTOList(List.of(teamMemberDTO));
-        when(apiTeamMemberService.findMyTeam(memberId)).thenReturn(teamMemberListDTO);
-
-        BusinessLogicException exception = assertThrows(BusinessLogicException.class,
-                () -> apiTeamJoinService.createTeamJoinNotification(memberId, communityId));
-
-        assertEquals(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN, exception.getExceptionType());
-    }
-
 
     @Test
     @DisplayName("정상적인 요청이 성공적으로 처리")

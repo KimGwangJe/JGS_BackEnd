@@ -1,7 +1,10 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Match.Service.APIMatchService;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.*;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.CreateMatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.MatchingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Response.MatchNotificationListDTO;
@@ -10,16 +13,13 @@ import com.example.JustGetStartedBackEnd.API.MatchNotification.ExceptionType.Mat
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.MatchNotificationRepository;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Service.MatchPostService;
-import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
-import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class APIMatchNotificationService {
         String applicantTeamName = dto.getTeamName();
         //신청자의 팀
         Team team = teamService.findByTeamNameReturnEntity(applicantTeamName);
-        validateLeaderAuthority(team, memberId);
+        apiTeamMemberService.validateLeaderAuthority(team, memberId);
 
         //이미 매치가 신청된 상태인지 확인
         MatchNotification matchNotification = matchNotificationRepository.findByMatchPostIdAndTeamName(dto.getMatchPostId(), applicantTeamName);
@@ -89,7 +89,7 @@ public class APIMatchNotificationService {
 
         MatchPost matchPost = matchNotification.getMatchPost();
         //그 팀의 리더만이 매치 수락 가능
-        validateLeaderAuthority(matchPost.getTeamA(), memberId);
+        apiTeamMemberService.validateLeaderAuthority(matchPost.getTeamA(), memberId);
 
         //매치 요청을 보낸 팀의 리더의 ID를 가져옴
         Long notificationMemberId = apiTeamMemberService.getLeaderId(matchNotification.getApplicantTeam());
@@ -166,14 +166,6 @@ public class APIMatchNotificationService {
         MatchNotificationListDTO matchNotificationListDTO = new MatchNotificationListDTO();
         matchNotificationListDTO.setMatchNotificationDTOList(matchNotificationDTOList);
         return matchNotificationListDTO;
-    }
-
-    private void validateLeaderAuthority(Team team, Long memberId){
-        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-        if(!isLeader) {
-            log.warn("Not Allow Authority - Match Notification");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
     }
 
     private MatchPost getValidatedMatchPost(CreateMatchNotificationDTO dto){

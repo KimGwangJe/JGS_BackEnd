@@ -153,6 +153,17 @@ public class Team {
         return teamInfoDTO;
     }
 
+    public TeamMemberListDTO toTeamMemberListDTO() {
+        List<TeamMemberDTO> teamMemberDTOList = this.getTeamMembers().stream()
+                .map(TeamMember::toTeamMemberDTO)
+                .collect(Collectors.toList());
+
+        TeamMemberListDTO teamMemberListDTO = new TeamMemberListDTO();
+        teamMemberListDTO.setTeamMemberDTOList(teamMemberDTOList);
+
+        return teamMemberListDTO;
+    }
+
     @Builder
     public Team(String teamName, Date createDate, Tier tier, int tierPoint, String introduce, Date lastMatchDate) {
         this.teamName = teamName;

@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -81,7 +82,8 @@ class APITeamReviewServiceTest {
     @Test
     @DisplayName("리뷰 작성 실패 - 매치 날짜가 미래일 경우")
     void fillReview_Fail_WhenMatchDate_InTheFuture() {
-        when(matchService.findByMatchById(anyLong())).thenReturn(futureGameMatch);
+        GameMatch gameMatch = mock(GameMatch.class);
+        when(matchService.findByMatchById(anyLong())).thenReturn(futureGameMatch).thenReturn(gameMatch);
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiTeamReviewService.fillReview(1L, fillReviewDTO));
@@ -93,19 +95,20 @@ class APITeamReviewServiceTest {
     @DisplayName("리뷰 작성 실패 - 사용자가 팀 리더가 아닐 경우")
     void fillReview_Fail_WhenUser_NotTeamLeader() {
         when(matchService.findByMatchById(anyLong())).thenReturn(pastGameMatch);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(false);
+
+        doThrow(new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY))
+                .when(apiTeamMemberService).validateLeaderAuthority(any(Team.class), anyLong());
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiTeamReviewService.fillReview(1L, fillReviewDTO));
 
-        assert(exception.getExceptionType()).equals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        assertEquals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY, exception.getExceptionType());
     }
 
     @Test
     @DisplayName("리뷰 작성 성공 - 정상적인 경우")
     void fillReview_Success() {
         when(matchService.findByMatchById(anyLong())).thenReturn(pastGameMatch);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(new Member());
         when(teamReviewRepository.save(any(TeamReview.class))).thenReturn(new TeamReview());
 

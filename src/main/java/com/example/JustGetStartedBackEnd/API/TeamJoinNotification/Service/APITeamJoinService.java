@@ -1,23 +1,21 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.Service.CommunityService;
-import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
+import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.Request.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.ExceptionType.TeamJoinExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Repository.TeamJoinNotificationRepository;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
-import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
-import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -83,18 +81,9 @@ public class APITeamJoinService {
 
         Member member = memberService.findByIdReturnEntity(memberId);
         TeamMemberListDTO teamMembers = apiTeamMemberService.findMyTeam(memberId);
-        for(TeamMemberDTO teamMember : teamMembers.getTeamMemberDTOList()){
-            if(teamMember.getTeamName().equals(community.getTeam().getTeamName())){
-                log.warn("Team Member Already Join");
-                throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
-            }
-        }
+        apiTeamMemberService.throwIfMemberAlreadyInTeam(teamMembers, community.getTeam().getTeamName());
 
-        JoinNotification joinNotification = teamJoinNotificationRepository.findByMemberIdAndCommunityId(memberId, communityId);
-        if (joinNotification != null) {
-            log.warn("Already Request Team Join Notification");
-            throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_ALREADY_WAIT);
-        }
+        throwIfTeamJoinNotificationExists(memberId, communityId);
 
         try{
             String message = member.getName() + "님으로 부터 " + community.getTeam().getTeamName() +
@@ -143,6 +132,14 @@ public class APITeamJoinService {
         } catch(Exception e){
             log.warn("Team Join Notification Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_DELETE_ERROR);
+        }
+    }
+
+    private void throwIfTeamJoinNotificationExists(Long memberId, Long communityId){
+        JoinNotification joinNotification = teamJoinNotificationRepository.findByMemberIdAndCommunityId(memberId, communityId);
+        if (joinNotification != null) {
+            log.warn("Already Request Team Join Notification");
+            throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_ALREADY_WAIT);
         }
     }
 

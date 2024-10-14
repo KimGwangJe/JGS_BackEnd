@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.MatchPost.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.Request.CreateMatchPostDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.Request.UpdateMatchPostDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
@@ -7,9 +8,7 @@ import com.example.JustGetStartedBackEnd.API.MatchPost.ExceptionType.MatchPostEx
 import com.example.JustGetStartedBackEnd.API.MatchPost.Repository.MatchPostRepository;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
-import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ public class APIMatchPostService {
     public void createMatchPost(Long memberId, CreateMatchPostDTO createMatchPostDTO) {
         Team team = teamService.findByTeamNameReturnEntity(createMatchPostDTO.getTeamName());
 
-        validateLeaderAuthority(team, memberId);
+        apiTeamMemberService.validateLeaderAuthority(team, memberId);
 
         MatchPost matchPost = MatchPost.builder()
                 .teamA(team)
@@ -46,7 +45,7 @@ public class APIMatchPostService {
     @Transactional(rollbackFor = Exception.class)
     public void updateMatchPost(Long memberId, UpdateMatchPostDTO updateMatchPostDTO){
         MatchPost matchPost = getMatchPostById(updateMatchPostDTO.getMatchPostId());
-        validateLeaderAuthority(matchPost.getTeamA(), memberId);
+        apiTeamMemberService.validateLeaderAuthority(matchPost.getTeamA(), memberId);
 
         matchPost.updateMatchPost(updateMatchPostDTO.getMatchDate(), updateMatchPostDTO.getLocation());
     }
@@ -55,7 +54,7 @@ public class APIMatchPostService {
     public void deleteMatchPost(Long memberId, Long matchPostId) {
         MatchPost matchPost = getMatchPostById(matchPostId);
 
-        validateLeaderAuthority(matchPost.getTeamA(), memberId);
+        apiTeamMemberService.validateLeaderAuthority(matchPost.getTeamA(), memberId);
 
         try {
             matchPostRepository.delete(matchPost);
@@ -73,14 +72,6 @@ public class APIMatchPostService {
     private MatchPost getMatchPostById(Long matchPostId) {
         return matchPostRepository.findById(matchPostId)
                 .orElseThrow(() -> new BusinessLogicException(MatchPostException.MATCH_POST_NOT_FOUND));
-    }
-
-    private void validateLeaderAuthority(Team team, Long memberId){
-        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-        if(!isLeader){
-            log.warn("Not Allow Authority - Match Post");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
     }
 
 }

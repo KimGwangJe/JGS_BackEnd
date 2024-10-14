@@ -1,16 +1,15 @@
 package com.example.JustGetStartedBackEnd.API.TeamReview.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
-import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.Request.FillReviewDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
 import com.example.JustGetStartedBackEnd.API.TeamReview.ExceptionType.TeamReviewExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Repository.TeamReviewRepository;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,10 +33,10 @@ public class APITeamReviewService {
         TeamReview teamReview;
         //A팀과 같은 이름이라면 B팀에 대한 리뷰 작성임
         if(gameMatch.getTeamA().getTeamName().equals(fillReviewDTO.getTeamName())){
-            validateLeaderAuthority(gameMatch.getTeamA(), memberId);
+            apiTeamMemberService.validateLeaderAuthority(gameMatch.getTeamA(), memberId);
             teamReview = makeTeamReview(gameMatch.getTeamB(), fillReviewDTO, memberId);
         } else {
-            validateLeaderAuthority(gameMatch.getTeamB(), memberId);
+            apiTeamMemberService.validateLeaderAuthority(gameMatch.getTeamB(), memberId);
             teamReview = makeTeamReview(gameMatch.getTeamA(), fillReviewDTO, memberId);
         }
 
@@ -49,13 +48,6 @@ public class APITeamReviewService {
         }
     }
 
-    private void validateLeaderAuthority(Team team, Long memberId){
-        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-        if(!isLeader){
-            log.warn("Not Allow Authority - Team");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
-    }
 
     private TeamReview makeTeamReview(Team team, FillReviewDTO fillReviewDTO, Long memberId){
         return TeamReview.builder()

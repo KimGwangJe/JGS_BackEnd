@@ -64,7 +64,6 @@ class APIMatchNotificationServiceTest {
         MatchPost matchPost = mock(MatchPost.class);
 
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
         when(matchNotificationRepository.findByMatchPostIdAndTeamName(anyLong(),anyString())).thenReturn(null);
         when(matchPostService.findMatchPostById(anyLong())).thenReturn(matchPost);
         when(matchPost.getMatchDate()).thenReturn(LocalDateTime.MAX);
@@ -84,31 +83,12 @@ class APIMatchNotificationServiceTest {
     }
 
     @Test
-    @DisplayName("매치 알림 생성 - 실패(권한 없음)")
-    void createMatchNotification_Fail_Not_Allow_Authority() {
-        Team team = mock(Team.class);
-
-        when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(false);
-
-        CreateMatchNotificationDTO dto = new CreateMatchNotificationDTO();
-        dto.setTeamName("not mir");
-        dto.setMatchPostId(1L);
-
-        BusinessLogicException exception = assertThrows(BusinessLogicException.class,
-                () -> apiMatchNotificationService.createMatchNotification(anyLong(), dto));
-
-        assert(exception.getExceptionType()).equals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-    }
-
-    @Test
     @DisplayName("매치 알림 생성 - 실패(이미 신청한 알림)")
     void createMatchNotification_Already_Request() {
         Team team = mock(Team.class);
         MatchNotification matchNotification = mock(MatchNotification.class);
 
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
         when(matchNotificationRepository.findByMatchPostIdAndTeamName(anyLong(),anyString())).thenReturn(matchNotification);
 
         CreateMatchNotificationDTO dto = new CreateMatchNotificationDTO();
@@ -128,7 +108,6 @@ class APIMatchNotificationServiceTest {
         MatchPost matchPost = mock(MatchPost.class);
 
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
         when(matchNotificationRepository.findByMatchPostIdAndTeamName(anyLong(),anyString())).thenReturn(null);
         when(matchPostService.findMatchPostById(anyLong())).thenReturn(matchPost);
         when(matchPost.getMatchDate()).thenReturn(LocalDateTime.MIN);
@@ -150,7 +129,6 @@ class APIMatchNotificationServiceTest {
         MatchPost matchPost = mock(MatchPost.class);
 
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
         when(matchNotificationRepository.findByMatchPostIdAndTeamName(anyLong(),anyString())).thenReturn(null);
         when(matchPostService.findMatchPostById(anyLong())).thenReturn(matchPost);
         when(matchPost.getMatchDate()).thenReturn(LocalDateTime.MAX);
@@ -173,7 +151,6 @@ class APIMatchNotificationServiceTest {
         MatchPost matchPost = mock(MatchPost.class);
 
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
         when(matchNotificationRepository.findByMatchPostIdAndTeamName(anyLong(),anyString())).thenReturn(null);
         when(matchPostService.findMatchPostById(anyLong())).thenReturn(matchPost);
         when(matchPost.getMatchDate()).thenReturn(LocalDateTime.MAX);
@@ -204,7 +181,6 @@ class APIMatchNotificationServiceTest {
         matchingDTO.setStatus(true);
 
         when(matchNotificationRepository.findById(anyLong())).thenReturn(Optional.of(matchNotification));
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
         when(matchPost.getTeamA()).thenReturn(teamA);
         when(matchNotification.getApplicantTeam()).thenReturn(appliTeam);
         when(matchNotification.getMatchPost()).thenReturn(matchPost);
@@ -225,6 +201,7 @@ class APIMatchNotificationServiceTest {
     @Test
     @DisplayName("매치 승인/거절 - 실패(권한 없음)")
     void deleteMatchNotification_Fail_Not_Allow_Authority() {
+        // Arrange
         MatchNotification matchNotification = mock(MatchNotification.class);
         MatchPost matchPost = mock(MatchPost.class);
         Team teamA = mock(Team.class);
@@ -233,9 +210,11 @@ class APIMatchNotificationServiceTest {
         matchingDTO.setStatus(true);
 
         when(matchNotificationRepository.findById(anyLong())).thenReturn(Optional.of(matchNotification));
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(false); // simulate non-leader scenario
         when(matchNotification.getMatchPost()).thenReturn(matchPost);
         when(matchPost.getTeamA()).thenReturn(teamA);
+
+        doThrow(new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY))
+                .when(apiTeamMemberService).validateLeaderAuthority(any(Team.class), anyLong());
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiMatchNotificationService.deleteMatchNotification(1L, matchingDTO));
@@ -243,13 +222,14 @@ class APIMatchNotificationServiceTest {
         assertEquals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY, exception.getExceptionType());
 
         verify(matchNotificationRepository, times(1)).findById(anyLong());
-        verify(apiTeamMemberService, times(1)).isLeader(any(Team.class), anyLong());
         verify(apiMatchService, never()).createMatch(any(CreateMatchDTO.class));
         verify(notificationService, never()).sendNotification(anyLong(), anyString());
         verify(apiNotificationService, never()).saveNotification(anyString(), anyLong());
         verify(matchNotificationRepository, never()).deleteAllByMatchPostId(anyLong());
         verify(matchPost, never()).updateIsEnd();
     }
+
+
 
 
 

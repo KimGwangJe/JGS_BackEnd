@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -49,7 +50,6 @@ class APIMatchPostServiceTest {
         Team team = mock(Team.class);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
 
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
 
         apiMatchPostService.createMatchPost(anyLong(), createMatchPostDTO);
 
@@ -66,13 +66,15 @@ class APIMatchPostServiceTest {
         Team team = mock(Team.class);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
 
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(false);
+        doThrow(new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY))
+                .when(apiTeamMemberService).validateLeaderAuthority(eq(team), anyLong());
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiMatchPostService.createMatchPost(anyLong(), createMatchPostDTO));
 
-        assert(exception.getExceptionType()).equals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        assertEquals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY, exception.getExceptionType());
     }
+
 
     @Test
     @DisplayName("매치 포스트 수정 - 성공")
@@ -82,7 +84,6 @@ class APIMatchPostServiceTest {
         when(matchPostRepository.findById(anyLong())).thenReturn(Optional.of(matchPost));
 
         when(matchPost.getTeamA()).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
 
         UpdateMatchPostDTO updateMatchPostDTO = new UpdateMatchPostDTO();
         updateMatchPostDTO.setMatchPostId(1L);
@@ -94,24 +95,27 @@ class APIMatchPostServiceTest {
     }
 
     @Test
-    @DisplayName("매치 포스트 수정 - 실패")
+    @DisplayName("매치 포스트 수정 - 실패(권한 없음)")
     void updateMatchPost_Fail() {
         MatchPost matchPost = mock(MatchPost.class);
         Team team = mock(Team.class);
-        when(matchPostRepository.findById(anyLong())).thenReturn(Optional.of(matchPost));
 
+        when(matchPostRepository.findById(anyLong())).thenReturn(Optional.of(matchPost));
         when(matchPost.getTeamA()).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(false);
 
         UpdateMatchPostDTO updateMatchPostDTO = new UpdateMatchPostDTO();
         updateMatchPostDTO.setMatchPostId(1L);
         updateMatchPostDTO.setLocation("location");
 
-        BusinessLogicException exception = assertThrows(BusinessLogicException.class,
-                () -> apiMatchPostService.updateMatchPost(anyLong(), updateMatchPostDTO));
+        doThrow(new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY))
+                .when(apiTeamMemberService).validateLeaderAuthority(eq(team), anyLong());
 
-        assert(exception.getExceptionType()).equals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        BusinessLogicException exception = assertThrows(BusinessLogicException.class,
+                () -> apiMatchPostService.updateMatchPost(1L, updateMatchPostDTO));
+
+        assertEquals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY, exception.getExceptionType());
     }
+
 
     @Test
     @DisplayName("매치 글 삭제 - 성공")
@@ -121,7 +125,6 @@ class APIMatchPostServiceTest {
         when(matchPostRepository.findById(anyLong())).thenReturn(Optional.of(matchPost));
 
         when(matchPost.getTeamA()).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(true);
 
         apiMatchPostService.deleteMatchPost(1L, 1L);
 
@@ -144,14 +147,17 @@ class APIMatchPostServiceTest {
     void deleteMatchPost_Fail_Not_Leader() {
         MatchPost matchPost = mock(MatchPost.class);
         Team team = mock(Team.class);
-        when(matchPostRepository.findById(anyLong())).thenReturn(Optional.of(matchPost));
 
+        when(matchPostRepository.findById(anyLong())).thenReturn(Optional.of(matchPost));
         when(matchPost.getTeamA()).thenReturn(team);
-        when(apiTeamMemberService.isLeader(any(Team.class), anyLong())).thenReturn(false);
+
+        doThrow(new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY))
+                .when(apiTeamMemberService).validateLeaderAuthority(eq(team), anyLong());
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiMatchPostService.deleteMatchPost(1L, 1L));
 
-        assert(exception.getExceptionType()).equals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        assertEquals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY, exception.getExceptionType());
     }
+
 }

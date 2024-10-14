@@ -1,6 +1,10 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
+import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
+import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.CreateTeamInviteDTO;
@@ -10,14 +14,8 @@ import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.ExceptionType.TeamInviteExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Repository.TeamInviteRepository;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
-import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,26 +42,14 @@ public class APITeamInviteService {
         Long inviteMemberId = dto.getTo();
         Team team = teamService.findByTeamNameReturnEntity(teamName);
 
-        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-        if(!isLeader) {
-            log.warn("Not Allow Authority - Create Team Invite");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
+        apiTeamMemberService.validateLeaderAuthority(team, memberId);
 
-        TeamInviteNotification TIN = teamInviteRepository.findByMemberIdAndTeamName(inviteMemberId, teamName);
-        if(TIN != null){
-            log.warn("Team Invite Already Request");
-            throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ALREADY_REQUEST);
-        }
+        //이미 초대를 보냈던 팀인지 확인
+        throwIfTeamInviteNotificationExists(inviteMemberId, teamName);
 
         //이미 가입된 사용자인지 확인
         TeamMemberListDTO teamMemberListDTO = apiTeamMemberService.findMyTeam(inviteMemberId);
-        for(TeamMemberDTO teamMember : teamMemberListDTO.getTeamMemberDTOList()){
-            if(teamMember.getTeamName().equals(teamName)){
-                log.warn("Team Member Already Join");
-                throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
-            }
-        }
+        apiTeamMemberService.throwIfMemberAlreadyInTeam(teamMemberListDTO, teamName);
 
         try{
             String message = teamName + "팀으로 부터 초대가 왔습니다.";
@@ -144,6 +130,14 @@ public class APITeamInviteService {
         } catch (Exception e) {
             log.warn("Delete Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_DELETE_ERROR);
+        }
+    }
+
+    private void throwIfTeamInviteNotificationExists(Long inviteMemberId, String teamName){
+        TeamInviteNotification TIN = teamInviteRepository.findByMemberIdAndTeamName(inviteMemberId, teamName);
+        if(TIN != null){
+            log.warn("Team Invite Already Request");
+            throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ALREADY_REQUEST);
         }
     }
 

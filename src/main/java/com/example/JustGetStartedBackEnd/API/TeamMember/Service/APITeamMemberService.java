@@ -89,12 +89,7 @@ public class APITeamMemberService {
         Team team = teamService.findByTeamNameReturnEntity(teamName);
         Member member = memberService.findByIdReturnEntity(memberId);
 
-        for(TeamMember teamMember :team.getTeamMembers()){
-            if(Objects.equals(teamMember.getMember().getMemberId(), member.getMemberId())){
-                log.warn("Team Member Already Join");
-                throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
-            }
-        }
+        throwIfMemberAlreadyInTeam(team.toTeamMemberListDTO(), teamName);
 
         TeamMember teamMember = TeamMember.builder()
                 .team(team)
@@ -109,10 +104,23 @@ public class APITeamMemberService {
         }
     }
 
-    public boolean isLeader(Team team, Long memberId){
-        return team.getTeamMembers().stream()
+    public void throwIfMemberAlreadyInTeam(TeamMemberListDTO teamMemberListDTO, String teamName){
+        for(TeamMemberDTO teamMember : teamMemberListDTO.getTeamMemberDTOList()){
+            if(teamMember.getTeamName().equals(teamName)){
+                log.warn("Team Member Already Join");
+                throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_ALREADY_JOIN);
+            }
+        }
+    }
+
+    public void validateLeaderAuthority(Team team, Long memberId){
+        boolean isLeader = team.getTeamMembers().stream()
                 .anyMatch(teamMember -> teamMember.getMember().getMemberId().equals(memberId) &&
                         teamMember.getRole() == TeamMemberRole.Leader);
+        if(!isLeader){
+            log.info("Not Allow Authority");
+            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        }
     }
 
     public Long getLeaderId(Team team){

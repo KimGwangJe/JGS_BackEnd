@@ -1,19 +1,18 @@
 package com.example.JustGetStartedBackEnd.API.Community.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.CreateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.UpdateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
 import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
-import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -89,12 +88,7 @@ public class APICommunityService {
     private Community createTeamRecruitmentCommunityPost(CreateCommunityDTO dto, Member member){
         Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
 
-        boolean isLeader = apiTeamMemberService.isLeader(team, member.getMemberId());
-
-        if (!isLeader) {
-            log.warn("Not Allow Authority - Create Community Post");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
-        }
+        apiTeamMemberService.validateLeaderAuthority(team, member.getMemberId());
 
         return Community.builder()
                 .content(dto.getContent())

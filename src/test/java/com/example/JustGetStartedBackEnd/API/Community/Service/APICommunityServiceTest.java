@@ -61,7 +61,6 @@ class APICommunityServiceTest {
 
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(eq(team), anyLong())).thenReturn(true);
 
         apiCommunityService.createCommunity(anyLong(), createCommunityDTO);
 
@@ -80,13 +79,16 @@ class APICommunityServiceTest {
 
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
-        when(apiTeamMemberService.isLeader(eq(team), anyLong())).thenReturn(false);
+
+        doThrow(new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY))
+                .when(apiTeamMemberService).validateLeaderAuthority(eq(team), anyLong());
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiCommunityService.createCommunity(anyLong(), createCommunityDTO));
 
-        assert(exception.getExceptionType()).equals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
+        assertEquals(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY, exception.getExceptionType());
     }
+
 
     @Test
     @DisplayName("커뮤니티 글 수정 - 성공")

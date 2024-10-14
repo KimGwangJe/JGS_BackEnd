@@ -8,7 +8,6 @@ import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.ExceptionType.TeamExceptionType;
 import com.example.JustGetStartedBackEnd.API.Team.Repository.TeamRepository;
-import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +57,7 @@ public class APITeamService {
     public void updateIntroduce(Long memberId, TeamRequestDTO dto){
         Team team = teamRepository.findByTeamName(dto.getTeamName());
 
-        validateLeaderAuthority(team, memberId);
+        apiTeamMemberService.validateLeaderAuthority(team, memberId);
         team.updateIntroduce(dto.getIntroduce());
     }
 
@@ -69,14 +68,6 @@ public class APITeamService {
         } catch(Exception e){
             log.warn("Team Save Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
-        }
-    }
-
-    private void validateLeaderAuthority(Team team, Long memberId){
-        boolean isLeader = apiTeamMemberService.isLeader(team, memberId);
-        if(!isLeader){
-            log.warn("Not Allow Authority - Team");
-            throw new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY);
         }
     }
 
