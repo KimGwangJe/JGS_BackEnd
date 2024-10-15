@@ -17,6 +17,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // 메모리 기반 메시지 브로커가 해당 api를 구독하고 있는 클라이언트에게 메시지를 전달한다.
         registry.enableSimpleBroker("/api/sub");
         // 클라이언트로부터 메시지를 받을 api의 prefix를 설정한다.
+        // api/pub/message 로 메시지 전송
         registry.setApplicationDestinationPrefixes("/api/pub");
     }
 

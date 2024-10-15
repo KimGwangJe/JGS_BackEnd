@@ -27,7 +27,9 @@ public class RedisSubscriber implements MessageListener {
             // Json 데이터로 변경
             ResponseChatDTO responseChatDTO = objectMapper.readValue(publishMessage, ResponseChatDTO.class);
 
-            //전송
+            // 전송
+            log.info("chatRoom Id : {}", responseChatDTO.getChatRoomId());
+            // 구독 중인 채널에 메시지가 발행되면 내부 브로커로 메시지를 전달한다.
             messagingTemplate.convertAndSend("/api/sub/" + responseChatDTO.getChatRoomId(), responseChatDTO);
 
         } catch (Exception e) {

@@ -21,6 +21,8 @@ public class RedisPublisher {
         try {
             // String으로 변경
             String jsonMessage = objectMapper.writeValueAsString(message);
+
+            // 해당 토픽에 메시지를 발행
             redisTemplate.convertAndSend(channelTopic.getTopic(), jsonMessage);
         } catch (JsonProcessingException e) {
             log.warn(e.getMessage());
