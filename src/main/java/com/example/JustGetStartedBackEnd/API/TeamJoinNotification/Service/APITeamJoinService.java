@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
@@ -7,7 +8,6 @@ import com.example.JustGetStartedBackEnd.API.Community.Service.CommunityService;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.Request.JoinTeamDTO;
@@ -18,6 +18,7 @@ import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberL
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +33,10 @@ public class APITeamJoinService {
     private final TeamJoinNotificationRepository teamJoinNotificationRepository;
     private final CommunityService communityService;
     private final MemberService memberService;
-    private final NotificationService notificationService;
     private final APITeamMemberService apiTeamMemberService;
     private final APINotificationService apinotificationService;
+
+    private final ApplicationEventPublisher publisher;
 
     @Transactional(readOnly = true)
     public JoinNotificationListDTO getTeamJoinList(Long memberId) {
@@ -85,20 +87,21 @@ public class APITeamJoinService {
 
         throwIfTeamJoinNotificationExists(memberId, communityId);
 
-        try{
-            String message = member.getName() + "님으로 부터 " + community.getTeam().getTeamName() +
-                    "팀에 가입 신청이 왔습니다.";
-            JoinNotification newJoinNotification = JoinNotification.builder()
-                    .isRead(false)
-                    .community(community)
-                    .pubMember(member)
-                    .content(message)
-                    .date(LocalDateTime.now())
-                    .build();
-            teamJoinNotificationRepository.save(newJoinNotification);
+        String message = member.getName() + "님으로 부터 " + community.getTeam().getTeamName() +
+                "팀에 가입 신청이 왔습니다.";
+        JoinNotification newJoinNotification = JoinNotification.builder()
+                .isRead(false)
+                .community(community)
+                .pubMember(member)
+                .content(message)
+                .date(LocalDateTime.now())
+                .build();
 
-            Long subMemberId = community.getWriter().getMemberId();
-            notificationService.sendNotification(subMemberId, message);
+        Long subMemberId = community.getWriter().getMemberId();
+        publisher.publishEvent(new SSEMessageDTO(subMemberId, message));
+
+        try{
+            teamJoinNotificationRepository.save(newJoinNotification);
         } catch(Exception e){
             log.warn("Team Join Request Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_REQUEST_ERROR);
@@ -113,21 +116,20 @@ public class APITeamJoinService {
         String teamName = joinNotification.getCommunity().getTeam().getTeamName();
         //가입 신청을 보낸 사용자에게 알림을 보냄
         Long notificationMemberId = joinNotification.getPubMember().getMemberId();
+        String message;
         if(joinTeamDTO.getIsJoin()){
             //팀 가입 처리
             apiTeamMemberService.joinTeamMember(notificationMemberId, teamName);
-            String message = teamName + "팀에 보낸 가입 신청이 승인되었습니다.";
-            //매치 가입 신청 승인 알림 SSO & DB 저장
-            notificationService.sendNotification(notificationMemberId, message);
-            apinotificationService.saveNotification(message, notificationMemberId);
+            message = teamName + "팀에 보낸 가입 신청이 승인되었습니다.";
         } else {
-            String message = teamName + "팀에 보낸 가입 신청이 거부되었습니다.";
-            //매치 가입 신청 거부 알림 SSO & DB 저장
-            notificationService.sendNotification(notificationMemberId, message);
-            apinotificationService.saveNotification(message, notificationMemberId);
+            message = teamName + "팀에 보낸 가입 신청이 거부되었습니다.";
         }
+        //매치 가입 신청 승인 / 거절 알림 SSO
+        publisher.publishEvent(new SSEMessageDTO(notificationMemberId, message));
 
         try{
+            apinotificationService.saveNotification(message, notificationMemberId);
+
             teamJoinNotificationRepository.deleteById(joinTeamDTO.getJoinNotificationId());
         } catch(Exception e){
             log.warn("Team Join Notification Fail : {}", e.getMessage());

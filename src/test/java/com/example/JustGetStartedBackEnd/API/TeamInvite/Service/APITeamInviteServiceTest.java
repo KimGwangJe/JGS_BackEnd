@@ -5,7 +5,6 @@ import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotif
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.CreateTeamInviteDTO;
@@ -23,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ class APITeamInviteServiceTest {
     @Mock
     private MemberService memberService;
     @Mock
-    private NotificationService notificationService;
+    private ApplicationEventPublisher publisher;
     @Mock
     private APITeamMemberService apiTeamMemberService;
     @Mock

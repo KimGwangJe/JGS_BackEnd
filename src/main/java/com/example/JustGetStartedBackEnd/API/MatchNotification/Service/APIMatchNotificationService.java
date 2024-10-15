@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Match.Service.APIMatchService;
@@ -13,7 +14,6 @@ import com.example.JustGetStartedBackEnd.API.MatchNotification.ExceptionType.Mat
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.MatchNotificationRepository;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Service.MatchPostService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
@@ -22,6 +22,7 @@ import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +38,11 @@ public class APIMatchNotificationService {
     private final MatchNotificationRepository matchNotificationRepository;
     private final TeamService teamService;
     private final MatchPostService matchPostService;
-    private final NotificationService notificationService;
     private final APIMatchService matchService;
     private final APITeamMemberService apiTeamMemberService;
     private final APINotificationService apinotificationService;
+
+    private final ApplicationEventPublisher publisher;
 
     @Transactional(rollbackFor = Exception.class)
     public void createMatchNotification(Long memberId, CreateMatchNotificationDTO dto){
@@ -59,20 +61,20 @@ public class APIMatchNotificationService {
 
         MatchPost matchPost = getValidatedMatchPost(dto);
 
+        Long notificationMemberId = apiTeamMemberService.getLeaderId(matchPost.getTeamA());
+        String message = applicantTeamName + "팀이 " +
+                matchPost.getTeamA().getTeamName() + "팀에 매치를 신청하였습니다.";
+        publisher.publishEvent(new SSEMessageDTO(notificationMemberId, message));
+
+        MatchNotification newMatchNotification = MatchNotification.builder()
+                .matchPost(matchPost)
+                .team(team)
+                .content(message)
+                .isRead(false)
+                .date(LocalDateTime.now())
+                .build();
+
         try{
-            Long notificationMemberId = apiTeamMemberService.getLeaderId(matchPost.getTeamA());
-            String message = applicantTeamName + "팀이 " +
-                    matchPost.getTeamA().getTeamName() + "팀에 매치를 신청하였습니다.";
-            notificationService.sendNotification(notificationMemberId, message);
-
-            MatchNotification newMatchNotification = MatchNotification.builder()
-                    .matchPost(matchPost)
-                    .team(team)
-                    .content(message)
-                    .isRead(false)
-                    .date(LocalDateTime.now())
-                    .build();
-
             matchNotificationRepository.save(newMatchNotification);
         } catch(Exception e){
             log.warn("Create Match Notification failed : {}", e.getMessage());
@@ -99,43 +101,46 @@ public class APIMatchNotificationService {
         //도전 팀
         String challengeTeamName = matchNotification.getApplicantTeam().getTeamName();
 
-        //매치를 수락한 경우
-        //매치를 요청 한 사람에게 알림
-        if(matchingDTO.getStatus()){
-            CreateMatchDTO createMatchDTO = new CreateMatchDTO();
-            createMatchDTO.setMatchDate(Timestamp.valueOf(matchPost.getMatchDate()));
-            createMatchDTO.setTeamA(matchPostTeamName); //매치를 올린 팀
-            createMatchDTO.setTeamB(challengeTeamName); //도전자
+        String message;
 
-            String message = matchPostTeamName + "팀과 " +
-                    challengeTeamName +
-                    "팀의 매치가 성사 되었습니다.";
-            //매치 성사 알림 SSO & DB 저장
-            notificationService.sendNotification(notificationMemberId, message);
+        try{
+            //매치를 수락한 경우
+            //매치를 요청 한 사람에게 알림
+            if(matchingDTO.getStatus()){
+                CreateMatchDTO createMatchDTO = new CreateMatchDTO();
+                createMatchDTO.setMatchDate(Timestamp.valueOf(matchPost.getMatchDate()));
+                createMatchDTO.setTeamA(matchPostTeamName); //매치를 올린 팀
+                createMatchDTO.setTeamB(challengeTeamName); //도전자
+
+                message = matchPostTeamName + "팀과 " +
+                        challengeTeamName +
+                        "팀의 매치가 성사 되었습니다.";
+
+                Timestamp lastMatchDate =  Timestamp.valueOf(matchPost.getMatchDate());
+                //두 팀의 마지막 매치 날짜 변경
+                matchNotification.getMatchPost().getTeamA().updateLastMatchDate(lastMatchDate);
+                matchNotification.getApplicantTeam().updateLastMatchDate(lastMatchDate);
+
+                //매치 생성
+                matchService.createMatch(createMatchDTO);
+                //매치글에 대한 다른 알림들까지 전부 삭제
+                matchNotificationRepository.deleteAllByMatchPostId(matchPost.getMatchPostId());
+
+                //매치 포스트를 마감처리
+                matchPost.updateIsEnd();
+            } else {
+                message = matchPostTeamName + "팀과 " +
+                        challengeTeamName +
+                        "팀의 매치가 상대팀의 팀장으로부터 거부되었습니다.";
+
+                //try 필요
+                matchNotificationRepository.deleteById(matchingDTO.getMatchNotificationId());
+            }
+            //매치 승인 / 거부 알림 SSO
+            publisher.publishEvent(new SSEMessageDTO(notificationMemberId, message));
             apinotificationService.saveNotification(message, notificationMemberId);
-
-            Timestamp lastMatchDate =  Timestamp.valueOf(matchPost.getMatchDate());
-            //두 팀의 마지막 매치 날짜 변경
-            matchNotification.getMatchPost().getTeamA().updateLastMatchDate(lastMatchDate);
-            matchNotification.getApplicantTeam().updateLastMatchDate(lastMatchDate);
-
-            //매치 생성
-            matchService.createMatch(createMatchDTO);
-
-            //매치글에 대한 다른 알림들까지 전부 삭제
-            matchNotificationRepository.deleteAllByMatchPostId(matchPost.getMatchPostId());
-
-            //매치 포스트를 마감처리
-            matchPost.updateIsEnd();
-        } else {
-            String message = matchPostTeamName + "팀과 " +
-                    challengeTeamName +
-                    "팀의 매치가 상대팀의 팀장으로부터 거부되었습니다.";
-            //매치 거부 알림 SSO & DB 저장
-            notificationService.sendNotification(notificationMemberId, message);
-            apinotificationService.saveNotification(message, notificationMemberId);
-
-            matchNotificationRepository.deleteById(matchingDTO.getMatchNotificationId());
+        } catch(Exception e){
+            throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_DELETE_ERROR);
         }
     }
 

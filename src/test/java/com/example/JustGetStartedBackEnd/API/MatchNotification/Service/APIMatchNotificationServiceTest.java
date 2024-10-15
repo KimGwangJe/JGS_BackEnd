@@ -1,7 +1,10 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Match.Service.APIMatchService;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.*;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.CreateMatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.MatchingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Response.MatchNotificationListDTO;
@@ -10,22 +13,20 @@ import com.example.JustGetStartedBackEnd.API.MatchNotification.ExceptionType.Mat
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.MatchNotificationRepository;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Service.MatchPostService;
-import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMemberRole;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -46,7 +47,7 @@ class APIMatchNotificationServiceTest {
     @Mock
     private MatchPostService matchPostService;
     @Mock
-    private NotificationService notificationService;
+    private ApplicationEventPublisher publisher;
     @Mock
     private APIMatchService apiMatchService;
     @Mock
@@ -192,7 +193,6 @@ class APIMatchNotificationServiceTest {
 
         verify(matchNotificationRepository, times(1)).findById(anyLong());
         verify(apiMatchService, times(1)).createMatch(any(CreateMatchDTO.class));
-        verify(notificationService, times(1)).sendNotification(anyLong(), anyString());
         verify(apiNotificationService, times(1)).saveNotification(anyString(), anyLong());
         verify(matchNotificationRepository, times(1)).deleteAllByMatchPostId(anyLong());
         verify(matchPost, times(1)).updateIsEnd();
@@ -223,7 +223,6 @@ class APIMatchNotificationServiceTest {
 
         verify(matchNotificationRepository, times(1)).findById(anyLong());
         verify(apiMatchService, never()).createMatch(any(CreateMatchDTO.class));
-        verify(notificationService, never()).sendNotification(anyLong(), anyString());
         verify(apiNotificationService, never()).saveNotification(anyString(), anyLong());
         verify(matchNotificationRepository, never()).deleteAllByMatchPostId(anyLong());
         verify(matchPost, never()).updateIsEnd();

@@ -1,10 +1,10 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.CreateTeamInviteDTO;
@@ -18,6 +18,7 @@ import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberL
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +33,10 @@ public class APITeamInviteService {
     private final TeamInviteRepository teamInviteRepository;
     private final TeamService teamService;
     private final MemberService memberService;
-    private final NotificationService notificationService;
     private final APITeamMemberService apiTeamMemberService;
     private final APINotificationService apiNotificationService;
+
+    private final ApplicationEventPublisher publisher;
 
     @Transactional(rollbackFor = Exception.class)
     public void createTeamInvite(Long memberId, CreateTeamInviteDTO dto){
@@ -62,7 +64,7 @@ public class APITeamInviteService {
                     .build();
             teamInviteRepository.save(newTIN);
 
-            notificationService.sendNotification(inviteMemberId, message);
+            publisher.publishEvent(new SSEMessageDTO(inviteMemberId, message));
         } catch( Exception e){
             log.warn("Create Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ERROR);
@@ -110,22 +112,22 @@ public class APITeamInviteService {
         String memberName = memberService.findById(memberId).getName();
         Long teamLeaderId = apiTeamMemberService.getLeaderId(teamInviteNotification.getTeam());
         String teamName = teamInviteNotification.getTeam().getTeamName();
+
+        String message;
         if (joinTeamDTO.getIsJoin()) {
             //멤버 가입 처리
             apiTeamMemberService.joinTeamMember(memberId, teamName);
-
-            //팀 가입 요청 승인 알림 SSO & DB 저장
-            String message = memberName + "님이 " + teamName + "팀에 가입하였습니다.";
-            notificationService.sendNotification(teamLeaderId, message);
-            apiNotificationService.saveNotification(message, teamLeaderId);
+            message = memberName + "님이 " + teamName + "팀에 가입하였습니다.";
         } else {
-            //팀 가입 요청 거부 알림 SSO & DB 저장
-            String message = memberName + "님이 " + teamName + "팀에 대한 가입 요청을 거절하였습니다.";
-            notificationService.sendNotification(teamLeaderId, message);
-            apiNotificationService.saveNotification(message, teamLeaderId);
+            message = memberName + "님이 " + teamName + "팀에 대한 가입 요청을 거절하였습니다.";
         }
 
+        //팀 가입 요청 승인 알림 SSO
+        publisher.publishEvent(new SSEMessageDTO(teamLeaderId, message));
+
         try {
+            apiNotificationService.saveNotification(message, teamLeaderId);
+
             teamInviteRepository.deleteById(joinTeamDTO.getInviteId());
         } catch (Exception e) {
             log.warn("Delete Team Invite Failed : {}", e.getMessage());

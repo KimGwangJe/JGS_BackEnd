@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
@@ -7,7 +8,6 @@ import com.example.JustGetStartedBackEnd.API.Community.Service.CommunityService;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
-import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.Request.JoinTeamDTO;
@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ class APITeamJoinServiceTest {
     private MemberService memberService;
 
     @Mock
-    private NotificationService notificationService;
+    private ApplicationEventPublisher publisher;
 
     @Mock
     private APITeamMemberService apiTeamMemberService;
@@ -220,12 +221,10 @@ class APITeamJoinServiceTest {
 
         lenient().when(teamJoinNotificationRepository.findByMemberIdAndCommunityId(requesterId, communityId)).thenReturn(null);
 
-        lenient().doNothing().when(notificationService).sendNotification(anyLong(), anyString());
 
         apiTeamJoinService.createTeamJoinNotification(requesterId, communityId);
 
         verify(teamJoinNotificationRepository, times(1)).save(any(JoinNotification.class));
-        verify(notificationService, times(1)).sendNotification(anyLong(), anyString());
     }
 
     @Test
@@ -253,7 +252,6 @@ class APITeamJoinServiceTest {
 
         // Mock services
         doNothing().when(apiTeamMemberService).joinTeamMember(anyLong(), anyString());
-        doNothing().when(notificationService).sendNotification(anyLong(), anyString());
         doNothing().when(apiNotificationService).saveNotification(anyString(), anyLong());
 
         // Execute the method under test
