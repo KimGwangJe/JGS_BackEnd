@@ -40,12 +40,11 @@ public class APIMatchService {
 
         log.info("Match Team {} : {}", teamA, teamB);
         gameMatchRepository.save(gameMatch);
-
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void updatePoint(Long memberId, EnterScoreDTO enterScoreDTO) {
-        GameMatch gameMatch = makeGameMatch(enterScoreDTO, memberId);
+        GameMatch gameMatch = getGameMatch(enterScoreDTO, memberId);
 
         // 점수 수정
         gameMatch.updateTeamAScore(enterScoreDTO.getScoreA());
@@ -56,10 +55,6 @@ public class APIMatchService {
 
         // 결과에 따라 점수를 변경하는 알고리즘
         updateTierPoints(teamA, teamB, gameMatch.getTeamAScore(), gameMatch.getTeamBScore());
-
-        // 변경된 팀 정보를 데이터베이스에 반영
-        apiTeamService.save(teamA);
-        apiTeamService.save(teamB);
     }
 
     private void updateTierPoints(Team teamA, Team teamB, int ATeamScore, int BTeamScore) {
@@ -146,7 +141,7 @@ public class APIMatchService {
         teamB.updateTier(tierService.getTierById(teamBTier), teamBPoints);
     }
 
-    private GameMatch makeGameMatch(EnterScoreDTO enterScoreDTO, Long memberId){
+    private GameMatch getGameMatch(EnterScoreDTO enterScoreDTO, Long memberId){
         GameMatch gameMatch = gameMatchRepository.findById(enterScoreDTO.getMatchId())
                 .orElseThrow(() -> new BusinessLogicException(MatchExceptionType.MATCH_NOT_FOUND));
 
