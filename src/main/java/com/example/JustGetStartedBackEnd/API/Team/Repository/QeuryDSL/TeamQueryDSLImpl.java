@@ -83,4 +83,13 @@ public class TeamQueryDSLImpl implements TeamQueryDSL {
         return new PageImpl<>(content, pageable, total);
     }
 
+    @Override
+    public List<Team> findTop3Team() {
+        return queryFactory
+                .selectFrom(team)
+                .orderBy(team.tier.tierId.desc()) // tierId를 내림차순으로 정렬
+                .orderBy(team.tierPoint.desc())   // tierPoint를 내림차순으로 정렬
+                .limit(3)                         // 상위 3개만 선택
+                .fetch();                         // 결과를 가져오기
+    }
 }

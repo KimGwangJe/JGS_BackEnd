@@ -3,6 +3,8 @@ package com.example.JustGetStartedBackEnd.API.FCM.Service;
 import com.example.JustGetStartedBackEnd.API.FCM.Entity.FCMToken;
 import com.example.JustGetStartedBackEnd.API.FCM.Repository.FCMRepository;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class FCMService {
     private final FCMRepository fcmRepository;
     private final MemberService memberService;
+    private final APITeamService apiTeamService;
 
     @Transactional(rollbackFor=Exception.class)
     public void save(Long memberId, String token){
@@ -46,23 +49,31 @@ public class FCMService {
         List<String> fcmTokenList = tokens.stream()
                 .map(FCMToken::getFcmToken)
                 .toList();
+
+        List<Team> teams = apiTeamService.findTop3Team();
+        StringBuilder body = new StringBuilder();
+        for(int i = 1; i < teams.size()+1; i++){
+            body.append(String.valueOf(i))
+                    .append("등 팀: ")
+                    .append(teams.get(i-1).getTeamName())
+                    .append("\n");
+        }
+
         // 메시지 리스트 생성
         List<Message> messages = new ArrayList<>();
         for (String token : fcmTokenList) {
             Message message = Message.builder()
                     .setNotification(Notification.builder()
-                            .setTitle("제목")
-                            .setBody("내용")
+                            .setTitle("JGS 팀 순위")
+                            .setBody(body.toString())
                             .build())
                     .setToken(token) // 각 토큰을 설정
                     .build();
             messages.add(message);
-            System.out.println(messages.get(0));
         }
 
         // 메시지 전송
         BatchResponse response = FirebaseMessaging.getInstance().sendEach(messages);
-        System.out.println(response.getSuccessCount());
         // 실패한 토큰 확인
         if (response.getFailureCount() > 0) {
             List<SendResponse> responses = response.getResponses();

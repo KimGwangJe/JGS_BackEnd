@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +70,11 @@ public class APITeamService {
             log.warn("Team Save Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamExceptionType.TEAM_SAVE_ERROR);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Team> findTop3Team(){
+        return teamRepository.findTop3Team();
     }
 
 }

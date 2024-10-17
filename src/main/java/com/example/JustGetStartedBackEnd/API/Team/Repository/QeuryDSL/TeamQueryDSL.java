@@ -4,6 +4,8 @@ import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface TeamQueryDSL {
     Team findByTeamName(String teamName);
 
@@ -12,4 +14,6 @@ public interface TeamQueryDSL {
     Page<Team> findByTierAndKeyword(Long tierId, String keyword, Pageable pageable);
 
     Page<Team> findByTier(Long tierId, Pageable pageable);
+
+    List<Team> findTop3Team();
 }
