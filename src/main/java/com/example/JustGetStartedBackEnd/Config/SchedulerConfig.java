@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.Config;
 
+import com.example.JustGetStartedBackEnd.API.FCM.Service.FCMService;
 import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Service.APIMatchPostService;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +16,10 @@ public class SchedulerConfig {
 
     private final APIImageService apiImageService;
     private final APIMatchPostService apiMatchPostService;
+    private final FCMService fcmService;
 
     //사용되지 않는 이미지를 삭제
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 오후 2시 40분에 실행
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 오후 00시 00분에 실행
     @Transactional(rollbackFor = Exception.class)
     public void deleteImage() {
         try {
@@ -34,6 +36,16 @@ public class SchedulerConfig {
             apiMatchPostService.updateMatchPostsToEnd();
         } catch(Exception e){
             log.error("Error Update Match Post", e);
+        }
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 오후 00시 00분에 실행
+    @Transactional(rollbackFor = Exception.class)
+    public void sendFCMNotification() {
+        try {
+            fcmService.sendMessage();
+        } catch(Exception e){
+            log.error("Error Send FCM Notification", e);
         }
     }
 }

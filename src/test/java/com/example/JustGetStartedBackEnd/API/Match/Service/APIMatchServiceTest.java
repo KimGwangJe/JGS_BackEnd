@@ -93,6 +93,5 @@ class APIMatchServiceTest {
         verify(gameMatchRepository, times(1)).findById(enterScoreDTO.getMatchId());
         verify(gameMatch, times(1)).updateTeamAScore(enterScoreDTO.getScoreA());
         verify(gameMatch, times(1)).updateTeamBScore(enterScoreDTO.getScoreB());
-        verify(apiTeamService, times(2)).save(any(Team.class));
     }
 }

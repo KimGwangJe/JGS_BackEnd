@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.API.Common;
+package com.example.JustGetStartedBackEnd.API.Common.EventListener;
 
 import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
 import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
