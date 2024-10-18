@@ -1,12 +1,13 @@
 package com.example.JustGetStartedBackEnd.API.Member.Repository.QueryDSL;
 
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
@@ -19,20 +20,22 @@ public class MemberQueryDSLImpl implements MemberQueryDSL {
 
     @Override
     public Page<Member> findByNameAndEmail(String keyword, Pageable pageable) {
-        JPQLQuery<Member> query = queryFactory
-                .selectFrom(member)
-                .where(
-                        member.name.containsIgnoreCase(keyword)
-                                .or(member.email.containsIgnoreCase(keyword))
-                );
+        BooleanExpression memberNameOrEmailCondition = member.name.containsIgnoreCase(keyword)
+                .or(member.email.containsIgnoreCase(keyword));
 
-        long total = query.fetchCount();
-        List<Member> content = query
+        List<Member> fetch = queryFactory
+                .selectFrom(member)
+                .where(memberNameOrEmailCondition)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, total);
+        JPQLQuery<Long> count = queryFactory
+                .select(member.count())
+                .from(member)
+                .where(memberNameOrEmailCondition);
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
 }

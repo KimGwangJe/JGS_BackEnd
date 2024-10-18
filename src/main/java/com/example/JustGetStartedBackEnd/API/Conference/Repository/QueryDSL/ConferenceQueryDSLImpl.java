@@ -5,8 +5,8 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
@@ -18,16 +18,18 @@ public class ConferenceQueryDSLImpl implements ConferenceQueryDSL {
 
     @Override
     public Page<Conference> findByConferenceNameKeyword(String keyword, Pageable pageable){
-        JPQLQuery<Conference> query = queryFactory
+        List<Conference> fetch = queryFactory
                 .selectFrom(conference)
-                .where(conference.conferenceName.eq(keyword));
-
-        long total = query.fetchCount(); // 전체 데이터 수 계산
-        List<Conference> conferences = query
+                .where(conference.conferenceName.eq(keyword))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(conferences, pageable, total);
+        JPQLQuery<Long> count = queryFactory
+                .select(conference.count())
+                .from(conference)
+                .where(conference.conferenceName.eq(keyword));
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 }

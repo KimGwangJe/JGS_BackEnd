@@ -1,12 +1,13 @@
 package com.example.JustGetStartedBackEnd.API.Community.Repository.QueryDSL;
 
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
@@ -19,22 +20,24 @@ public class CommunityQueryDSLImpl implements CommunityQueryDSL {
 
     @Override
     public Page<Community> findByTeamNameAndTitle(String keyword, Pageable pageable){
+        BooleanExpression titleOrTeamNameCondition = community.title.equalsIgnoreCase(keyword)
+                .or(team.teamName.equalsIgnoreCase(keyword));
+
         // QueryDSL로 검색 쿼리 생성
-        JPQLQuery<Community> query = queryFactory
+        List<Community> fetch = queryFactory
                 .selectFrom(community)
                 .leftJoin(community.team, team)
-                .where(community.title.equalsIgnoreCase(keyword)
-                        .or(team.teamName.equalsIgnoreCase(keyword)));
-
-        // 페이징 적용
-        long total = query.fetchCount(); // 전체 데이터 수 계산
-        List<Community> communities = query
+                .where(titleOrTeamNameCondition)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // Page 객체로 변환하여 반환
-        return new PageImpl<>(communities, pageable, total);
+        JPQLQuery<Long> count = queryFactory
+                .select(community.count())
+                .from(community)
+                .where(titleOrTeamNameCondition);
 
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 }

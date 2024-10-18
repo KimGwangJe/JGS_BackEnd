@@ -1,12 +1,13 @@
 package com.example.JustGetStartedBackEnd.API.Match.Repository.QueryDSL;
 
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
@@ -19,57 +20,62 @@ public class GameMatchQueryDSLImpl implements GameMatchQueryDSL {
 
     @Override
     public Page<GameMatch> findByTeamNameKeyword(String keyword, Pageable pageable) {
-        JPQLQuery<GameMatch> query = queryFactory
-                .selectFrom(gameMatch)
-                .leftJoin(gameMatch.teamA, team).fetchJoin()
-                .leftJoin(gameMatch.teamA.tier).fetchJoin()
-                .where(gameMatch.teamA.teamName.containsIgnoreCase(keyword)
-                        .or(gameMatch.teamB.teamName.containsIgnoreCase(keyword)));
+        BooleanExpression teamNameCondition = gameMatch.teamA.teamName.containsIgnoreCase(keyword)
+                .or(gameMatch.teamB.teamName.containsIgnoreCase(keyword));
 
-        long total = query.fetchCount(); // 전체 데이터 수 계산
-        List<GameMatch> gameMatches = query
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+        List<GameMatch> fetch = getGameMatchList(teamNameCondition, pageable);
 
-        return new PageImpl<>(gameMatches, pageable, total);
+        JPQLQuery<Long> count = getCount(teamNameCondition);
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
     @Override
     public Page<GameMatch> findByTierAndKeyword(Long tierId, String keyword, Pageable pageable) {
-        JPQLQuery<GameMatch> query = queryFactory
-                .selectFrom(gameMatch)
-                .leftJoin(gameMatch.teamA, team).fetchJoin()
-                .leftJoin(gameMatch.teamA.tier).fetchJoin()
-                .where(gameMatch.teamA.tier.tierId.eq(tierId)
-                        .or(gameMatch.teamB.tier.tierId.eq(tierId))
-                        .and(gameMatch.teamA.teamName.containsIgnoreCase(keyword)
-                                .or(gameMatch.teamB.teamName.containsIgnoreCase(keyword))));
+        BooleanExpression tierCondition = gameMatch.teamA.tier.tierId.eq(tierId)
+                .or(gameMatch.teamB.tier.tierId.eq(tierId));
 
-        long total = query.fetchCount();
-        List<GameMatch> gameMatches = query
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+        BooleanExpression keywordCondition = gameMatch.teamA.teamName.containsIgnoreCase(keyword)
+                .or(gameMatch.teamB.teamName.containsIgnoreCase(keyword));
 
-        return new PageImpl<>(gameMatches, pageable, total);
+        BooleanExpression mergeCondition = tierCondition.and(keywordCondition);
+
+        List<GameMatch> fetch = getGameMatchList(mergeCondition, pageable);
+
+        JPQLQuery<Long> count = getCount(mergeCondition);
+
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
     @Override
     public Page<GameMatch> findByTier(Long tierId, Pageable pageable) {
-        JPQLQuery<GameMatch> query = queryFactory
+        BooleanExpression tierCondition = gameMatch.teamA.tier.tierId.eq(tierId)
+                .or(gameMatch.teamB.tier.tierId.eq(tierId));
+
+        List<GameMatch> fetch = getGameMatchList(tierCondition, pageable);
+
+        JPQLQuery<Long> count = getCount(tierCondition);
+
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
+    }
+
+    private List<GameMatch> getGameMatchList(BooleanExpression condition, Pageable pageable){
+        return queryFactory
                 .selectFrom(gameMatch)
                 .leftJoin(gameMatch.teamA, team).fetchJoin()
                 .leftJoin(gameMatch.teamA.tier).fetchJoin()
-                .where(gameMatch.teamA.tier.tierId.eq(tierId)
-                        .or(gameMatch.teamB.tier.tierId.eq(tierId)));
-
-        long total = query.fetchCount();
-        List<GameMatch> gameMatches = query
+                .where(condition)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
 
-        return new PageImpl<>(gameMatches, pageable, total);
+    private JPQLQuery<Long> getCount(BooleanExpression condition){
+        return queryFactory
+                .select(gameMatch.count())
+                .from(gameMatch)
+                .where(condition);
     }
 }

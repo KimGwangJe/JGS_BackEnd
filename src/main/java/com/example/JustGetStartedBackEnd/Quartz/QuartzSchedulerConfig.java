@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class SchedulerConfig {
+public class QuartzSchedulerConfig {
     private final Scheduler scheduler;
 
     @PostConstruct

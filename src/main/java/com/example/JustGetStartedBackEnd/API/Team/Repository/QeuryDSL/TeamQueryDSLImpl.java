@@ -1,12 +1,13 @@
 package com.example.JustGetStartedBackEnd.API.Team.Repository.QeuryDSL;
 
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
@@ -34,53 +35,36 @@ public class TeamQueryDSLImpl implements TeamQueryDSL {
 
     @Override
     public Page<Team> findByTeamNameKeyword(String keyword, Pageable pageable) {
-        JPQLQuery<Team> query = queryFactory
-                .selectFrom(team)
-                .leftJoin(team.tier, tier).fetchJoin()
-                .where(team.teamName.containsIgnoreCase(keyword));
+        BooleanExpression teamNameCondition = team.teamName.containsIgnoreCase(keyword);
 
-        long total = query.fetchCount();
-        List<Team> content = query
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+        List<Team> fetch = getTeamList(teamNameCondition, pageable);
 
-        return new PageImpl<>(content, pageable, total);
+        JPQLQuery<Long> count = getCount(teamNameCondition);
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
     @Override
     public Page<Team> findByTierAndKeyword(Long tierId, String keyword, Pageable pageable) {
-        JPQLQuery<Team> query = queryFactory
-                .selectFrom(team)
-                .leftJoin(team.tier, tier).fetchJoin()
-                .where(
-                        team.tier.tierId.eq(tierId),
-                        team.teamName.containsIgnoreCase(keyword)
-                );
+        BooleanExpression tierAndOrTeamNameCondition =  team.tier.tierId.eq(tierId)
+                .and(team.teamName.containsIgnoreCase(keyword));
 
-        long total = query.fetchCount();
-        List<Team> content = query
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+        List<Team> fetch = getTeamList(tierAndOrTeamNameCondition, pageable);
 
-        return new PageImpl<>(content, pageable, total);
+        JPQLQuery<Long> count = getCount(tierAndOrTeamNameCondition);
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
     @Override
     public Page<Team> findByTier(Long tierId, Pageable pageable) {
-        JPQLQuery<Team> query = queryFactory
-                .selectFrom(team)
-                .leftJoin(team.tier, tier).fetchJoin()
-                .where(team.tier.tierId.eq(tierId));
+        BooleanExpression tierIdCondition = team.tier.tierId.eq(tierId);
 
-        long total = query.fetchCount();
-        List<Team> content = query
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+        List<Team> fetch = getTeamList(tierIdCondition, pageable);
 
-        return new PageImpl<>(content, pageable, total);
+        JPQLQuery<Long> count = getCount(tierIdCondition);
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
     @Override
@@ -91,5 +75,22 @@ public class TeamQueryDSLImpl implements TeamQueryDSL {
                 .orderBy(team.tierPoint.desc())   // tierPoint를 내림차순으로 정렬
                 .limit(3)                         // 상위 3개만 선택
                 .fetch();                         // 결과를 가져오기
+    }
+
+    private List<Team> getTeamList(BooleanExpression condition, Pageable pageable) {
+        return queryFactory
+                .selectFrom(team)
+                .leftJoin(team.tier, tier).fetchJoin()
+                .where(condition)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    private JPQLQuery<Long> getCount(BooleanExpression booleanExpression) {
+        return queryFactory
+                .select(team.count())
+                .from(team)
+                .where(booleanExpression);
     }
 }
