@@ -110,7 +110,7 @@ public class APIImageService {
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteImageCommunityByNull(){
-        List<Image> images = imageRepository.findByCommunityId(null);
+        List<Image> images = imageRepository.findByCommunityIsNull();
         for(Image image : images){
             s3Client.deleteObject(new DeleteObjectRequest(bucket, image.getImageName()));
         }

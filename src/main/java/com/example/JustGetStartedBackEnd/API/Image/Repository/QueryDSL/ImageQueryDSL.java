@@ -8,6 +8,8 @@ public interface ImageQueryDSL {
 
     List<Image> findByCommunityId(Long communityId);
 
+    List<Image> findByCommunityIsNull();
+
     Image findByImageUrl(String imageUrl);
 
     void deleteImagesWhereCommunityIdIsNull();
