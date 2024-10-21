@@ -56,9 +56,10 @@ class APITeamInviteControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void createTeamInvite() throws Exception{
-        CreateTeamInviteDTO createTeamInviteDTO = new CreateTeamInviteDTO();
-        createTeamInviteDTO.setTeamName("미르");
-        createTeamInviteDTO.setTo(1L);
+        CreateTeamInviteDTO createTeamInviteDTO = CreateTeamInviteDTO.builder()
+                .teamName("미르")
+                .to(1L)
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(createTeamInviteDTO);
@@ -94,9 +95,10 @@ class APITeamInviteControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void deleteTeamInvite() throws Exception{
-        JoinTeamDTO joinTeamDTO = new JoinTeamDTO();
-        joinTeamDTO.setInviteId(1L);
-        joinTeamDTO.setIsJoin(true);
+        JoinTeamDTO joinTeamDTO = JoinTeamDTO.builder()
+                .inviteId(1L)
+                .isJoin(true)
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(joinTeamDTO);

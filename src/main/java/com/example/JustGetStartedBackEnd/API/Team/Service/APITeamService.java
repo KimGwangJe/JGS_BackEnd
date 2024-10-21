@@ -31,16 +31,16 @@ public class APITeamService {
         Member member = memberService.findByIdReturnEntity(memberId);
 
         //팀명이 겹치는 팀이 있으면 안됨
-        Team team = teamRepository.findByTeamName(dto.getTeamName());
+        Team team = teamRepository.findByTeamName(dto.teamName());
         if(team != null){
             throw new BusinessLogicException(TeamExceptionType.DUPLICATION_TEAM_NAME);
         }
 
         Team newTeam = Team.builder()
-                .teamName(dto.getTeamName())
+                .teamName(dto.teamName())
                 .tier(Tier.builder().tierId(1L).tierName("Bronze").build())
                 .createDate(new Date())
-                .introduce(dto.getIntroduce())
+                .introduce(dto.introduce())
                 .tierPoint(0)
                 .lastMatchDate(null)
                 .build();
@@ -56,10 +56,10 @@ public class APITeamService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "teamInfoCache", key = "'team/' + #dto.teamName", cacheManager = "cacheManager")
     public void updateIntroduce(Long memberId, TeamRequestDTO dto){
-        Team team = teamRepository.findByTeamName(dto.getTeamName());
+        Team team = teamRepository.findByTeamName(dto.teamName());
 
         apiTeamMemberService.validateLeaderAuthority(team, memberId);
-        team.updateIntroduce(dto.getIntroduce());
+        team.updateIntroduce(dto.introduce());
     }
 
     @Transactional(rollbackFor = Exception.class)

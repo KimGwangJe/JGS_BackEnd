@@ -37,7 +37,7 @@ public class APICommunityService {
         Member member = memberService.findByIdReturnEntity(memberId);
         Community community;
 
-        if (createCommunityDTO.getTeamName() != null && !createCommunityDTO.getTeamName().isBlank()) {
+        if (createCommunityDTO.teamName() != null && !createCommunityDTO.teamName().isBlank()) {
             community = createTeamRecruitmentCommunityPost(createCommunityDTO, member);
         } else {
             community = createNonTeamRecruitmentCommunityPost(createCommunityDTO, member);
@@ -55,11 +55,11 @@ public class APICommunityService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "communityInfoCache", key = "'community/' + #updateCommunityDTO.communityId", cacheManager = "cacheManager")
     public void updateCommunityPost(Long memberId, UpdateCommunityDTO updateCommunityDTO){
-        Community community = findCommunityById(updateCommunityDTO.getCommunityId());
+        Community community = findCommunityById(updateCommunityDTO.communityId());
 
         validateMemberAuthority(community.getWriter(), memberId);
 
-        community.updateContentAndTitle(updateCommunityDTO.getContent(), updateCommunityDTO.getTitle());
+        community.updateContentAndTitle(updateCommunityDTO.content(), updateCommunityDTO.title());
         apiImageService.linkImagesToCommunity(community.getContent(), community);
     }
 
@@ -86,15 +86,15 @@ public class APICommunityService {
     }
 
     private Community createTeamRecruitmentCommunityPost(CreateCommunityDTO dto, Member member){
-        Team team = teamService.findByTeamNameReturnEntity(dto.getTeamName());
+        Team team = teamService.findByTeamNameReturnEntity(dto.teamName());
 
         apiTeamMemberService.validateLeaderAuthority(team, member.getMemberId());
 
         return Community.builder()
-                .content(dto.getContent())
-                .title(dto.getTitle())
+                .content(dto.content())
+                .title(dto.title())
                 .recruit(true)
-                .recruitDate(dto.getRecruitDate())
+                .recruitDate(dto.recruitDate())
                 .team(team)
                 .writer(member)
                 .writeDate(new Date())
@@ -103,8 +103,8 @@ public class APICommunityService {
 
     private Community createNonTeamRecruitmentCommunityPost(CreateCommunityDTO dto, Member member){
         return Community.builder()
-                .content(dto.getContent())
-                .title(dto.getTitle())
+                .content(dto.content())
+                .title(dto.title())
                 .recruit(false)
                 .writeDate(new Date())
                 .team(null)

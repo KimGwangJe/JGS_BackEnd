@@ -19,7 +19,7 @@ public class SSEEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendSSENotification(SSEMessageDTO dto) {
-        log.info("memberId : {}, message : {}", dto.getMemberId(), dto.getMessage());
-        notificationService.sendNotification(dto.getMemberId(), dto.getMessage());
+        log.info("memberId : {}, message : {}", dto.memberId(), dto.message());
+        notificationService.sendNotification(dto.memberId(), dto.message());
     }
 }

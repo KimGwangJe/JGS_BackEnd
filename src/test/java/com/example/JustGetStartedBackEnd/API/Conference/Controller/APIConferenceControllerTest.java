@@ -34,14 +34,15 @@ class APIConferenceControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void createConference() throws Exception{
-        ConferenceInfoDTO conferenceInfoDTO = new ConferenceInfoDTO();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date()); // 현재 날짜 설정
         calendar.add(Calendar.MONTH, 1); // 한 달 추가
         Date oneMonthLater = calendar.getTime();
-        conferenceInfoDTO.setConferenceDate(oneMonthLater);
-        conferenceInfoDTO.setConferenceName("conference");
-        conferenceInfoDTO.setContent("content");
+        ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
+                .conferenceDate(oneMonthLater)
+                .conferenceName("Conference")
+                .content("content")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(conferenceInfoDTO);
@@ -57,9 +58,10 @@ class APIConferenceControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateWinnerTeam() throws Exception {
-        UpdateWinnerDTO updateWinnerDTO = new UpdateWinnerDTO();
-        updateWinnerDTO.setWinnerTeam("mir");
-        updateWinnerDTO.setConferenceName("conference");
+        UpdateWinnerDTO updateWinnerDTO = UpdateWinnerDTO.builder()
+                .winnerTeam("mir")
+                .conferenceName("conference")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(updateWinnerDTO);
@@ -75,14 +77,16 @@ class APIConferenceControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateConference() throws Exception{
-        ConferenceInfoDTO conferenceInfoDTO  = new ConferenceInfoDTO();
-        conferenceInfoDTO.setContent("content");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date()); // 현재 날짜 설정
         calendar.add(Calendar.MONTH, 1); // 한 달 추가
         Date oneMonthLater = calendar.getTime();
-        conferenceInfoDTO.setConferenceDate(oneMonthLater);
-        conferenceInfoDTO.setConferenceName("conference");
+
+        ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
+                .conferenceDate(oneMonthLater)
+                .conferenceName("Conference")
+                .content("content")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(conferenceInfoDTO);

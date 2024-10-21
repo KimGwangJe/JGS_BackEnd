@@ -85,9 +85,10 @@ class APITeamJoinControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void join() throws Exception {
-        JoinTeamDTO joinTeamDTO = new JoinTeamDTO();
-        joinTeamDTO.setJoinNotificationId(1L);
-        joinTeamDTO.setIsJoin(true);
+        JoinTeamDTO joinTeamDTO = JoinTeamDTO.builder()
+                .joinNotificationId(1L)
+                .isJoin(true)
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(joinTeamDTO);

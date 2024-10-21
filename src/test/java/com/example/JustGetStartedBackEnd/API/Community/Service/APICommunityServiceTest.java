@@ -1,19 +1,19 @@
 package com.example.JustGetStartedBackEnd.API.Community.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.CreateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.UpdateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
 import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,8 +57,13 @@ class APICommunityServiceTest {
         Member member = mock(Member.class);
         Team team = mock(Team.class);
 
-        CreateCommunityDTO createCommunityDTO = new CreateCommunityDTO();
-        createCommunityDTO.setTeamName("mir");
+        CreateCommunityDTO createCommunityDTO = CreateCommunityDTO.builder()
+                .title("title")
+                .content("content")
+                .recruit(true)
+                .recruitDate(LocalDateTime.now())
+                .teamName("mir")
+                .build();
 
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
@@ -74,8 +80,13 @@ class APICommunityServiceTest {
         Member member = mock(Member.class);
         Team team = mock(Team.class);
 
-        CreateCommunityDTO createCommunityDTO = new CreateCommunityDTO();
-        createCommunityDTO.setTeamName("mir");
+        CreateCommunityDTO createCommunityDTO = CreateCommunityDTO.builder()
+                .title("title")
+                .content("content")
+                .recruit(true)
+                .recruitDate(LocalDateTime.now())
+                .teamName("mir")
+                .build();
 
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
@@ -100,10 +111,12 @@ class APICommunityServiceTest {
         when(community.getWriter()).thenReturn(member);
         when(member.getMemberId()).thenReturn(1L);
 
-        UpdateCommunityDTO updateCommunityDTO = new UpdateCommunityDTO();
-        updateCommunityDTO.setCommunityId(1L);
-        updateCommunityDTO.setTitle("title");
-        updateCommunityDTO.setContent("content");
+        UpdateCommunityDTO updateCommunityDTO = UpdateCommunityDTO.builder()
+                .communityId(1L)
+                .content("content")
+                .title("title")
+                .build();
+
         apiCommunityService.updateCommunityPost(1L, updateCommunityDTO);
 
         verify(communityRepository, times(1)).findById(anyLong());
@@ -114,10 +127,11 @@ class APICommunityServiceTest {
     void updateCommunityPost_Fail_Not_Found() {
         when(communityRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        UpdateCommunityDTO updateCommunityDTO = new UpdateCommunityDTO();
-        updateCommunityDTO.setCommunityId(1L);
-        updateCommunityDTO.setTitle("title");
-        updateCommunityDTO.setContent("content");
+        UpdateCommunityDTO updateCommunityDTO = UpdateCommunityDTO.builder()
+                .communityId(1L)
+                .content("content")
+                .title("title")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiCommunityService.updateCommunityPost(1L, updateCommunityDTO));
@@ -136,10 +150,11 @@ class APICommunityServiceTest {
         when(community.getWriter()).thenReturn(member);
         when(member.getMemberId()).thenReturn(2L);
 
-        UpdateCommunityDTO updateCommunityDTO = new UpdateCommunityDTO();
-        updateCommunityDTO.setCommunityId(1L);
-        updateCommunityDTO.setTitle("title");
-        updateCommunityDTO.setContent("content");
+        UpdateCommunityDTO updateCommunityDTO = UpdateCommunityDTO.builder()
+                .communityId(1L)
+                .content("content")
+                .title("title")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiCommunityService.updateCommunityPost(1L, updateCommunityDTO));

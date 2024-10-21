@@ -46,13 +46,13 @@ public class APIMatchNotificationService {
 
     @Transactional(rollbackFor = Exception.class)
     public void createMatchNotification(Long memberId, CreateMatchNotificationDTO dto){
-        String applicantTeamName = dto.getTeamName();
+        String applicantTeamName = dto.teamName();
         //신청자의 팀
         Team team = teamService.findByTeamNameReturnEntity(applicantTeamName);
         apiTeamMemberService.validateLeaderAuthority(team, memberId);
 
         //이미 매치가 신청된 상태인지 확인
-        MatchNotification matchNotification = matchNotificationRepository.findByMatchPostIdAndTeamName(dto.getMatchPostId(), applicantTeamName);
+        MatchNotification matchNotification = matchNotificationRepository.findByMatchPostIdAndTeamName(dto.matchPostId(), applicantTeamName);
         if(matchNotification != null){
             //신청 한 이력이 있으면 에러
             log.warn("Match Notification Already Request");
@@ -86,7 +86,7 @@ public class APIMatchNotificationService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteMatchNotification(Long memberId, MatchingDTO matchingDTO){
         //매치 수락시 -> 매치 생성 매치글 삭제 매치 알림들 전부 삭제
-        MatchNotification matchNotification = matchNotificationRepository.findById(matchingDTO.getMatchNotificationId())
+        MatchNotification matchNotification = matchNotificationRepository.findById(matchingDTO.matchNotificationId())
                 .orElseThrow(() -> new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_NOT_FOUND));
 
         MatchPost matchPost = matchNotification.getMatchPost();
@@ -106,7 +106,7 @@ public class APIMatchNotificationService {
         try{
             //매치를 수락한 경우
             //매치를 요청 한 사람에게 알림
-            if(matchingDTO.getStatus()){
+            if(matchingDTO.status()){
                 CreateMatchDTO createMatchDTO = new CreateMatchDTO();
                 createMatchDTO.setMatchDate(Timestamp.valueOf(matchPost.getMatchDate()));
                 createMatchDTO.setTeamA(matchPostTeamName); //매치를 올린 팀
@@ -134,7 +134,7 @@ public class APIMatchNotificationService {
                         "팀의 매치가 상대팀의 팀장으로부터 거부되었습니다.";
 
                 //try 필요
-                matchNotificationRepository.deleteById(matchingDTO.getMatchNotificationId());
+                matchNotificationRepository.deleteById(matchingDTO.matchNotificationId());
             }
             //매치 승인 / 거부 알림 SSO
             publisher.publishEvent(new SSEMessageDTO(notificationMemberId, message));
@@ -176,7 +176,7 @@ public class APIMatchNotificationService {
     }
 
     private MatchPost getValidatedMatchPost(CreateMatchNotificationDTO dto){
-        MatchPost matchPost = matchPostService.findMatchPostById(dto.getMatchPostId());
+        MatchPost matchPost = matchPostService.findMatchPostById(dto.matchPostId());
         if(matchPost.getMatchDate().isBefore(LocalDateTime.now())){
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_INVALID_DATE);
         }
@@ -184,7 +184,7 @@ public class APIMatchNotificationService {
             log.warn("Match Post Is Already End");
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_POST_IS_END);
         }
-        if(matchPost.getTeamA().getTeamName().equals(dto.getTeamName())){
+        if(matchPost.getTeamA().getTeamName().equals(dto.teamName())){
             log.warn("Can Not Request Same Team");
             throw new BusinessLogicException(MatchNotificationExceptionType.SAME_TEAM_MATCH_ERROR);
         }

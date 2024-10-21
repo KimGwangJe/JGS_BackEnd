@@ -44,9 +44,10 @@ class APITeamServiceTest {
 
         when(teamRepository.findByTeamName(anyString())).thenReturn(new Team());
 
-        TeamRequestDTO dto = new TeamRequestDTO();
-        dto.setTeamName("mir");
-        dto.setIntroduce("introduce");
+        TeamRequestDTO dto = TeamRequestDTO.builder()
+                .teamName("미르")
+                .introduce("introduce")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiTeamService.makeTeam(1L, dto));
@@ -61,9 +62,10 @@ class APITeamServiceTest {
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
         when(teamRepository.findByTeamName(anyString())).thenReturn(null);
 
-        TeamRequestDTO dto = new TeamRequestDTO();
-        dto.setTeamName("mir");
-        dto.setIntroduce("introduce");
+        TeamRequestDTO dto = TeamRequestDTO.builder()
+                .teamName("미르")
+                .introduce("introduce")
+                .build();
 
         apiTeamService.makeTeam(anyLong(), dto);
 

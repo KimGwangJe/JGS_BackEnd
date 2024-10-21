@@ -28,11 +28,12 @@ class APITeamReviewControllerTest {
     @DisplayName("팀 리뷰 작성 - 성공")
     @Test
     void fillTeamReview() throws Exception{
-        FillReviewDTO fillReviewDTO = new FillReviewDTO();
-        fillReviewDTO.setMatchId(1L);
-        fillReviewDTO.setTeamName("mir");
-        fillReviewDTO.setContent("content");
-        fillReviewDTO.setRating(1F);
+        FillReviewDTO fillReviewDTO = FillReviewDTO.builder()
+                .matchId(1L)
+                .teamName("mir")
+                .content("content")
+                .rating(1F)
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(fillReviewDTO);
@@ -48,10 +49,11 @@ class APITeamReviewControllerTest {
     @DisplayName("팀 리뷰 작성 - 실패")
     @Test
     void fillTeamReviewFail() throws Exception{
-        FillReviewDTO fillReviewDTO = new FillReviewDTO();
-        fillReviewDTO.setMatchId(1L);
-        fillReviewDTO.setContent("content");
-        fillReviewDTO.setRating(1F);
+        FillReviewDTO fillReviewDTO = FillReviewDTO.builder()
+                .matchId(1L)
+                .content("content")
+                .rating(1F)
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(fillReviewDTO);

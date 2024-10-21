@@ -72,11 +72,12 @@ class APITeamReviewServiceTest {
                 .referee(referee)
                 .build();
 
-        fillReviewDTO = new FillReviewDTO();
-        fillReviewDTO.setMatchId(1L);
-        fillReviewDTO.setTeamName("teamName");
-        fillReviewDTO.setRating(1.0F);
-        fillReviewDTO.setContent("content");
+        fillReviewDTO = FillReviewDTO.builder()
+                .matchId(1L)
+                .teamName("mir")
+                .content("content")
+                .rating(1F)
+                .build();
     }
 
     @Test

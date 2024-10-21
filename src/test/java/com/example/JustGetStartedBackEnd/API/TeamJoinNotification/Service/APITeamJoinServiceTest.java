@@ -231,9 +231,10 @@ class APITeamJoinServiceTest {
     @Test
     @DisplayName("팀 초대 알림 승인/거절")
     void join() {
-        JoinTeamDTO joinTeamDTO = new JoinTeamDTO();
-        joinTeamDTO.setJoinNotificationId(1L);
-        joinTeamDTO.setIsJoin(true);
+        JoinTeamDTO joinTeamDTO = JoinTeamDTO.builder()
+                .joinNotificationId(1L)
+                .isJoin(true)
+                .build();
 
         // Mock JoinNotification and its dependencies
         JoinNotification joinNotification = mock(JoinNotification.class);

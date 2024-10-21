@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.MatchPost.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.Request.CreateMatchPostDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.Request.UpdateMatchPostDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
@@ -9,7 +10,6 @@ import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,9 +43,10 @@ class APIMatchPostServiceTest {
     @Test
     @DisplayName("매치 글 생성 - 성공")
     void createMatchPost_Success() {
-        CreateMatchPostDTO createMatchPostDTO = new CreateMatchPostDTO();
-        createMatchPostDTO.setTeamName("mir");
-        createMatchPostDTO.setLocation("location");
+        CreateMatchPostDTO createMatchPostDTO = CreateMatchPostDTO.builder()
+                .location("location")
+                .teamName("mir")
+                .build();
 
         Team team = mock(Team.class);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
@@ -59,9 +60,10 @@ class APIMatchPostServiceTest {
     @Test
     @DisplayName("매치 글 생성 - 실패(권한 이슈)")
     void createMatchPost_Fail() {
-        CreateMatchPostDTO createMatchPostDTO = new CreateMatchPostDTO();
-        createMatchPostDTO.setTeamName("mir");
-        createMatchPostDTO.setLocation("location");
+        CreateMatchPostDTO createMatchPostDTO = CreateMatchPostDTO.builder()
+                .location("location")
+                .teamName("mir")
+                .build();
 
         Team team = mock(Team.class);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
@@ -85,9 +87,10 @@ class APIMatchPostServiceTest {
 
         when(matchPost.getTeamA()).thenReturn(team);
 
-        UpdateMatchPostDTO updateMatchPostDTO = new UpdateMatchPostDTO();
-        updateMatchPostDTO.setMatchPostId(1L);
-        updateMatchPostDTO.setLocation("location");
+        UpdateMatchPostDTO updateMatchPostDTO = UpdateMatchPostDTO.builder()
+                .matchPostId(1L)
+                .location("location")
+                .build();
 
         apiMatchPostService.updateMatchPost(anyLong(), updateMatchPostDTO);
 
@@ -103,9 +106,10 @@ class APIMatchPostServiceTest {
         when(matchPostRepository.findById(anyLong())).thenReturn(Optional.of(matchPost));
         when(matchPost.getTeamA()).thenReturn(team);
 
-        UpdateMatchPostDTO updateMatchPostDTO = new UpdateMatchPostDTO();
-        updateMatchPostDTO.setMatchPostId(1L);
-        updateMatchPostDTO.setLocation("location");
+        UpdateMatchPostDTO updateMatchPostDTO = UpdateMatchPostDTO.builder()
+                .matchPostId(1L)
+                .location("location")
+                .build();
 
         doThrow(new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY))
                 .when(apiTeamMemberService).validateLeaderAuthority(eq(team), anyLong());

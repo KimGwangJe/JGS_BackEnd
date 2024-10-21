@@ -28,11 +28,11 @@ public class APITeamReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void fillReview(Long memberId,FillReviewDTO fillReviewDTO){
-        GameMatch gameMatch = getGameMatch(fillReviewDTO.getMatchId());
+        GameMatch gameMatch = getGameMatch(fillReviewDTO.matchId());
 
         TeamReview teamReview;
         //A팀과 같은 이름이라면 B팀에 대한 리뷰 작성임
-        if(gameMatch.getTeamA().getTeamName().equals(fillReviewDTO.getTeamName())){
+        if(gameMatch.getTeamA().getTeamName().equals(fillReviewDTO.teamName())){
             apiTeamMemberService.validateLeaderAuthority(gameMatch.getTeamA(), memberId);
             teamReview = makeTeamReview(gameMatch.getTeamB(), fillReviewDTO, memberId);
         } else {
@@ -52,8 +52,8 @@ public class APITeamReviewService {
     private TeamReview makeTeamReview(Team team, FillReviewDTO fillReviewDTO, Long memberId){
         return TeamReview.builder()
                 .team(team)
-                .content(fillReviewDTO.getContent())
-                .rating(fillReviewDTO.getRating())
+                .content(fillReviewDTO.content())
+                .rating(fillReviewDTO.rating())
                 .writer(memberService.findByIdReturnEntity(memberId))
                 .build();
     }

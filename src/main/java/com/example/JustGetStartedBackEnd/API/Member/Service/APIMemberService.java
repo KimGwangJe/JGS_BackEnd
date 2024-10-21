@@ -19,6 +19,6 @@ public class APIMemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new BusinessLogicException(MemberExceptionType.MEMBER_NOT_FOUND)
         );
-        member.update(updateMemberDTO.getName(), updateMemberDTO.getProfileImage(), updateMemberDTO.getIntroduce());
+        member.update(updateMemberDTO.name(), updateMemberDTO.profileImage(), updateMemberDTO.introduce());
     }
 }

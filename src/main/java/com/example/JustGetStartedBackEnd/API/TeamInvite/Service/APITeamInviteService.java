@@ -39,8 +39,8 @@ public class APITeamInviteService {
 
     @Transactional(rollbackFor = Exception.class)
     public void createTeamInvite(Long memberId, CreateTeamInviteDTO dto){
-        String teamName = dto.getTeamName();
-        Long inviteMemberId = dto.getTo();
+        String teamName = dto.teamName();
+        Long inviteMemberId = dto.to();
         Team team = teamService.findByTeamNameReturnEntity(teamName);
 
         apiTeamMemberService.validateLeaderAuthority(team, memberId);
@@ -104,14 +104,14 @@ public class APITeamInviteService {
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteTeamInvite(Long memberId, JoinTeamDTO joinTeamDTO) {
-        TeamInviteNotification teamInviteNotification = findTeamInviteNotificationById(memberId, joinTeamDTO.getInviteId());
+        TeamInviteNotification teamInviteNotification = findTeamInviteNotificationById(memberId, joinTeamDTO.inviteId());
 
         String memberName = memberService.findById(memberId).getName();
         Long teamLeaderId = apiTeamMemberService.getLeaderId(teamInviteNotification.getTeam());
         String teamName = teamInviteNotification.getTeam().getTeamName();
 
         String message;
-        if (joinTeamDTO.getIsJoin()) {
+        if (joinTeamDTO.isJoin()) {
             //멤버 가입 처리
             apiTeamMemberService.joinTeamMember(memberId, teamName);
             message = memberName + "님이 " + teamName + "팀에 가입하였습니다.";
@@ -125,7 +125,7 @@ public class APITeamInviteService {
         try {
             apiNotificationService.saveNotification(message, teamLeaderId);
 
-            teamInviteRepository.deleteById(joinTeamDTO.getInviteId());
+            teamInviteRepository.deleteById(joinTeamDTO.inviteId());
         } catch (Exception e) {
             log.warn("Delete Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_DELETE_ERROR);

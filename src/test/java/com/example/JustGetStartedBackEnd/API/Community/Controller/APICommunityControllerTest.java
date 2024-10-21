@@ -32,12 +32,13 @@ class APICommunityControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void createCommunity() throws Exception {
-        CreateCommunityDTO createCommunityDTO = new CreateCommunityDTO();
-        createCommunityDTO.setContent("content");
-        createCommunityDTO.setRecruit(true);
-        createCommunityDTO.setTitle("title");
-        createCommunityDTO.setTeamName("mir");
-        createCommunityDTO.setRecruitDate(LocalDateTime.now());
+        CreateCommunityDTO createCommunityDTO = CreateCommunityDTO.builder()
+                .title("title")
+                .content("content")
+                .recruit(true)
+                .recruitDate(LocalDateTime.now())
+                .teamName("mir")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -55,10 +56,11 @@ class APICommunityControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateCommunityPost() throws Exception {
-        UpdateCommunityDTO updateCommunityDTO = new UpdateCommunityDTO();
-        updateCommunityDTO.setCommunityId(1L);
-        updateCommunityDTO.setContent("content");
-        updateCommunityDTO.setTitle("title");
+        UpdateCommunityDTO updateCommunityDTO = UpdateCommunityDTO.builder()
+                .communityId(1L)
+                .content("content")
+                .title("title")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(updateCommunityDTO);

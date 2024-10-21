@@ -4,8 +4,8 @@ import com.example.JustGetStartedBackEnd.API.AllNotification.DTO.AllNotification
 import com.example.JustGetStartedBackEnd.API.AllNotification.Service.APIAllNotificationService;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Response.MatchNotificationListDTO;
-import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request.NotificationDTO;
-import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request.NotificationListDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Response.NotificationDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Response.NotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteInfoDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;

@@ -31,9 +31,10 @@ class APIMatchNotificationControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void createMatchNotification() throws Exception{
-        CreateMatchNotificationDTO createMatchNotificationDTO = new CreateMatchNotificationDTO();
-        createMatchNotificationDTO.setMatchPostId(1L);
-        createMatchNotificationDTO.setTeamName("mir");
+        CreateMatchNotificationDTO createMatchNotificationDTO = CreateMatchNotificationDTO.builder()
+                .matchPostId(1L)
+                .teamName("mir")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(createMatchNotificationDTO);
@@ -49,9 +50,10 @@ class APIMatchNotificationControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void deleteMatchNotification() throws Exception {
-        MatchingDTO matchingDTO = new MatchingDTO();
-        matchingDTO.setMatchNotificationId(1L);
-        matchingDTO.setStatus(true);
+        MatchingDTO matchingDTO = MatchingDTO.builder()
+                .matchNotificationId(1L)
+                .status(true)
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(matchingDTO);

@@ -32,13 +32,13 @@ public class ChatService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseChatDTO saveChat(RequestChatDTO requestChatDTO){
         //채팅방 멤버 ID를 memberId랑 chatRoomId로 찾아야됨
-        ChatRoomMember chatRoomMember = chatRoomMemberService.findByMemberIdAndChatRoomId(requestChatDTO.getMemberId(), requestChatDTO.getChatRoomId());
-        ChatRoom chatRoom = chatRoomService.getChatRoomEntity(requestChatDTO.getChatRoomId());
+        ChatRoomMember chatRoomMember = chatRoomMemberService.findByMemberIdAndChatRoomId(requestChatDTO.memberId(), requestChatDTO.chatRoomId());
+        ChatRoom chatRoom = chatRoomService.getChatRoomEntity(requestChatDTO.chatRoomId());
         //그러고 저장한 다음에
         Chat chat = Chat.builder()
                 .chatRoomMember(chatRoomMember)
                 .chatRoom(chatRoom)
-                .content(requestChatDTO.getMessage())
+                .content(requestChatDTO.message())
                 .chatDate(LocalDateTime.now())
                 .build();
 
@@ -46,7 +46,7 @@ public class ChatService {
         chatRoom.getChatRoomMembers().stream()
                 .filter(member -> !member.getMember().getMemberId().equals(chatRoomMember.getMember().getMemberId()))
                 .forEach(member -> publisher.publishEvent(
-                        new SSEMessageDTO(member.getMember().getMemberId(), requestChatDTO.getMessage())));
+                        new SSEMessageDTO(member.getMember().getMemberId(), requestChatDTO.message())));
 
         try{
             chatRepository.save(chat);

@@ -28,10 +28,11 @@ class APIMemberControllerTest {
     @DisplayName("회원 정보 수정")
     @Test
     void updateMember() throws Exception{
-        UpdateMemberDTO updateMemberDTO = new UpdateMemberDTO();
-        updateMemberDTO.setName("김광제");
-        updateMemberDTO.setIntroduce("introduce");
-        updateMemberDTO.setProfileImage("profileImage");
+        UpdateMemberDTO updateMemberDTO = UpdateMemberDTO.builder()
+                .name("김광제")
+                .introduce("introduce")
+                .profileImage("profileImage")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(updateMemberDTO);

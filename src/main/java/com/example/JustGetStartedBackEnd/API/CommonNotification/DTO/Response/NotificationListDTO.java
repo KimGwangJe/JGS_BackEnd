@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request;
+package com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Response;
 
 import lombok.Getter;
 import lombok.Setter;

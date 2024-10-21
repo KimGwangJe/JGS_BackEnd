@@ -24,15 +24,15 @@ public class APIMatchPostService {
 
     @Transactional(rollbackFor = Exception.class)
     public void createMatchPost(Long memberId, CreateMatchPostDTO createMatchPostDTO) {
-        Team team = teamService.findByTeamNameReturnEntity(createMatchPostDTO.getTeamName());
+        Team team = teamService.findByTeamNameReturnEntity(createMatchPostDTO.teamName());
 
         apiTeamMemberService.validateLeaderAuthority(team, memberId);
 
         MatchPost matchPost = MatchPost.builder()
                 .teamA(team)
                 .isEnd(false)
-                .location(createMatchPostDTO.getLocation())
-                .matchDate(createMatchPostDTO.getMatchDate())
+                .location(createMatchPostDTO.location())
+                .matchDate(createMatchPostDTO.matchDate())
                 .build();
 
         try{
@@ -44,10 +44,10 @@ public class APIMatchPostService {
 
     @Transactional(rollbackFor = Exception.class)
     public void updateMatchPost(Long memberId, UpdateMatchPostDTO updateMatchPostDTO){
-        MatchPost matchPost = getMatchPostById(updateMatchPostDTO.getMatchPostId());
+        MatchPost matchPost = getMatchPostById(updateMatchPostDTO.matchPostId());
         apiTeamMemberService.validateLeaderAuthority(matchPost.getTeamA(), memberId);
 
-        matchPost.updateMatchPost(updateMatchPostDTO.getMatchDate(), updateMatchPostDTO.getLocation());
+        matchPost.updateMatchPost(updateMatchPostDTO.matchDate(), updateMatchPostDTO.location());
     }
 
     @Transactional(rollbackFor = Exception.class)

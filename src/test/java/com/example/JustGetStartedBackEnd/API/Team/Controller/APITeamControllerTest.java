@@ -27,9 +27,10 @@ class APITeamControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void makeTeam() throws Exception{
-        TeamRequestDTO createTeamDTO = new TeamRequestDTO();
-        createTeamDTO.setTeamName("미르");
-        createTeamDTO.setIntroduce("introduce");
+        TeamRequestDTO createTeamDTO = TeamRequestDTO.builder()
+                .teamName("미르")
+                .introduce("introduce")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(createTeamDTO);
@@ -45,9 +46,10 @@ class APITeamControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateIntroduce() throws Exception{
-        TeamRequestDTO updateIntroduceDTO = new TeamRequestDTO();
-        updateIntroduceDTO.setIntroduce("introduce");
-        updateIntroduceDTO.setTeamName("mir");
+        TeamRequestDTO updateIntroduceDTO = TeamRequestDTO.builder()
+                .teamName("미르")
+                .introduce("introduce")
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(updateIntroduceDTO);

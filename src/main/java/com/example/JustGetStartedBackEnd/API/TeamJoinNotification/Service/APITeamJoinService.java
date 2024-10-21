@@ -108,13 +108,13 @@ public class APITeamJoinService {
 
     @Transactional(rollbackFor = Exception.class)
     public void join(JoinTeamDTO joinTeamDTO){
-        JoinNotification joinNotification = findJoinNotificationById(joinTeamDTO.getJoinNotificationId());
+        JoinNotification joinNotification = findJoinNotificationById(joinTeamDTO.joinNotificationId());
 
         String teamName = joinNotification.getCommunity().getTeam().getTeamName();
         //가입 신청을 보낸 사용자에게 알림을 보냄
         Long notificationMemberId = joinNotification.getPubMember().getMemberId();
         String message;
-        if(joinTeamDTO.getIsJoin()){
+        if(joinTeamDTO.isJoin()){
             //팀 가입 처리
             apiTeamMemberService.joinTeamMember(notificationMemberId, teamName);
             message = teamName + "팀에 보낸 가입 신청이 승인되었습니다.";
@@ -127,7 +127,7 @@ public class APITeamJoinService {
         try{
             apinotificationService.saveNotification(message, notificationMemberId);
 
-            teamJoinNotificationRepository.deleteById(joinTeamDTO.getJoinNotificationId());
+            teamJoinNotificationRepository.deleteById(joinTeamDTO.joinNotificationId());
         } catch(Exception e){
             log.warn("Team Join Notification Fail : {}", e.getMessage());
             throw new BusinessLogicException(TeamJoinExceptionType.TEAM_JOIN_DELETE_ERROR);

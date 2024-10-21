@@ -44,10 +44,11 @@ class APIMemberServiceTest {
                 .profileImage("profileImage")
                 .build();
 
-        updateMemberDTO = new UpdateMemberDTO();
-        updateMemberDTO.setName("change Name");
-        updateMemberDTO.setIntroduce("introduce");
-        updateMemberDTO.setProfileImage("profileImage");
+        updateMemberDTO = UpdateMemberDTO.builder()
+                .name("change Name")
+                .introduce("introduce")
+                .profileImage("profileImage")
+                .build();
     }
 
     @Test

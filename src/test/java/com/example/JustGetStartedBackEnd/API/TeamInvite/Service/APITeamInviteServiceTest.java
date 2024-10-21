@@ -68,9 +68,10 @@ class APITeamInviteServiceTest {
         when(apiTeamMemberService.findMyTeam(anyLong())).thenReturn(teamMemberListDTO);
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
 
-        CreateTeamInviteDTO dto = new CreateTeamInviteDTO();
-        dto.setTo(1L);
-        dto.setTeamName("mir");
+        CreateTeamInviteDTO dto = CreateTeamInviteDTO.builder()
+                .to(1L)
+                .teamName("mir")
+                .build();
 
         apiTeamInviteService.createTeamInvite(1L, dto);
 
@@ -84,9 +85,10 @@ class APITeamInviteServiceTest {
         Team team = mock(Team.class);
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
 
-        CreateTeamInviteDTO dto = new CreateTeamInviteDTO();
-        dto.setTo(1L);
-        dto.setTeamName("mir");
+        CreateTeamInviteDTO dto = CreateTeamInviteDTO.builder()
+                .to(1L)
+                .teamName("mir")
+                .build();
 
         doThrow(new BusinessLogicException(TeamMemberExceptionType.TEAM_MEMBER_INVALID_AUTHORITY))
                 .when(apiTeamMemberService).validateLeaderAuthority(eq(team), anyLong());
@@ -108,9 +110,10 @@ class APITeamInviteServiceTest {
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
         when(teamInviteRepository.findByMemberIdAndTeamName(anyLong(), anyString())).thenReturn(TIN);
 
-        CreateTeamInviteDTO dto = new CreateTeamInviteDTO();
-        dto.setTo(1L);
-        dto.setTeamName("mir");
+        CreateTeamInviteDTO dto = CreateTeamInviteDTO.builder()
+                .to(1L)
+                .teamName("mir")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiTeamInviteService.createTeamInvite(anyLong(), dto));
@@ -121,9 +124,10 @@ class APITeamInviteServiceTest {
     @Test
     @DisplayName("팀 초대 생성 - 실패(이미 가입된 사용자)")
     void createTeamInvite_Fail_Member_Already_Join() {
-        CreateTeamInviteDTO dto = new CreateTeamInviteDTO();
-        dto.setTo(1L);
-        dto.setTeamName("mir");
+        CreateTeamInviteDTO dto = CreateTeamInviteDTO.builder()
+                .to(1L)
+                .teamName("mir")
+                .build();
 
         Team team = mock(Team.class);
         TeamMemberListDTO teamMemberListDTO = new TeamMemberListDTO();
@@ -202,9 +206,10 @@ class APITeamInviteServiceTest {
     void deleteTeamInvite_Fail_Not_Found() {
         when(teamInviteRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        JoinTeamDTO joinTeamDTO = new JoinTeamDTO();
-        joinTeamDTO.setInviteId(1L);
-        joinTeamDTO.setIsJoin(true);
+        JoinTeamDTO joinTeamDTO = JoinTeamDTO.builder()
+                .inviteId(1L)
+                .isJoin(true)
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiTeamInviteService.deleteTeamInvite(1L, joinTeamDTO));

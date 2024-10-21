@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.CommonNotification.Repository.QueryDSL;
 
-import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request.NotificationDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Response.NotificationDTO;
 
 import java.util.List;
 

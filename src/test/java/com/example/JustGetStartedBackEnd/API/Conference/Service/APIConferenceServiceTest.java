@@ -47,9 +47,10 @@ class APIConferenceServiceTest {
         Member member = mock(Member.class);
         when(memberService.findByIdReturnEntity(anyLong())).thenReturn(member);
 
-        ConferenceInfoDTO conferenceInfoDTO = new ConferenceInfoDTO();
-        conferenceInfoDTO.setConferenceName("conferenceName");
-        conferenceInfoDTO.setContent("content");
+        ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
+                .conferenceName("conferenceName")
+                .content("content")
+                .build();
 
         apiConferenceService.createConference(anyLong(), conferenceInfoDTO);
 
@@ -62,9 +63,10 @@ class APIConferenceServiceTest {
         Conference conference = mock(Conference.class);
         when(conferenceRepository.findById(anyString())).thenReturn(Optional.of(conference));
 
-        ConferenceInfoDTO conferenceInfoDTO = new ConferenceInfoDTO();
-        conferenceInfoDTO.setConferenceName("conferenceName");
-        conferenceInfoDTO.setContent("content");
+        ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
+                .conferenceName("conferenceName")
+                .content("content")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiConferenceService.createConference(anyLong(), conferenceInfoDTO));
@@ -83,9 +85,10 @@ class APIConferenceServiceTest {
         when(conference.getOrganizer()).thenReturn(member);
         when(member.getMemberId()).thenReturn(1L);
 
-        UpdateWinnerDTO updateWinnerDTO = new UpdateWinnerDTO();
-        updateWinnerDTO.setWinnerTeam("mir");
-        updateWinnerDTO.setConferenceName("conferenceName");
+        UpdateWinnerDTO updateWinnerDTO = UpdateWinnerDTO.builder()
+                .winnerTeam("mir")
+                .conferenceName("conferenceName")
+                .build();
 
         apiConferenceService.updateWinnerTeam(memberId, updateWinnerDTO);
 
@@ -97,9 +100,10 @@ class APIConferenceServiceTest {
     void updateWinnerTeam_Fail_Not_Found() {
         when(conferenceRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        UpdateWinnerDTO updateWinnerDTO = new UpdateWinnerDTO();
-        updateWinnerDTO.setWinnerTeam("mir");
-        updateWinnerDTO.setConferenceName("conferenceName");
+        UpdateWinnerDTO updateWinnerDTO = UpdateWinnerDTO.builder()
+                .winnerTeam("mir")
+                .conferenceName("conferenceName")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiConferenceService.updateWinnerTeam(anyLong(), updateWinnerDTO));
@@ -118,9 +122,10 @@ class APIConferenceServiceTest {
         when(conference.getOrganizer()).thenReturn(member);
         when(member.getMemberId()).thenReturn(2L);// 다른 사람 아이디를 넣어야됨
 
-        UpdateWinnerDTO updateWinnerDTO = new UpdateWinnerDTO();
-        updateWinnerDTO.setWinnerTeam("mir");
-        updateWinnerDTO.setConferenceName("conferenceName");
+        UpdateWinnerDTO updateWinnerDTO = UpdateWinnerDTO.builder()
+                .winnerTeam("mir")
+                .conferenceName("conferenceName")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiConferenceService.updateWinnerTeam(memberId, updateWinnerDTO));
@@ -139,9 +144,10 @@ class APIConferenceServiceTest {
         when(conference.getOrganizer()).thenReturn(member);
         when(member.getMemberId()).thenReturn(1L);// 다른 사람 아이디를 넣어야됨
 
-        ConferenceInfoDTO conferenceInfoDTO = new ConferenceInfoDTO();
-        conferenceInfoDTO.setConferenceName("conferenceName");
-        conferenceInfoDTO.setContent("content");
+        ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
+                .conferenceName("conferenceName")
+                .content("content")
+                .build();
 
         apiConferenceService.updateConference(memberId, conferenceInfoDTO);
 
@@ -153,9 +159,10 @@ class APIConferenceServiceTest {
     void updateConference_Fail_Not_Found() {
         when(conferenceRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        ConferenceInfoDTO conferenceInfoDTO = new ConferenceInfoDTO();
-        conferenceInfoDTO.setConferenceName("conferenceName");
-        conferenceInfoDTO.setContent("content");
+        ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
+                .conferenceName("conferenceName")
+                .content("content")
+                .build();
 
         when(conferenceRepository.findById(anyString())).thenReturn(Optional.empty());
 
@@ -176,9 +183,10 @@ class APIConferenceServiceTest {
         when(conference.getOrganizer()).thenReturn(member);
         when(member.getMemberId()).thenReturn(2L);// 다른 사람 아이디를 넣어야됨
 
-        ConferenceInfoDTO conferenceInfoDTO = new ConferenceInfoDTO();
-        conferenceInfoDTO.setConferenceName("conferenceName");
-        conferenceInfoDTO.setContent("content");
+        ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
+                .conferenceName("conferenceName")
+                .content("content")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiConferenceService.updateConference(memberId, conferenceInfoDTO));

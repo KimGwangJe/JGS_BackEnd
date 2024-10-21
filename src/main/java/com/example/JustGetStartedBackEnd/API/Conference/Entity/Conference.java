@@ -40,9 +40,9 @@ public class Conference {
     }
 
     public void updateConferenceInfo(ConferenceInfoDTO conferenceInfoDTO){
-        this.conferenceName = conferenceInfoDTO.getConferenceName();
-        this.content = conferenceInfoDTO.getContent();
-        this.conferenceDate = conferenceInfoDTO.getConferenceDate();
+        this.conferenceName = conferenceInfoDTO.conferenceName();
+        this.content = conferenceInfoDTO.content();
+        this.conferenceDate = conferenceInfoDTO.conferenceDate();
     }
 
     @Builder

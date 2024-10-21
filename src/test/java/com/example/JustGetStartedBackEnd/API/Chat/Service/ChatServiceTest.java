@@ -53,10 +53,7 @@ class ChatServiceTest {
         when(chatRoomMember.getMember()).thenReturn(member);
         when(member.getMemberId()).thenReturn(1L);
 
-        RequestChatDTO requestChatDTO = new RequestChatDTO();
-        requestChatDTO.setChatRoomId(1L);
-        requestChatDTO.setMessage("message");
-        requestChatDTO.setMemberId(1L);
+        RequestChatDTO requestChatDTO = new RequestChatDTO(1L, 1L, "message");
         chatService.saveChat(requestChatDTO);
 
         verify(chatRepository, times(1)).save(any(Chat.class));

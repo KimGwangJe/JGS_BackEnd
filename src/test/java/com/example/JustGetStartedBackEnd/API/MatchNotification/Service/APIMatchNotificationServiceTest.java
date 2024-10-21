@@ -73,9 +73,10 @@ class APIMatchNotificationServiceTest {
         when(team.getTeamName()).thenReturn("mir");
         when(apiTeamMemberService.getLeaderId(any(Team.class))).thenReturn(1L);
 
-        CreateMatchNotificationDTO dto = new CreateMatchNotificationDTO();
-        dto.setTeamName("not mir");
-        dto.setMatchPostId(1L);
+        CreateMatchNotificationDTO dto = CreateMatchNotificationDTO.builder()
+                .matchPostId(1L)
+                .teamName("not mir")
+                .build();
 
         apiMatchNotificationService.createMatchNotification(anyLong(), dto);
 
@@ -92,9 +93,10 @@ class APIMatchNotificationServiceTest {
         when(teamService.findByTeamNameReturnEntity(anyString())).thenReturn(team);
         when(matchNotificationRepository.findByMatchPostIdAndTeamName(anyLong(),anyString())).thenReturn(matchNotification);
 
-        CreateMatchNotificationDTO dto = new CreateMatchNotificationDTO();
-        dto.setTeamName("not mir");
-        dto.setMatchPostId(1L);
+        CreateMatchNotificationDTO dto = CreateMatchNotificationDTO.builder()
+                .matchPostId(1L)
+                .teamName("not mir")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiMatchNotificationService.createMatchNotification(anyLong(), dto));
@@ -113,9 +115,10 @@ class APIMatchNotificationServiceTest {
         when(matchPostService.findMatchPostById(anyLong())).thenReturn(matchPost);
         when(matchPost.getMatchDate()).thenReturn(LocalDateTime.MIN);
 
-        CreateMatchNotificationDTO dto = new CreateMatchNotificationDTO();
-        dto.setTeamName("not mir");
-        dto.setMatchPostId(1L);
+        CreateMatchNotificationDTO dto = CreateMatchNotificationDTO.builder()
+                .matchPostId(1L)
+                .teamName("not mir")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiMatchNotificationService.createMatchNotification(anyLong(), dto));
@@ -135,9 +138,10 @@ class APIMatchNotificationServiceTest {
         when(matchPost.getMatchDate()).thenReturn(LocalDateTime.MAX);
         when(matchPost.isEnd()).thenReturn(true);
 
-        CreateMatchNotificationDTO dto = new CreateMatchNotificationDTO();
-        dto.setTeamName("not mir");
-        dto.setMatchPostId(1L);
+        CreateMatchNotificationDTO dto = CreateMatchNotificationDTO.builder()
+                .matchPostId(1L)
+                .teamName("not mir")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiMatchNotificationService.createMatchNotification(anyLong(), dto));
@@ -159,9 +163,10 @@ class APIMatchNotificationServiceTest {
         when(matchPost.getTeamA()).thenReturn(team);
         when(team.getTeamName()).thenReturn("mir");
 
-        CreateMatchNotificationDTO dto = new CreateMatchNotificationDTO();
-        dto.setTeamName("mir");
-        dto.setMatchPostId(1L);
+        CreateMatchNotificationDTO dto = CreateMatchNotificationDTO.builder()
+                .matchPostId(1L)
+                .teamName("mir")
+                .build();
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> apiMatchNotificationService.createMatchNotification(anyLong(), dto));
@@ -177,9 +182,10 @@ class APIMatchNotificationServiceTest {
         MatchPost matchPost = mock(MatchPost.class);
         Team teamA = mock(Team.class);
         Team appliTeam = mock(Team.class);
-        MatchingDTO matchingDTO = new MatchingDTO();
-        matchingDTO.setMatchNotificationId(1L);
-        matchingDTO.setStatus(true);
+        MatchingDTO matchingDTO = MatchingDTO.builder()
+                .matchNotificationId(1L)
+                .status(true)
+                .build();
 
         when(matchNotificationRepository.findById(anyLong())).thenReturn(Optional.of(matchNotification));
         when(matchPost.getTeamA()).thenReturn(teamA);
@@ -205,9 +211,10 @@ class APIMatchNotificationServiceTest {
         MatchNotification matchNotification = mock(MatchNotification.class);
         MatchPost matchPost = mock(MatchPost.class);
         Team teamA = mock(Team.class);
-        MatchingDTO matchingDTO = new MatchingDTO();
-        matchingDTO.setMatchNotificationId(1L);
-        matchingDTO.setStatus(true);
+        MatchingDTO matchingDTO = MatchingDTO.builder()
+                .matchNotificationId(1L)
+                .status(true)
+                .build();
 
         when(matchNotificationRepository.findById(anyLong())).thenReturn(Optional.of(matchNotification));
         when(matchNotification.getMatchPost()).thenReturn(matchPost);

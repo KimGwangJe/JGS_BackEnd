@@ -1,8 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.CommonNotification.Service;
 
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request.NotificationDTO;
-import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request.NotificationListDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Response.NotificationDTO;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Response.NotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Entity.Notification;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.ExceptionType.NotificationExceptionType;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Repository.NotificationRepository;

@@ -28,7 +28,7 @@ public class APIConferenceService {
 
     @Transactional(rollbackFor = Exception.class)
     public void createConference(Long memberId, ConferenceInfoDTO conferenceInfoDTO) {
-        String conferenceName = conferenceInfoDTO.getConferenceName();
+        String conferenceName = conferenceInfoDTO.conferenceName();
         Optional<Conference> conference = conferenceRepository.findById(conferenceName);
 
         if(conference.isPresent()){
@@ -39,8 +39,8 @@ public class APIConferenceService {
         Conference newConference = Conference.builder()
                 .organizer(memberService.findByIdReturnEntity(memberId))
                 .conferenceName(conferenceName)
-                .conferenceDate(conferenceInfoDTO.getConferenceDate())
-                .content(conferenceInfoDTO.getContent())
+                .conferenceDate(conferenceInfoDTO.conferenceDate())
+                .content(conferenceInfoDTO.content())
                 .winnerTeam(null)
                 .build();
 
@@ -53,16 +53,16 @@ public class APIConferenceService {
 
     @Transactional(rollbackFor = Exception.class)
     public void updateWinnerTeam(Long memberId, UpdateWinnerDTO updateWinnerDTO){
-        Conference conference = getByConferenceName(updateWinnerDTO.getConferenceName());
+        Conference conference = getByConferenceName(updateWinnerDTO.conferenceName());
         validConferenceOrganizer(conference, memberId);
 
-        Team team = teamService.findByTeamNameReturnEntity(updateWinnerDTO.getWinnerTeam());
+        Team team = teamService.findByTeamNameReturnEntity(updateWinnerDTO.winnerTeam());
         conference.updateWinnerTeam(team);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void updateConference(Long memberId, ConferenceInfoDTO conferenceInfoDTO){
-        Conference conference = getByConferenceName(conferenceInfoDTO.getConferenceName());
+        Conference conference = getByConferenceName(conferenceInfoDTO.conferenceName());
         validConferenceOrganizer(conference, memberId);
 
         conference.updateConferenceInfo(conferenceInfoDTO);

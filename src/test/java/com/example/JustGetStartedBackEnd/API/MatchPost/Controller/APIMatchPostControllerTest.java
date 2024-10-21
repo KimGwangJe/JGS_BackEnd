@@ -32,10 +32,11 @@ class APIMatchPostControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void createMatchPost() throws Exception {
-        CreateMatchPostDTO createMatchPostDTO = new CreateMatchPostDTO();
-        createMatchPostDTO.setLocation("location");
-        createMatchPostDTO.setTeamName("mir");
-        createMatchPostDTO.setMatchDate(LocalDateTime.now().plusMonths(1));
+        CreateMatchPostDTO createMatchPostDTO = CreateMatchPostDTO.builder()
+                .location("location")
+                .teamName("mir")
+                .matchDate(LocalDateTime.now().plusMonths(1))
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -52,10 +53,11 @@ class APIMatchPostControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateMatchPost() throws Exception {
-        UpdateMatchPostDTO updateMatchPostDTO = new UpdateMatchPostDTO();
-        updateMatchPostDTO.setMatchPostId(1L);
-        updateMatchPostDTO.setLocation("location");
-        updateMatchPostDTO.setMatchDate(LocalDateTime.now().plusMonths(1));
+        UpdateMatchPostDTO updateMatchPostDTO = UpdateMatchPostDTO.builder()
+                .matchPostId(1L)
+                .location("location")
+                .matchDate(LocalDateTime.now().plusMonths(1))
+                .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
