@@ -1,5 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.QueryDSL;
 
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotification;
 
 import java.util.List;
@@ -9,5 +10,5 @@ public interface MatchNotificationQueryDSL {
 
     void deleteAllByMatchPostId(Long matchPostId);
 
-    List<MatchNotification> findByTeamName(String teamName);
+    List<MatchNotificationDTO> findByTeamNameIn(List<String> teamNames);
 }

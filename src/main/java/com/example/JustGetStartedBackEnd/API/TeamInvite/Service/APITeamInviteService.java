@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,12 +73,10 @@ public class APITeamInviteService {
     @Transactional(readOnly = true)
     public TeamInviteListDTO getTeamInvite(Long memberId) {
         // 회원 ID로 팀 초대 알림 조회
-        List<TeamInviteNotification> teamInviteNotifications = teamInviteRepository.findByMemberId(memberId);
+        List<TeamInviteInfoDTO> teamInviteNotifications = teamInviteRepository.findByMemberId(memberId);
 
         // 스트림을 사용하여 DTO로 변환
-        List<TeamInviteInfoDTO> teamInviteInfoDTOS = teamInviteNotifications.stream()
-                .map(TeamInviteNotification::toDTO)
-                .collect(Collectors.toList());
+        List<TeamInviteInfoDTO> teamInviteInfoDTOS = teamInviteNotifications.stream().toList();
 
         // 결과를 TeamInviteListDTO에 설정
         TeamInviteListDTO teamInviteListDTO = new TeamInviteListDTO();

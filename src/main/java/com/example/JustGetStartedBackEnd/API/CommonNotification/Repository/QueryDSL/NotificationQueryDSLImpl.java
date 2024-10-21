@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.CommonNotification.Repository.QueryDSL;
 
-import com.example.JustGetStartedBackEnd.API.CommonNotification.Entity.Notification;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request.NotificationDTO;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -21,9 +22,15 @@ public class NotificationQueryDSLImpl implements NotificationQueryDSL {
     }
 
     @Override
-    public List<Notification> findByMemberId(Long memberId){
+    public List<NotificationDTO> findByMemberId(Long memberId){
         return queryFactory
-                .selectFrom(notification)
+                .select(Projections.fields(NotificationDTO.class,
+                        notification.notificationId,
+                        notification.content,
+                        notification.isRead,
+                        notification.date
+                        ))
+                .from(notification)
                 .where(notification.member.memberId.eq(memberId))
                 .fetch();
     }

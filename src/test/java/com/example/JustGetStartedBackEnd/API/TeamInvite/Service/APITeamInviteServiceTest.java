@@ -9,6 +9,7 @@ import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.CreateTeamInviteDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.Request.JoinTeamDTO;
+import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteInfoDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.ExceptionType.TeamInviteExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Repository.TeamInviteRepository;
@@ -146,8 +147,8 @@ class APITeamInviteServiceTest {
     @Test
     @DisplayName("팀 초대 리스트 조회 - 성공")
     void getTeamInvite() {
-        List<TeamInviteNotification> teamInviteNotifications = new ArrayList<>();
-        when(teamInviteRepository.findByMemberId(anyLong())).thenReturn(teamInviteNotifications);
+        List<TeamInviteInfoDTO> teamInviteInfoDTOS = new ArrayList<>();
+        when(teamInviteRepository.findByMemberId(anyLong())).thenReturn(teamInviteInfoDTOS);
 
         apiTeamInviteService.getTeamInvite(anyLong());
 

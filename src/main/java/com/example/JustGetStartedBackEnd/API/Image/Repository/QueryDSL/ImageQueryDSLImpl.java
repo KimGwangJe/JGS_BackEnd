@@ -21,9 +21,10 @@ public class ImageQueryDSLImpl implements ImageQueryDSL {
     }
 
     @Override
-    public List<Image> findByCommunityIsNull(){
+    public List<String> findByCommunityIsNull(){
         return queryFactory
-                .selectFrom(image)
+                .select(image.imageName)
+                .from(image)
                 .where(image.community.isNull())
                 .fetch();
     }

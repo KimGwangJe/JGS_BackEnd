@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.MatchPost.Repository.QueryDSL;
 
-import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
+import com.example.JustGetStartedBackEnd.API.MatchPost.DTO.MatchPostDTO;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,40 +22,28 @@ public class MatchPostQueryDSLImpl implements MatchPostQueryDSL {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<MatchPost> findByTier(Long tierId, Pageable pageable) {
-        BooleanExpression tierCondition = matchPost.teamA.tier.tierId.eq(tierId);
+    public Page<MatchPostDTO> searchPagedMatchPost(Long tierId, String keyword, Pageable pageable){
+        BooleanExpression pagingCondition = null;
 
-        List<MatchPost> fetch = getMatchPostList(tierCondition, pageable);
+        // tierId가 있는 경우 조건 추가
+        if (tierId != null) {
+            pagingCondition = matchPost.teamA.tier.tierId.eq(tierId);
+        }
 
-        JPQLQuery<Long> count = getCount(tierCondition);
+        // keyword가 있는 경우 조건 추가
+        if (keyword != null && !keyword.isBlank()) {
+            BooleanExpression keywordCondition = matchPost.teamA.teamName.containsIgnoreCase(keyword);
 
-        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
-    }
+            pagingCondition = (pagingCondition == null) ? keywordCondition : pagingCondition.and(keywordCondition);
+        }
 
-    @Override
-    public Page<MatchPost> findByTeamNameKeyword(String keyword, Pageable pageable) {
-        BooleanExpression teamNameCondition = matchPost.teamA.teamName.containsIgnoreCase(keyword);
+        // 검색 조건에 따라 결과 조회
+        List<MatchPostDTO> fetch = getMatchPostList(pagingCondition, pageable);
 
-        List<MatchPost> fetch = getMatchPostList(teamNameCondition, pageable);
-
-        JPQLQuery<Long> count = getCount(teamNameCondition);
-
-        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
-    }
-
-
-    @Override
-    public Page<MatchPost> findByTierAndKeyword(Long tierId, String keyword, Pageable pageable) {
-        BooleanExpression tierIdOrTeamNameCondition = matchPost.teamA.tier.tierId.eq(tierId)
-                .and(matchPost.teamA.teamName.containsIgnoreCase(keyword));
-
-        List<MatchPost> fetch = getMatchPostList(tierIdOrTeamNameCondition, pageable);
-
-        JPQLQuery<Long> count = getCount(tierIdOrTeamNameCondition);
+        JPQLQuery<Long> count = getCount(pagingCondition);
 
         return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
-
 
     @Override
     public void updateMatchPostsToEnd() {
@@ -65,11 +54,20 @@ public class MatchPostQueryDSLImpl implements MatchPostQueryDSL {
                 .execute();
     }
 
-    private List<MatchPost> getMatchPostList(BooleanExpression booleanExpression, Pageable pageable) {
+    private List<MatchPostDTO> getMatchPostList(BooleanExpression booleanExpression, Pageable pageable) {
         return queryFactory
-                .selectFrom(matchPost)
-                .leftJoin(matchPost.teamA, team).fetchJoin()
-                .leftJoin(team.tier, tier).fetchJoin()
+                .select(Projections.fields(MatchPostDTO.class,
+                        matchPost.matchPostId,
+                        matchPost.teamA.teamName,
+                        matchPost.isEnd,
+                        matchPost.matchDate,
+                        matchPost.location,
+                        matchPost.teamA.tier.tierId,
+                        matchPost.teamA.tier.tierName
+                        ))
+                .from(matchPost)
+                .join(matchPost.teamA, team)
+                .join(team.tier, tier)
                 .where(booleanExpression)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

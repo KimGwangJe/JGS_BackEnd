@@ -1,9 +1,10 @@
 package com.example.JustGetStartedBackEnd.API.CommonNotification.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
+import com.example.JustGetStartedBackEnd.API.CommonNotification.DTO.Request.NotificationDTO;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Entity.Notification;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.ExceptionType.NotificationExceptionType;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Repository.NotificationRepository;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import org.junit.jupiter.api.DisplayName;
@@ -134,9 +135,9 @@ class APINotificationServiceTest {
     @Test
     @DisplayName("멤버의 일반 알림 전체 조회 - 성공")
     void getAllNotification() {
-        Notification notification = mock(Notification.class);
-        List<Notification> notificationList = new ArrayList<>();
-        notificationList.add(notification);
+        NotificationDTO notificationDTO = new NotificationDTO();
+        List<NotificationDTO> notificationList = new ArrayList<>();
+        notificationList.add(notificationDTO);
         when(notificationRepository.findByMemberId(anyLong())).thenReturn(notificationList);
 
         apiNotificationService.getAllNotification(anyLong());

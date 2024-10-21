@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface ChatRoomQueryDSL {
     List<ChatRoom> findByMemberId(Long memberId);
-    Optional<ChatRoom> findByMemberIdAndGuestId(Long memberId, Long guestId);
+    Optional<Long> findByMemberIdAndGuestId(Long memberId, Long guestId);
 
 }

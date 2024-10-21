@@ -1,9 +1,9 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Repository.QeuryDSL;
 
-import com.example.JustGetStartedBackEnd.API.Chat.Entity.Chat;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
 
 import java.util.List;
 
 public interface ChatQueryDSL {
-    List<Chat> findByChatRoomId(Long chatRoomId);
+    List<ResponseChatDTO> findByChatRoomId(Long chatRoomId);
 }

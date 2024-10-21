@@ -38,7 +38,7 @@ class MemberServiceTest {
 
     private static Member member;
     private static MemberDTO memberDTO;
-    private Page<Member> memberPage;
+    private Page<MemberDTO> memberPage;
 
     @BeforeEach
     void setUp(){
@@ -60,32 +60,35 @@ class MemberServiceTest {
         memberDTO.setProfileImage("profileImage");
         memberDTO.setRole("USER");
 
-        memberPage = new PageImpl<>(Collections.singletonList(member));
+
+        memberPage = new PageImpl<>(Collections.singletonList(memberDTO));
     }
 
     @Test
     @DisplayName("페이징 멤버 조회 키워드 O - 성공")
     void getMemberList_WithKeyword() {
-        when(memberRepository.findByNameAndEmail(anyString(), any(Pageable.class))).thenReturn(memberPage);
+        when(memberRepository.searchPagedMatchPost(anyString(), any(Pageable.class))).thenReturn(memberPage);
 
         PagingResponseDTO<MemberDTO> result = memberService.getMemberList(0,10,"Kim");
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(memberRepository, times(1)).findByNameAndEmail(anyString(), any(Pageable.class));
+        verify(memberRepository, times(1)).searchPagedMatchPost(anyString(), any(Pageable.class));
     }
 
     @Test
     @DisplayName("페이징 멤버 조회 키워드 X - 성공")
     void getMemberList_WithOutKeyword() {
-        when(memberRepository.findAll(any(Pageable.class))).thenReturn(memberPage);
+        when(memberRepository.searchPagedMatchPost(eq(null), any(Pageable.class))).thenReturn(memberPage);
 
-        PagingResponseDTO<MemberDTO> result = memberService.getMemberList(0,10, "");
+        PagingResponseDTO<MemberDTO> result = memberService.getMemberList(0, 10, null);
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(memberRepository, times(1)).findAll(any(Pageable.class));
+
+        verify(memberRepository, times(1)).searchPagedMatchPost(eq(null), any(Pageable.class));
     }
+
 
     @Test
     @DisplayName("아이디로 멤버 찾기 - 성공")

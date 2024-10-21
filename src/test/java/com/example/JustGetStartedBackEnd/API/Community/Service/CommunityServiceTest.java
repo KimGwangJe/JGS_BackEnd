@@ -1,13 +1,14 @@
 package com.example.JustGetStartedBackEnd.API.Community.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.Response.CommunityDTO;
+import com.example.JustGetStartedBackEnd.API.Community.DTO.Response.CommunityInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Community.ExceptionType.CommunityExceptionType;
 import com.example.JustGetStartedBackEnd.API.Community.Repository.CommunityRepository;
-import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
-import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,10 +38,11 @@ class CommunityServiceTest {
     private CommunityService communityService;
 
     private static Community community;
-    private Page<Community> communityPage;
+    private Page<CommunityDTO> communityPage;
 
     @BeforeEach
     void setUp(){
+        CommunityDTO communityDTO = new CommunityDTO();
         community = Community.builder()
                 .writer(new Member())
                 .team(new Team())
@@ -48,47 +50,48 @@ class CommunityServiceTest {
                 .content("content")
                 .build();
 
-        communityPage = new PageImpl<>(Collections.singletonList(community));
+        communityPage = new PageImpl<>(Collections.singletonList(communityDTO));
     }
 
     @Test
     @DisplayName("페이징 팀 조회 키워드 - 성공")
     void findAll_With_Keyword() {
-        when(communityRepository.findByTeamNameAndTitle(anyString(), any(Pageable.class))).thenReturn(communityPage);
+        when(communityRepository.searchPagedCommunities(anyString(), any(Pageable.class))).thenReturn(communityPage);
 
         PagingResponseDTO<CommunityDTO> result = communityService.findAll(0,10, "keyword");
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(communityRepository, times(1)).findByTeamNameAndTitle(anyString(), any(Pageable.class));
+        verify(communityRepository, times(1)).searchPagedCommunities(anyString(), any(Pageable.class));
     }
 
     @Test
     @DisplayName("페이징 팀 조회 키워드 없이 - 성공")
     void findAll_WithOut_any_keyword() {
-        when(communityRepository.findAll(any(Pageable.class))).thenReturn(communityPage);
+        when(communityRepository.searchPagedCommunities(eq(null), any(Pageable.class))).thenReturn(communityPage);
 
-        PagingResponseDTO<CommunityDTO> result = communityService.findAll(0,10, "");
+        PagingResponseDTO<CommunityDTO> result = communityService.findAll(0, 10, null);
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(communityRepository, times(1)).findAll(any(Pageable.class));
+
+        verify(communityRepository, times(1)).searchPagedCommunities(eq(null), any(Pageable.class));
     }
 
     @Test
     void findById_Success() {
-        Community community = mock(Community.class);
-        when(communityRepository.findById(anyLong())).thenReturn(Optional.of(community));
+        CommunityInfoDTO communityInfoDTO = new CommunityInfoDTO();
+        when(communityRepository.findByIdCustom(anyLong())).thenReturn(Optional.of(communityInfoDTO));
 
         communityService.findById(anyLong());
 
-        verify(communityRepository, times(1)).findById(anyLong());
+        verify(communityRepository, times(1)).findByIdCustom(anyLong());
     }
 
     @Test
     @DisplayName("아이디로 커뮤니티 글 찾기 - 실패(찾을 수 없음)")
     void findById_Fail_Not_Found() {
-        when(communityRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(communityRepository.findByIdCustom(anyLong())).thenReturn(Optional.empty());
 
         BusinessLogicException exception = assertThrows(BusinessLogicException.class,
                 () -> communityService.findById(anyLong()));

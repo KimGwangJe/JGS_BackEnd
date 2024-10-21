@@ -1,6 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Chat.Service;
 
 import com.example.JustGetStartedBackEnd.API.Chat.DTO.Request.RequestChatDTO;
+import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.Chat;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoom;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoomMember;
@@ -64,7 +65,7 @@ class ChatServiceTest {
     @Test
     @DisplayName("채팅 리스트 조회 - 성공")
     void getChatList() {
-        List<Chat> chats = new ArrayList<>();
+        List<ResponseChatDTO> chats = new ArrayList<>();
         when(chatRepository.findByChatRoomId(anyLong())).thenReturn(chats);
 
         chatService.getChatList(anyLong());

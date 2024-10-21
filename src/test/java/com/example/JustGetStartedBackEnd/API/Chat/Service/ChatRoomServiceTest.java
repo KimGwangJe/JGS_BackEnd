@@ -58,9 +58,8 @@ class ChatRoomServiceTest {
     @Test
     @DisplayName("채팅방 생성 - 성공(기존에 있던 경우)")
     void createChatRoom_Success_Present() {
-        ChatRoom chatRoom = mock(ChatRoom.class);
-        when(chatRoomRepository.findByMemberIdAndGuestId(anyLong(), anyLong())).thenReturn(Optional.of(chatRoom));
-        when(chatRoom.getChatRoomId()).thenReturn(1L);
+        Long a = 1L;
+        when(chatRoomRepository.findByMemberIdAndGuestId(anyLong(), anyLong())).thenReturn(Optional.of(a));
 
         chatRoomService.createChatRoom(1L, 2L);
 

@@ -1,6 +1,5 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Entity;
 
-import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import jakarta.persistence.*;
@@ -37,17 +36,6 @@ public class MatchNotification {
 
     @Column(name = "date")
     private LocalDateTime date;
-
-    public MatchNotificationDTO toDTO() {
-        MatchNotificationDTO matchNotificationDTO = new MatchNotificationDTO();
-        matchNotificationDTO.setMatchPostId(this.getMatchPost().getMatchPostId());
-        matchNotificationDTO.setMatchNotificationId(this.getMatchNotifiId());
-        matchNotificationDTO.setRead(this.isRead());
-        matchNotificationDTO.setContent(this.getContent());
-        matchNotificationDTO.setTeamName(this.getApplicantTeam().getTeamName());
-        matchNotificationDTO.setDate(this.date);
-        return matchNotificationDTO;
-    }
 
     public void updateRead(){
         this.isRead = true;

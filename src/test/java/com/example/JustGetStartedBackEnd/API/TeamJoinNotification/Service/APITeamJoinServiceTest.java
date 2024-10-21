@@ -1,6 +1,5 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service;
 
-import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
@@ -9,6 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.Request.JoinTeamDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
@@ -86,7 +86,8 @@ class APITeamJoinServiceTest {
     @Test
     @DisplayName("팀 가입 알림 전체 조회")
     void getTeamJoinList() {
-        when(teamJoinNotificationRepository.findByWriterMemberId(anyLong())).thenReturn(joinNotifications);
+        ArrayList<JoinNotificationDTO> joinNotificationDTOS = new ArrayList<>();
+        when(teamJoinNotificationRepository.findByWriterMemberId(anyLong())).thenReturn(joinNotificationDTOS);
 
         apiTeamJoinService.getTeamJoinList(anyLong());
 

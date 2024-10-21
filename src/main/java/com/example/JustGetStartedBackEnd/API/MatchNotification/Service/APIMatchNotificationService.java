@@ -161,11 +161,13 @@ public class APIMatchNotificationService {
                 .filter(member -> member.getRole() == TeamMemberRole.Leader)
                 .toList();
 
-        // DTO 변환
-        List<MatchNotificationDTO> matchNotificationDTOList = leaderTeams.stream()
-                .flatMap(teamMemberDTO -> matchNotificationRepository.findByTeamName(teamMemberDTO.getTeamName()).stream())
-                .map(MatchNotification::toDTO)
+        // teamName 리스트 추출
+        List<String> teamNames = leaderTeams.stream()
+                .map(TeamMemberDTO::getTeamName)
                 .collect(Collectors.toList());
+
+        // 한 번의 쿼리로 모든 teamName에 대한 데이터를 조회
+        List<MatchNotificationDTO> matchNotificationDTOList = matchNotificationRepository.findByTeamNameIn(teamNames);
 
 
         MatchNotificationListDTO matchNotificationListDTO = new MatchNotificationListDTO();

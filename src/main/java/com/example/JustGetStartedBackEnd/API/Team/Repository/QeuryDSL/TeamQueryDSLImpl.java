@@ -1,6 +1,9 @@
 package com.example.JustGetStartedBackEnd.API.Team.Repository.QeuryDSL;
 
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TierDTO;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -32,37 +35,23 @@ public class TeamQueryDSLImpl implements TeamQueryDSL {
                 .fetchOne();
     }
 
-
     @Override
-    public Page<Team> findByTeamNameKeyword(String keyword, Pageable pageable) {
-        BooleanExpression teamNameCondition = team.teamName.containsIgnoreCase(keyword);
+    public Page<TeamDTO> searchPagedTeam(Long tierId, String keyword, Pageable pageable){
+        BooleanExpression pagingCondition = null;
 
-        List<Team> fetch = getTeamList(teamNameCondition, pageable);
+        if(tierId != null){
+            pagingCondition = team.tier.tierId.eq(tierId);
+        }
 
-        JPQLQuery<Long> count = getCount(teamNameCondition);
+        if (keyword != null && !keyword.isBlank()) {
+            BooleanExpression keywordCondition = team.teamName.containsIgnoreCase(keyword);
 
-        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
-    }
+            pagingCondition = (pagingCondition == null) ? keywordCondition : pagingCondition.and(keywordCondition);
+        }
 
-    @Override
-    public Page<Team> findByTierAndKeyword(Long tierId, String keyword, Pageable pageable) {
-        BooleanExpression tierAndOrTeamNameCondition =  team.tier.tierId.eq(tierId)
-                .and(team.teamName.containsIgnoreCase(keyword));
+        List<TeamDTO> fetch = getTeamList(pagingCondition, pageable);
 
-        List<Team> fetch = getTeamList(tierAndOrTeamNameCondition, pageable);
-
-        JPQLQuery<Long> count = getCount(tierAndOrTeamNameCondition);
-
-        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
-    }
-
-    @Override
-    public Page<Team> findByTier(Long tierId, Pageable pageable) {
-        BooleanExpression tierIdCondition = team.tier.tierId.eq(tierId);
-
-        List<Team> fetch = getTeamList(tierIdCondition, pageable);
-
-        JPQLQuery<Long> count = getCount(tierIdCondition);
+        JPQLQuery<Long> count = getCount(pagingCondition);
 
         return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
@@ -77,10 +66,20 @@ public class TeamQueryDSLImpl implements TeamQueryDSL {
                 .fetch();                         // 결과를 가져오기
     }
 
-    private List<Team> getTeamList(BooleanExpression condition, Pageable pageable) {
+    private List<TeamDTO> getTeamList(BooleanExpression condition, Pageable pageable) {
         return queryFactory
-                .selectFrom(team)
-                .leftJoin(team.tier, tier).fetchJoin()
+                .select(Projections.fields(TeamDTO.class,
+                        team.teamName,
+                        team.createDate,
+                        Projections.fields(TierDTO.class,
+                                team.tier.tierId,
+                                team.tier.tierName).as("tier"),
+                        team.tierPoint,
+                        team.introduce,
+                        team.lastMatchDate)
+                )
+                .from(team)
+                .join(team.tier, tier)
                 .where(condition)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

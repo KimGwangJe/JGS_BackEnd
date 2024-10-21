@@ -45,10 +45,7 @@ public class FCMService {
     @Transactional(rollbackFor=Exception.class)
     public void sendMessage() throws FirebaseMessagingException {
         // FCMToken을 가져와서 리스트로 변환
-        List<FCMToken> tokens = fcmRepository.findAll();
-        List<String> fcmTokenList = tokens.stream()
-                .map(FCMToken::getFcmToken)
-                .toList();
+        List<String> tokens = fcmRepository.findAllFCMTokens();
 
         List<Team> teams = apiTeamService.findTop3Team();
         StringBuilder body = new StringBuilder();
@@ -61,7 +58,7 @@ public class FCMService {
 
         // 메시지 리스트 생성
         List<Message> messages = new ArrayList<>();
-        for (String token : fcmTokenList) {
+        for (String token : tokens) {
             Message message = Message.builder()
                     .setNotification(Notification.builder()
                             .setTitle("JGS 팀 순위")
@@ -80,7 +77,7 @@ public class FCMService {
             List<String> failedTokens = new ArrayList<>();
             for (int i = 0; i < responses.size(); i++) {
                 if (!responses.get(i).isSuccessful()) {
-                    failedTokens.add(fcmTokenList.get(i));
+                    failedTokens.add(tokens.get(i));
                 }
             }
             log.info("실패한 토큰 목록: {}", failedTokens);

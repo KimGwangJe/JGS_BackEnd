@@ -1,11 +1,9 @@
 package com.example.JustGetStartedBackEnd.API.Community.Entity;
 
-import com.example.JustGetStartedBackEnd.API.Community.DTO.Response.CommunityDTO;
-import com.example.JustGetStartedBackEnd.API.Community.DTO.Response.CommunityInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Image.Entity.Image;
-import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -63,36 +61,6 @@ public class Community {
     public void updateContentAndTitle(String content, String title) {
         this.content = content;
         this.title = title;
-    }
-
-    public CommunityDTO getCommunityPaging(){
-        CommunityDTO communityDTO = new CommunityDTO();
-        communityDTO.setTitle(this.title);
-        communityDTO.setCommunityId(this.communityId);
-        communityDTO.setRecruit(this.recruit);
-        if(this.recruit){
-            communityDTO.setTeamName(this.team.getTeamName());
-            communityDTO.setRecruitDate(this.recruitDate);
-        }
-        return communityDTO;
-    }
-
-    public CommunityInfoDTO getCommunityInfo(){
-        CommunityInfoDTO communityInfoDTO = new CommunityInfoDTO();
-        communityInfoDTO.setTitle(this.title);
-        communityInfoDTO.setCommunityId(this.communityId);
-        communityInfoDTO.setRecruit(this.recruit);
-        communityInfoDTO.setContent(this.content);
-        communityInfoDTO.setMemberId(this.writer.getMemberId());
-        communityInfoDTO.setWriteDate(this.writeDate);
-
-        //모집 글일 경우에만 팀이름과 모집 기간 데이터 있음
-        if(this.recruit){
-            communityInfoDTO.setTeamName(this.team.getTeamName());
-            communityInfoDTO.setRecruitDate(this.recruitDate);
-        }
-
-        return communityInfoDTO;
     }
 
     @Builder

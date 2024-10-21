@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,15 +26,8 @@ public class MemberService {
     @Transactional(readOnly = true)
     public PagingResponseDTO<MemberDTO> getMemberList(int page, int size, String keyword){
         Pageable pageable = PageRequest.of(page, size);
-        Page<Member> memberPage;
-        if (keyword == null || keyword.isEmpty()) {
-            memberPage = memberRepository.findAll(pageable);
-        } else {
-            memberPage = memberRepository.findByNameAndEmail(keyword, pageable);
-        }
-        List<MemberDTO> memberDTOS = memberPage.getContent().stream()
-                .map(Member::toMemberDTO)
-                .collect(Collectors.toList());
+        Page<MemberDTO> memberPage = memberRepository.searchPagedMatchPost(keyword, pageable);
+        List<MemberDTO> memberDTOS = memberPage.getContent().stream().toList();
 
         return new PagingResponseDTO<>(memberPage, memberDTOS);
     }

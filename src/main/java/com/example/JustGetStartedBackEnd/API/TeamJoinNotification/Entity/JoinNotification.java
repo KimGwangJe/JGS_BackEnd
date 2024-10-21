@@ -1,7 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
-import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -40,17 +39,6 @@ public class JoinNotification {
 
     public void updateRead(){
         this.isRead = true;
-    }
-
-    public JoinNotificationDTO toDTO() {
-        JoinNotificationDTO joinNotificationDTO = new JoinNotificationDTO();
-        joinNotificationDTO.setNotificationId(this.getNotificationId());
-        joinNotificationDTO.setTeamName(this.getCommunity().getTeam().getTeamName());
-        joinNotificationDTO.setRead(this.isRead());
-        joinNotificationDTO.setMemberId(this.getPubMember().getMemberId());
-        joinNotificationDTO.setMemberName(this.getPubMember().getName());
-        joinNotificationDTO.setDate(this.date);
-        return joinNotificationDTO;
     }
 
     @Builder

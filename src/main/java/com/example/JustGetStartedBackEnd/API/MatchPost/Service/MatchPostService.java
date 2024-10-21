@@ -26,23 +26,16 @@ public class MatchPostService {
     @Transactional(readOnly = true)
     public PagingResponseDTO<MatchPostDTO> getMatchPostList(int page, int size, String keyword, String tier){
         Pageable pageable = PageRequest.of(page,size);
-        Page<MatchPost> matchPost;
+        Page<MatchPostDTO> matchPost;
 
-        if((tier == null || tier.isEmpty()) && (keyword == null || keyword.isEmpty())){
-            matchPost = matchPostRepository.findAll(pageable);
-        } else if (tier != null && !tier.isEmpty() && (keyword == null || keyword.isEmpty())) {
-            Tier tierEntity = tierService.getTierByName(tier);
-            matchPost = matchPostRepository.findByTier(tierEntity.getTierId(), pageable);
-        } else if (tier == null || tier.isEmpty()) {
-            matchPost = matchPostRepository.findByTeamNameKeyword(keyword, pageable);
+        if(tier == null || tier.isBlank()){
+            matchPost =matchPostRepository.searchPagedMatchPost(null, keyword, pageable);
         } else {
             Tier tierEntity = tierService.getTierByName(tier);
-            matchPost = matchPostRepository.findByTierAndKeyword(tierEntity.getTierId(), keyword, pageable);
+            matchPost = matchPostRepository.searchPagedMatchPost(tierEntity.getTierId(), keyword, pageable);
         }
 
-        List<MatchPostDTO> matchDTOs = matchPost.getContent().stream()
-                .map(MatchPost::toMatchPostDTO)
-                .toList();
+        List<MatchPostDTO> matchDTOs = matchPost.getContent().stream().toList();
 
         return new PagingResponseDTO<>(matchPost, matchDTOs);
     }

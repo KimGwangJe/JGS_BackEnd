@@ -1,15 +1,15 @@
 package com.example.JustGetStartedBackEnd.API.Match.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.ExceptionType.MatchExceptionType;
 import com.example.JustGetStartedBackEnd.API.Match.Repository.GameMatchRepository;
-import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class MatchServiceTest {
     private MatchService matchService;
 
     private static GameMatch gameMatch;
-    private Page<GameMatch> gameMatchPage;
+    private Page<MatchInfoDTO> gameMatchPage;
 
     @BeforeEach
     void setUp(){
@@ -58,21 +58,24 @@ class MatchServiceTest {
                 .referee(new Member())
                 .build();
 
-        gameMatchPage = new PageImpl<>(Collections.singletonList(gameMatch));
+        MatchInfoDTO matchInfoDTO = new MatchInfoDTO();
+        gameMatchPage = new PageImpl<>(Collections.singletonList(matchInfoDTO));
     }
 
 
     @Test
     @DisplayName("페이징 팀 조회 키워드 - 성공")
     void findAll_With_Keyword() {
-        when(gameMatchRepository.findByTeamNameKeyword(anyString(), any(Pageable.class))).thenReturn(gameMatchPage);
+        when(gameMatchRepository.searchPagedGameMatches(eq(null), anyString(), any(Pageable.class))).thenReturn(gameMatchPage);
 
-        PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0,10, "keyword", "");
+        PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0, 10, "keyword", null);
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(gameMatchRepository, times(1)).findByTeamNameKeyword(anyString(), any(Pageable.class));
+
+        verify(gameMatchRepository, times(1)).searchPagedGameMatches(eq(null), anyString(), any(Pageable.class));
     }
+
 
     @Test
     @DisplayName("페이징 팀 조회 티어 - 성공")
@@ -81,14 +84,15 @@ class MatchServiceTest {
         when(tierService.getTierByName(anyString())).thenReturn(tier);
         when(tier.getTierId()).thenReturn(1L);
 
-        when(gameMatchRepository.findByTier(anyLong(), any(Pageable.class))).thenReturn(gameMatchPage);
+        when(gameMatchRepository.searchPagedGameMatches(anyLong(), eq(null), any(Pageable.class))).thenReturn(gameMatchPage);
 
-        PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0,10, "", "Tier");
+        PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0, 10, null, "someString");
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(gameMatchRepository, times(1)).findByTier(anyLong(), any(Pageable.class));
+        verify(gameMatchRepository, times(1)).searchPagedGameMatches(anyLong(), eq(null), any(Pageable.class));
     }
+
 
     @Test
     @DisplayName("페이징 팀 조회 티어&키워드 - 성공")
@@ -97,25 +101,25 @@ class MatchServiceTest {
         when(tierService.getTierByName(anyString())).thenReturn(tier);
         when(tier.getTierId()).thenReturn(1L);
 
-        when(gameMatchRepository.findByTierAndKeyword(anyLong(), anyString(), any(Pageable.class))).thenReturn(gameMatchPage);
+        when(gameMatchRepository.searchPagedGameMatches(anyLong(), anyString(), any(Pageable.class))).thenReturn(gameMatchPage);
 
         PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0,10, "Keyword", "Tier");
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(gameMatchRepository, times(1)).findByTierAndKeyword(anyLong(), anyString(), any(Pageable.class));
+        verify(gameMatchRepository, times(1)).searchPagedGameMatches(anyLong(), anyString(), any(Pageable.class));
     }
 
     @Test
     @DisplayName("페이징 팀 조회 키워드&티어 없이 - 성공")
     void findAll_WithOut_any_keyword_And_Tier() {
-        when(gameMatchRepository.findAll(any(Pageable.class))).thenReturn(gameMatchPage);
+        when(gameMatchRepository.searchPagedGameMatches(eq(null), eq(null), any(Pageable.class))).thenReturn(gameMatchPage);
 
-        PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0,10, "", "");
+        PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0,10, null, null);
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(gameMatchRepository, times(1)).findAll(any(Pageable.class));
+        verify(gameMatchRepository, times(1)).searchPagedGameMatches(eq(null), eq(null), any(Pageable.class));
     }
 
     @Test

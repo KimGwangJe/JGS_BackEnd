@@ -40,7 +40,7 @@ class TeamServiceTest {
 
     private static Team team;
     private static MemberDTO memberDTO;
-    private Page<Team> teamPage;
+    private Page<TeamDTO> teamPage;
 
     @BeforeEach
     void setUp(){
@@ -51,20 +51,22 @@ class TeamServiceTest {
                 .tierPoint(0)
                 .build();
 
-        teamPage = new PageImpl<>(Collections.singletonList(team));
+        TeamDTO teamDTO = new TeamDTO();
+        teamPage = new PageImpl<>(Collections.singletonList(teamDTO));
     }
 
     @Test
     @DisplayName("페이징 팀 조회 키워드 - 성공")
     void findAll_With_Keyword() {
-        when(teamRepository.findByTeamNameKeyword(anyString(), any(Pageable.class))).thenReturn(teamPage);
+        when(teamRepository.searchPagedTeam(isNull(), eq("keyword"), any(Pageable.class))).thenReturn(teamPage);
 
-        PagingResponseDTO<TeamDTO> result = teamService.findAll(0,10, "keyword", "");
+        PagingResponseDTO<TeamDTO> result = teamService.findAll(0, 10, "keyword", null);
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(teamRepository, times(1)).findByTeamNameKeyword(anyString(), any(Pageable.class));
+        verify(teamRepository, times(1)).searchPagedTeam(isNull(), eq("keyword"), any(Pageable.class));
     }
+
 
     @Test
     @DisplayName("페이징 팀 조회 티어 - 성공")
@@ -73,13 +75,13 @@ class TeamServiceTest {
         when(tierService.getTierByName(anyString())).thenReturn(tier);
         when(tier.getTierId()).thenReturn(1L);
 
-        when(teamRepository.findByTier(anyLong(), any(Pageable.class))).thenReturn(teamPage);
+        when(teamRepository.searchPagedTeam(anyLong(),anyString(), any(Pageable.class))).thenReturn(teamPage);
 
         PagingResponseDTO<TeamDTO> result = teamService.findAll(0,10, "", "Tier");
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(teamRepository, times(1)).findByTier(anyLong(), any(Pageable.class));
+        verify(teamRepository, times(1)).searchPagedTeam(anyLong(), anyString(), any(Pageable.class));
     }
 
     @Test
@@ -89,26 +91,27 @@ class TeamServiceTest {
         when(tierService.getTierByName(anyString())).thenReturn(tier);
         when(tier.getTierId()).thenReturn(1L);
 
-        when(teamRepository.findByTierAndKeyword(anyLong(), anyString(), any(Pageable.class))).thenReturn(teamPage);
+        when(teamRepository.searchPagedTeam(anyLong(), anyString(), any(Pageable.class))).thenReturn(teamPage);
 
         PagingResponseDTO<TeamDTO> result = teamService.findAll(0,10, "Keyword", "Tier");
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(teamRepository, times(1)).findByTierAndKeyword(anyLong(), anyString(), any(Pageable.class));
+        verify(teamRepository, times(1)).searchPagedTeam(anyLong(), anyString(), any(Pageable.class));
     }
 
     @Test
     @DisplayName("페이징 팀 조회 키워드&티어 없이 - 성공")
     void findAll_WithOut_any_keyword_And_Tier() {
-        when(teamRepository.findAll(any(Pageable.class))).thenReturn(teamPage);
+        when(teamRepository.searchPagedTeam(any(), any(), any(Pageable.class))).thenReturn(teamPage);
 
-        PagingResponseDTO<TeamDTO> result = teamService.findAll(0,10, "", "");
+        PagingResponseDTO<TeamDTO> result = teamService.findAll(0, 10, null, null);
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
-        verify(teamRepository, times(1)).findAll(any(Pageable.class));
+        verify(teamRepository, times(1)).searchPagedTeam(any(), any(), any(Pageable.class));
     }
+
 
     @Test
     @DisplayName("팀 이름으로 팀 조회 - 성공")

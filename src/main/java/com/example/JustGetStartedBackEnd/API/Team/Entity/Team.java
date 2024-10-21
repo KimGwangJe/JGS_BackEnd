@@ -1,23 +1,22 @@
 package com.example.JustGetStartedBackEnd.API.Team.Entity;
 
+import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.Response.ConferenceListDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.Entity.Conference;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchDTO;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.Response.MatchListDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
+import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotification;
+import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.Response.TeamInfoDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
-import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
+import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.TeamMemberDTO;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Entity.TeamMember;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
-import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
-import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotification;
-import com.example.JustGetStartedBackEnd.API.MatchPost.Entity.MatchPost;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -99,16 +98,6 @@ public class Team {
         this.tierPoint = tierPoint;
     }
 
-    public TeamDTO toTeamDTO() {
-        TeamDTO teamDTO = new TeamDTO();
-        teamDTO.setTeamName(this.teamName);
-        teamDTO.setTier(this.tier.tierDTO());
-        teamDTO.setCreateDate(this.createDate);
-        teamDTO.setTierPoint(this.tierPoint);
-        teamDTO.setIntroduce(this.introduce);
-        teamDTO.setLastMatchDate(this.lastMatchDate);
-        return teamDTO;
-    }
 
     public TeamInfoDTO toTeamInfoDTO() {
         TeamInfoDTO teamInfoDTO = new TeamInfoDTO();

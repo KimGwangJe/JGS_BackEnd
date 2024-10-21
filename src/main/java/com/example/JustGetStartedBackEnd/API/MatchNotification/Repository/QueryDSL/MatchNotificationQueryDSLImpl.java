@@ -1,6 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Repository.QueryDSL;
 
+import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.MatchNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Entity.MatchNotification;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -30,10 +32,19 @@ public class MatchNotificationQueryDSLImpl implements MatchNotificationQueryDSL 
     }
 
     @Override
-    public List<MatchNotification> findByTeamName(String teamName) {
+    public List<MatchNotificationDTO> findByTeamNameIn(List<String> teamNames) {
         return queryFactory
-                .selectFrom(matchNotification)
-                .where(matchNotification.matchPost.teamA.teamName.eq(teamName))
+                .select(Projections.fields(MatchNotificationDTO.class,
+                        matchNotification.matchNotifiId.as("matchNotificationId"),
+                        matchNotification.matchPost.matchPostId,
+                        matchNotification.applicantTeam.teamName,
+                        matchNotification.content,
+                        matchNotification.isRead,
+                        matchNotification.date
+                ))
+                .from(matchNotification)
+                .where(matchNotification.matchPost.teamA.teamName.in(teamNames))
                 .fetch();
     }
+
 }

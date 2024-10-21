@@ -26,27 +26,16 @@ public class MatchService {
     @Transactional(rollbackFor = Exception.class)
     public PagingResponseDTO<MatchInfoDTO> findAll(int page, int size, String keyword, String tier){
         Pageable pageable = PageRequest.of(page, size);
-        Page<GameMatch> matchPage;
+        Page<MatchInfoDTO> matchPage;
 
-        if ((tier == null || tier.isEmpty()) && (keyword == null || keyword.isEmpty())) {
-            // tier와 keyword가 둘 다 없을 경우, 모든 팀 검색
-            matchPage = gameMatchRepository.findAll(pageable);
-        } else if (tier != null && !tier.isEmpty() && (keyword == null || keyword.isEmpty())) {
-            // tier만 존재할 경우, 해당 tier의 팀 검색
-            Tier tierEntity = tierService.getTierByName(tier);
-            matchPage = gameMatchRepository.findByTier(tierEntity.getTierId(), pageable);
-        } else if (tier == null || tier.isEmpty()) {
-            // keyword만 존재할 경우, 팀 이름으로 검색
-            matchPage = gameMatchRepository.findByTeamNameKeyword(keyword, pageable);
+        if(tier == null || tier.isBlank()){
+            matchPage = gameMatchRepository.searchPagedGameMatches(null, keyword, pageable);
         } else {
-            // tier와 keyword가 모두 존재할 경우, 두 조건으로 검색
             Tier tierEntity = tierService.getTierByName(tier);
-            matchPage = gameMatchRepository.findByTierAndKeyword(tierEntity.getTierId(), keyword, pageable);
+            matchPage = gameMatchRepository.searchPagedGameMatches(tierEntity.getTierId(), keyword, pageable);
         }
 
-        List<MatchInfoDTO> matchInfoDTOS = matchPage.getContent().stream()
-                .map(GameMatch::toMatchPagingDTO)
-                .toList();
+        List<MatchInfoDTO> matchInfoDTOS = matchPage.getContent().stream().toList();
 
         return new PagingResponseDTO<>(matchPage, matchInfoDTOS);
     }

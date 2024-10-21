@@ -29,7 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -255,39 +255,33 @@ class APIMatchNotificationServiceTest {
     }
 
     @Test
-    @DisplayName("getAllMatchNotifications - Success Case")
+    @DisplayName("회원의 전체 알림 조회 - 성공")
     void getAllMatchNotifications_Success() {
         TeamMemberDTO leaderTeam1 = mock(TeamMemberDTO.class);
-        TeamMemberDTO leaderTeam2 = mock(TeamMemberDTO.class);
         TeamMemberListDTO teamMemberListDTO = mock(TeamMemberListDTO.class);
-        MatchNotification matchNotification1 = mock(MatchNotification.class);
-        MatchNotification matchNotification2 = mock(MatchNotification.class);
         MatchNotificationDTO matchNotificationDTO1 = mock(MatchNotificationDTO.class);
-        MatchNotificationDTO matchNotificationDTO2 = mock(MatchNotificationDTO.class);
 
         when(leaderTeam1.getRole()).thenReturn(TeamMemberRole.Leader);
-        when(leaderTeam2.getRole()).thenReturn(TeamMemberRole.Leader);
         when(leaderTeam1.getTeamName()).thenReturn("Team A");
-        when(leaderTeam2.getTeamName()).thenReturn("Team B");
 
-        when(teamMemberListDTO.getTeamMemberDTOList()).thenReturn(Arrays.asList(leaderTeam1, leaderTeam2));
+        when(teamMemberListDTO.getTeamMemberDTOList()).thenReturn(List.of(leaderTeam1));
+
         when(apiTeamMemberService.findMyTeam(anyLong())).thenReturn(teamMemberListDTO);
 
-        when(matchNotificationRepository.findByTeamName("Team A")).thenReturn(List.of(matchNotification1));
-        when(matchNotificationRepository.findByTeamName("Team B")).thenReturn(List.of(matchNotification2));
-        when(matchNotification1.toDTO()).thenReturn(matchNotificationDTO1);
-        when(matchNotification2.toDTO()).thenReturn(matchNotificationDTO2);
+        List<String> teamNames = List.of(leaderTeam1.getTeamName());
+        ArrayList<MatchNotificationDTO> dtoList = new ArrayList<>();
+        dtoList.add(matchNotificationDTO1);
+
+        when(matchNotificationRepository.findByTeamNameIn(teamNames)).thenReturn(dtoList);
 
         MatchNotificationListDTO result = apiMatchNotificationService.getAllMatchNotifications(1L);
 
         assertNotNull(result);
-        assertEquals(2, result.getMatchNotificationDTOList().size());
+        assertEquals(1, result.getMatchNotificationDTOList().size());
         assertTrue(result.getMatchNotificationDTOList().contains(matchNotificationDTO1));
-        assertTrue(result.getMatchNotificationDTOList().contains(matchNotificationDTO2));
 
         verify(apiTeamMemberService, times(1)).findMyTeam(anyLong());
-        verify(matchNotificationRepository, times(1)).findByTeamName("Team A");
-        verify(matchNotificationRepository, times(1)).findByTeamName("Team B");
     }
+
 
 }

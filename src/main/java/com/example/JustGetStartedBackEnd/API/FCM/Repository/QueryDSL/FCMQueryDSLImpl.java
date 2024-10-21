@@ -5,6 +5,7 @@ import com.example.JustGetStartedBackEnd.API.FCM.Entity.QFCMToken;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -18,5 +19,13 @@ public class FCMQueryDSLImpl implements FCMQueryDSL {
                 .selectFrom(QFCMToken.fCMToken)
                 .where(QFCMToken.fCMToken.member.memberId.eq(memberId))
                 .fetchOne());
+    }
+
+    @Override
+    public List<String> findAllFCMTokens(){
+        return queryFactory
+                .select(QFCMToken.fCMToken.fcmToken)
+                .from(QFCMToken.fCMToken)
+                .fetch();
     }
 }

@@ -1,6 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Repository.QeuryDSL;
 
+import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteInfoDTO;
 import com.example.JustGetStartedBackEnd.API.TeamInvite.Entity.TeamInviteNotification;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -14,9 +16,15 @@ public class TeamInviteQueryDSLImpl implements TeamInviteQueryDSL{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<TeamInviteNotification> findByMemberId(Long memberId) {
+    public List<TeamInviteInfoDTO> findByMemberId(Long memberId) {
         return queryFactory
-                .selectFrom(teamInviteNotification)
+                .select(Projections.fields(TeamInviteInfoDTO.class,
+                        teamInviteNotification.inviteId,
+                        teamInviteNotification.team.teamName,
+                        teamInviteNotification.isRead,
+                        teamInviteNotification.inviteDate
+                        ))
+                .from(teamInviteNotification)
                 .where(teamInviteNotification.member.memberId.eq(memberId))
                 .fetch();
     }

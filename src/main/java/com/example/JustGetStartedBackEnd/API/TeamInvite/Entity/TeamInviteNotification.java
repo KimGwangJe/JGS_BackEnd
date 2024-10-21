@@ -1,8 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Entity;
 
-import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
-import com.example.JustGetStartedBackEnd.API.TeamInvite.DTO.TeamInviteInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,15 +38,6 @@ public class TeamInviteNotification {
 
     public void updateRead() {
         this.isRead = true;
-    }
-
-    public TeamInviteInfoDTO toDTO() {
-        TeamInviteInfoDTO teamInviteInfoDTO = new TeamInviteInfoDTO();
-        teamInviteInfoDTO.setInviteId(this.getInviteId());
-        teamInviteInfoDTO.setTeamName(this.getTeam().getTeamName());
-        teamInviteInfoDTO.setInviteDate(this.getInviteDate());
-        teamInviteInfoDTO.setRead(this.isRead());
-        return teamInviteInfoDTO;
     }
 
     @Builder

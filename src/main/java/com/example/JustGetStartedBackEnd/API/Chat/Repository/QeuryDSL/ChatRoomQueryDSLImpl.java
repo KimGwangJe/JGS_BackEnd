@@ -26,11 +26,12 @@ public class ChatRoomQueryDSLImpl implements ChatRoomQueryDSL {
     }
 
     @Override
-    public Optional<ChatRoom> findByMemberIdAndGuestId(Long memberId, Long guestId) {
+    public Optional<Long> findByMemberIdAndGuestId(Long memberId, Long guestId) {
         return Optional.ofNullable(queryFactory
-                .selectFrom(chatRoom)
-                .leftJoin(chatRoom.chatRoomMembers, chatRoomMember).fetchJoin()
-                .leftJoin(chatRoomMember.member, member).fetchJoin()
+                .select(chatRoom.chatRoomId)
+                .from(chatRoom)
+                .join(chatRoom.chatRoomMembers, chatRoomMember)
+                .join(chatRoomMember.member, member)
                 .where(chatRoomMember.member.memberId.eq(memberId)
                         .or(chatRoomMember.member.memberId.eq(guestId)))
                 .groupBy(chatRoom)

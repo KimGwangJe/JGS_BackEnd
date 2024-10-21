@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,12 +40,10 @@ public class APITeamJoinService {
     @Transactional(readOnly = true)
     public JoinNotificationListDTO getTeamJoinList(Long memberId) {
         // 회원 ID로 팀 가입 알림 조회
-        List<JoinNotification> joinNotificationList = teamJoinNotificationRepository.findByWriterMemberId(memberId);
+        List<JoinNotificationDTO> joinNotificationList = teamJoinNotificationRepository.findByWriterMemberId(memberId);
 
         // 스트림을 사용하여 DTO로 변환
-        List<JoinNotificationDTO> joinNotificationDTOS = joinNotificationList.stream()
-                .map(JoinNotification::toDTO)
-                .collect(Collectors.toList());
+        List<JoinNotificationDTO> joinNotificationDTOS = joinNotificationList.stream().toList();
 
         // 결과를 JoinNotificationListDTO에 설정
         JoinNotificationListDTO joinNotificationListDTO = new JoinNotificationListDTO();

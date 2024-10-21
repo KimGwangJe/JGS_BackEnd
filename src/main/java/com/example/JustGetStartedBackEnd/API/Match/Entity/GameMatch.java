@@ -1,10 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Match.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchDTO;
-import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TierDTO;
-import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -69,34 +67,6 @@ public class GameMatch {
         dto.setTeamAScore(this.teamAScore);
         dto.setTeamBScore(this.teamBScore);
         dto.setReferee(this.referee == null ? null : this.referee.getMemberId());
-        return dto;
-    }
-
-    public MatchInfoDTO toMatchPagingDTO() {
-        MatchInfoDTO dto = new MatchInfoDTO();
-        dto.setMatchId(this.matchId);
-        dto.setMatchDate(this.matchDate);
-        dto.setTeamA(this.teamA.getTeamName());
-        dto.setTeamB(this.teamB.getTeamName());
-        dto.setTeamAScore(this.teamAScore);
-        dto.setTeamBScore(this.teamBScore);
-        dto.setReferee(this.referee == null ? null : this.referee.getMemberId());
-        dto.setTeamATier(toATierDTO());
-        dto.setTeamBTier(toBTierDTO());
-        return dto;
-    }
-
-    public TierDTO toATierDTO(){
-        TierDTO dto = new TierDTO();
-        dto.setTierId(this.teamA.getTier().getTierId());
-        dto.setTierName(this.teamA.getTier().getTierName());
-        return dto;
-    }
-
-    public TierDTO toBTierDTO(){
-        TierDTO dto = new TierDTO();
-        dto.setTierId(this.teamB.getTier().getTierId());
-        dto.setTierName(this.teamB.getTier().getTierName());
         return dto;
     }
 }

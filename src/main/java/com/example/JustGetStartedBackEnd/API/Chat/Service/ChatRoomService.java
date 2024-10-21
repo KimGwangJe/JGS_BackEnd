@@ -38,10 +38,10 @@ public class ChatRoomService {
             throw new BusinessLogicException(ChatRoomExceptionType.SAME_MEMBER_ERROR);
         }
         // 두명이 모두 포함된 채팅방이 이미 있는지 확인
-        Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findByMemberIdAndGuestId(memberId, guestId);
+        Optional<Long> optionalChatRoom = chatRoomRepository.findByMemberIdAndGuestId(memberId, guestId);
         // 있다면 기존 채팅방의 번호를 넘겨줌
         if(optionalChatRoom.isPresent()){
-            return optionalChatRoom.get().getChatRoomId();
+            return optionalChatRoom.get();
         }
         // 아니라면 새로운 채팅방과 채팅 멤버 생성
         Member member = memberService.findByIdReturnEntity(memberId);

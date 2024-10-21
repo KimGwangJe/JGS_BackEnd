@@ -1,6 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Repository.QueryDSL;
 
+import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.DTO.JoinNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Entity.JoinNotification;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -23,9 +25,17 @@ public class TeamJoinNotificationQueryDSLImpl implements TeamJoinNotificationQue
     }
 
     @Override
-    public List<JoinNotification> findByWriterMemberId(Long memberId) {
+    public List<JoinNotificationDTO> findByWriterMemberId(Long memberId) {
         return queryFactory
-                .selectFrom(joinNotification)
+                .select(Projections.fields(JoinNotificationDTO.class,
+                        joinNotification.notificationId,
+                        joinNotification.isRead,
+                        joinNotification.pubMember.memberId,
+                        joinNotification.pubMember.name.as("memberName"),
+                        joinNotification.community.team.teamName,
+                        joinNotification.date
+                        ))
+                .from(joinNotification)
                 .where(joinNotification.community.writer.memberId.eq(memberId))
                 .fetch();
     }

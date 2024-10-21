@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,12 +60,8 @@ public class ChatService {
     @Transactional(readOnly = true)
     public ResponseChatListDTO getChatList(Long chatRoomId){
         ResponseChatListDTO responseChatListDTO = new ResponseChatListDTO();
-        List<Chat> chats = chatRepository.findByChatRoomId(chatRoomId);
-        List<ResponseChatDTO> chatDTOS = new ArrayList<>();
-        for(Chat chat : chats){
-            chatDTOS.add(chat.toResponseChatDTO());
-        }
-        responseChatListDTO.setChats(chatDTOS);
+        List<ResponseChatDTO> chats = chatRepository.findByChatRoomId(chatRoomId);
+        responseChatListDTO.setChats(chats);
         return responseChatListDTO;
     }
 }
