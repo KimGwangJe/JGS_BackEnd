@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.AllNotification.Controller;
 
 import com.example.JustGetStartedBackEnd.API.AllNotification.DTO.AllNotificationDTO;
 import com.example.JustGetStartedBackEnd.API.AllNotification.Service.APIAllNotificationService;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

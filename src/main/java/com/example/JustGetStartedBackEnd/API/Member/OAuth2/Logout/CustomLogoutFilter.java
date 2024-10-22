@@ -1,7 +1,7 @@
-package com.example.JustGetStartedBackEnd.OAuth2.Logout;
+package com.example.JustGetStartedBackEnd.API.Member.OAuth2.Logout;
 
-import com.example.JustGetStartedBackEnd.JWT.JWTUtil;
-import com.example.JustGetStartedBackEnd.OAuth2.Redis.RefreshTokenRepository;
+import com.example.JustGetStartedBackEnd.API.Member.JWT.JWTUtil;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.Redis.RefreshTokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

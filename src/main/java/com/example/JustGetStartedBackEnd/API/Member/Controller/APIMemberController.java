@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.Member.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Member.DTO.Request.UpdateMemberDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Service.APIMemberService;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

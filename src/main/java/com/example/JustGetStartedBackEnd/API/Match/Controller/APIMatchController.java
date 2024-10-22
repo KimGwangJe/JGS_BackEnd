@@ -2,7 +2,7 @@ package com.example.JustGetStartedBackEnd.API.Match.Controller;
 
 import com.example.JustGetStartedBackEnd.API.Match.DTO.Request.EnterScoreDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Service.APIMatchService;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

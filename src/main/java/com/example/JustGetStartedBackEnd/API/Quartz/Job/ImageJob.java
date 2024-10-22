@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.Quartz.Job;
+package com.example.JustGetStartedBackEnd.API.Quartz.Job;
 
 import com.example.JustGetStartedBackEnd.API.Image.Service.APIImageService;
 import lombok.RequiredArgsConstructor;

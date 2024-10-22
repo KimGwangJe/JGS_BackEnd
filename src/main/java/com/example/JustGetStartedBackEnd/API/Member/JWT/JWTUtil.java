@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.JWT;
+package com.example.JustGetStartedBackEnd.API.Member.JWT;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

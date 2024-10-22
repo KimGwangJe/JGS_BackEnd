@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.OAuth2.UserDetails;
+package com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails;
 
 import lombok.AllArgsConstructor;
 

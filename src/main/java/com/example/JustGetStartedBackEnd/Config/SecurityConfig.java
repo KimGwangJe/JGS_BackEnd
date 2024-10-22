@@ -1,11 +1,11 @@
 package com.example.JustGetStartedBackEnd.Config;
 
-import com.example.JustGetStartedBackEnd.JWT.JWTFilter;
-import com.example.JustGetStartedBackEnd.JWT.JWTUtil;
-import com.example.JustGetStartedBackEnd.OAuth2.CustomSuccessHandler;
-import com.example.JustGetStartedBackEnd.OAuth2.Logout.CustomLogoutFilter;
-import com.example.JustGetStartedBackEnd.OAuth2.OAuth2Service.CustomOAuth2UserService;
-import com.example.JustGetStartedBackEnd.OAuth2.Redis.RefreshTokenRepository;
+import com.example.JustGetStartedBackEnd.API.Member.JWT.JWTFilter;
+import com.example.JustGetStartedBackEnd.API.Member.JWT.JWTUtil;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.CustomSuccessHandler;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.Logout.CustomLogoutFilter;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.OAuth2Service.CustomOAuth2UserService;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.Redis.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

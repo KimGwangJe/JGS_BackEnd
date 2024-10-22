@@ -1,8 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Member.Controller;
 
-import com.example.JustGetStartedBackEnd.JWT.JWTUtil;
-import com.example.JustGetStartedBackEnd.OAuth2.Redis.RefreshToken;
-import com.example.JustGetStartedBackEnd.OAuth2.Redis.RefreshTokenRepository;
+import com.example.JustGetStartedBackEnd.API.Member.JWT.JWTUtil;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.Redis.RefreshToken;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.Redis.RefreshTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;

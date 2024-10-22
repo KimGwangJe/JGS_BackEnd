@@ -1,9 +1,9 @@
-package com.example.JustGetStartedBackEnd.OAuth2;
+package com.example.JustGetStartedBackEnd.API.Member.OAuth2;
 
-import com.example.JustGetStartedBackEnd.JWT.JWTUtil;
-import com.example.JustGetStartedBackEnd.OAuth2.Redis.RefreshToken;
-import com.example.JustGetStartedBackEnd.OAuth2.Redis.RefreshTokenRepository;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.JWT.JWTUtil;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.Redis.RefreshToken;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.Redis.RefreshTokenRepository;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

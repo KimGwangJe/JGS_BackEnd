@@ -1,10 +1,10 @@
-package com.example.JustGetStartedBackEnd.OAuth2.OAuth2Service;
+package com.example.JustGetStartedBackEnd.API.Member.OAuth2.OAuth2Service;
 
+import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.MemberRole;
-import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.*;
 import com.example.JustGetStartedBackEnd.API.Member.Repository.MemberRepository;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

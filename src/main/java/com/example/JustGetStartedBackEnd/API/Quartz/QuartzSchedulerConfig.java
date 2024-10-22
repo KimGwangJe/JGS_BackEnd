@@ -1,9 +1,9 @@
-package com.example.JustGetStartedBackEnd.Quartz;
+package com.example.JustGetStartedBackEnd.API.Quartz;
 
-import com.example.JustGetStartedBackEnd.Quartz.Job.FCMJob;
-import com.example.JustGetStartedBackEnd.Quartz.Job.ImageJob;
-import com.example.JustGetStartedBackEnd.Quartz.Job.MatchPostJob;
-import com.example.JustGetStartedBackEnd.Quartz.JobListener.QuartzJobListener;
+import com.example.JustGetStartedBackEnd.API.Quartz.Job.FCMJob;
+import com.example.JustGetStartedBackEnd.API.Quartz.Job.ImageJob;
+import com.example.JustGetStartedBackEnd.API.Quartz.Job.MatchPostJob;
+import com.example.JustGetStartedBackEnd.API.Quartz.JobListener.QuartzJobListener;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.quartz.*;

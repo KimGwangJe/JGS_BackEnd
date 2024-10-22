@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.OAuth2.Redis;
+package com.example.JustGetStartedBackEnd.API.Member.OAuth2.Redis;
 
 import jakarta.persistence.Id;
 

@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.Quartz.JobListener;
+package com.example.JustGetStartedBackEnd.API.Quartz.JobListener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;

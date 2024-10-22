@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.SSE.Controller;
 
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import com.example.JustGetStartedBackEnd.API.SSE.Service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -4,7 +4,7 @@ import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.Creat
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Response.MatchNotificationListDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.Request.MatchingDTO;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.Service.APIMatchNotificationService;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

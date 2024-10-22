@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.CommonNotification.Controller;
 
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;

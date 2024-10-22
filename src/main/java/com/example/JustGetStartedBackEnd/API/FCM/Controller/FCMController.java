@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.FCM.Controller;
 
 import com.example.JustGetStartedBackEnd.API.FCM.Service.FCMService;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;

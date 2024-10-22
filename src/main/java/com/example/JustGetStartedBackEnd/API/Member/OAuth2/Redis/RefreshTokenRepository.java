@@ -1,4 +1,4 @@
-package com.example.JustGetStartedBackEnd.OAuth2.Redis;
+package com.example.JustGetStartedBackEnd.API.Member.OAuth2.Redis;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

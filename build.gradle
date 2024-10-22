@@ -81,6 +81,8 @@ dependencies {
 
 	//quartz 를 활용한 스케줄링
 	implementation 'org.springframework.boot:spring-boot-starter-quartz:3.2.3'
+	// Spring Batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
 }
 
 // Querydsl 빌드 옵션 설정

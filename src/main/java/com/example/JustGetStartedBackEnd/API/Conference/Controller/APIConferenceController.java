@@ -3,7 +3,7 @@ package com.example.JustGetStartedBackEnd.API.Conference.Controller;
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.ConferenceInfoDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.UpdateWinnerDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.Service.APIConferenceService;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

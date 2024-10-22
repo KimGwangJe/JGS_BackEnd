@@ -3,7 +3,7 @@ package com.example.JustGetStartedBackEnd.API.Community.Controller;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.CreateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.DTO.Request.UpdateCommunityDTO;
 import com.example.JustGetStartedBackEnd.API.Community.Service.APICommunityService;
-import com.example.JustGetStartedBackEnd.OAuth2.UserDetails.CustomOAuth2User;
+import com.example.JustGetStartedBackEnd.API.Member.OAuth2.UserDetails.CustomOAuth2User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
