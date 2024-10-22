@@ -3,7 +3,6 @@ package com.example.JustGetStartedBackEnd.Member.Controller;
 import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Member.Controller.MemberController;
 import com.example.JustGetStartedBackEnd.API.Member.DTO.MemberDTO;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.MemberRole;
 import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -38,31 +38,28 @@ class MemberControllerTest {
     @WithMockUser(username = "test@gmail.com", password = "0000")
     @Test
     void getMemberList() throws Exception {
+        // Given
         MemberDTO memberDTO = makeMemberDTO();
-        ArrayList<MemberDTO> memberDTOArrayList = new ArrayList<>();
-        memberDTOArrayList.add(memberDTO);
+        List<MemberDTO> memberDTOList = List.of(memberDTO); // 불변 리스트 생성
 
-        Page<Member> memberPage = new PageImpl<>(new ArrayList<>());
-        PagingResponseDTO<MemberDTO> memberListDTO = new PagingResponseDTO<>(memberPage, memberDTOArrayList);
+        Page<MemberDTO> memberPage = new PageImpl<>(new ArrayList<>()); // 빈 페이지 객체
 
-        memberListDTO.setContent(memberDTOArrayList);
-        memberListDTO.setLast(true);
-        memberListDTO.setTotalPages(0);
-        memberListDTO.setTotalElements(1);
-        memberListDTO.setPageNo(0);
-        memberListDTO.setPageSize(10);
+        // PagingResponseDTO를 생성할 때 필요한 값을 모두 설정
+        PagingResponseDTO<MemberDTO> memberListDTO = PagingResponseDTO.of(memberPage, memberDTOList);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String expectedJson = objectMapper.writeValueAsString(memberListDTO);
 
         given(memberService.getMemberList(anyInt(), anyInt(), anyString())).willReturn(memberListDTO);
 
+        // When & Then
         mockMvc.perform(get("/member")
-                .param("page","0")
-                .param("keyword", ""))
+                        .param("page", "0")
+                        .param("keyword", ""))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
     }
+
 
     @DisplayName("특정 회원 조회")
     @WithMockUser(username = "test@gmail.com", password = "0000")

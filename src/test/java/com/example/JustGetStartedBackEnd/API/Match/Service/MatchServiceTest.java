@@ -71,7 +71,7 @@ class MatchServiceTest {
         PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0, 10, "keyword", null);
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
 
         verify(gameMatchRepository, times(1)).searchPagedGameMatches(eq(null), anyString(), any(Pageable.class));
     }
@@ -89,7 +89,7 @@ class MatchServiceTest {
         PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0, 10, null, "someString");
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(gameMatchRepository, times(1)).searchPagedGameMatches(anyLong(), eq(null), any(Pageable.class));
     }
 
@@ -106,7 +106,7 @@ class MatchServiceTest {
         PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0,10, "Keyword", "Tier");
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(gameMatchRepository, times(1)).searchPagedGameMatches(anyLong(), anyString(), any(Pageable.class));
     }
 
@@ -118,7 +118,7 @@ class MatchServiceTest {
         PagingResponseDTO<MatchInfoDTO> result = matchService.findAll(0,10, null, null);
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(gameMatchRepository, times(1)).searchPagedGameMatches(eq(null), eq(null), any(Pageable.class));
     }
 

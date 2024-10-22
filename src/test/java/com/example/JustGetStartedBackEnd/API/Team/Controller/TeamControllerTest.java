@@ -1,12 +1,11 @@
 package com.example.JustGetStartedBackEnd.API.Team.Controller;
 
+import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.Response.ConferenceListDTO;
 import com.example.JustGetStartedBackEnd.API.Match.DTO.Response.MatchListDTO;
-import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
-import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.Response.TeamInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Team.DTO.TeamDTO;
 import com.example.JustGetStartedBackEnd.API.Team.DTO.TierDTO;
-import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.TeamMember.DTO.Response.TeamMemberListDTO;
 import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.TeamReviewListDTO;
@@ -89,17 +88,9 @@ class TeamControllerTest {
         teamDTO.setTierPoint(0);
         teamDTOS.add(teamDTO);
 
-        Page<Team> teamPage = new PageImpl<>(new ArrayList<>());
+        Page<TeamDTO> teamPage = new PageImpl<>(new ArrayList<>());
 
-        PagingResponseDTO<TeamDTO> teamListPagingDTO = new PagingResponseDTO(teamPage, teamDTOS);
-
-        teamListPagingDTO.setContent(teamDTOS);
-        teamListPagingDTO.setPageNo(0);
-        teamListPagingDTO.setPageSize(0);
-        teamListPagingDTO.setTotalPages(0);
-        teamListPagingDTO.setLast(true);
-        teamListPagingDTO.setTotalElements(0);
-        return teamListPagingDTO;
+        return PagingResponseDTO.of(teamPage, teamDTOS);
     }
 
     private TeamInfoDTO makeTeamInfoDTO(){

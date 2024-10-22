@@ -56,7 +56,7 @@ class ConferenceServiceTest {
         PagingResponseDTO<ConferenceDTO> result = conferenceService.getConferenceList(0,10, "keyword");
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(conferenceRepository, times(1)).searchPagedConferences(anyString(), any(Pageable.class));
     }
 
@@ -68,7 +68,7 @@ class ConferenceServiceTest {
         PagingResponseDTO<ConferenceDTO> result = conferenceService.getConferenceList(0,10, null);
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(conferenceRepository, times(1)).searchPagedConferences(eq(null), any(Pageable.class));
     }
 }

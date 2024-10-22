@@ -40,7 +40,7 @@ public class TeamService {
 
         List<TeamDTO> teamDTOs = teamPage.getContent().stream().toList();
 
-        return new PagingResponseDTO<>(teamPage, teamDTOs);
+        return PagingResponseDTO.of(teamPage, teamDTOs);
     }
 
     @Transactional(readOnly = true)

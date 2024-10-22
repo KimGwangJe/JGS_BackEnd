@@ -1,9 +1,8 @@
 package com.example.JustGetStartedBackEnd.API.Match.Controller;
 
-import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
-import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
 import com.example.JustGetStartedBackEnd.API.Common.DTO.PagingResponseDTO;
+import com.example.JustGetStartedBackEnd.API.Match.DTO.MatchInfoDTO;
+import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +58,7 @@ class MatchControllerTest {
         MatchInfoDTO matchInfoDTO = new MatchInfoDTO();
         ArrayList<MatchInfoDTO> matchDTOArrayList = new ArrayList<>();
         matchDTOArrayList.add(matchInfoDTO);
-        Page<GameMatch> matchPage = new PageImpl<>(new ArrayList<>());
-        return new PagingResponseDTO<>(matchPage, matchDTOArrayList);
+        Page<MatchInfoDTO> matchPage = new PageImpl<>(new ArrayList<>());
+        return PagingResponseDTO.of(matchPage, matchDTOArrayList);
     }
 }

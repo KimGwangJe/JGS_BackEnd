@@ -25,6 +25,6 @@ public class ConferenceService {
 
         List<ConferenceDTO> conferenceDTOList = conferencePage.getContent().stream().toList();
 
-        return new PagingResponseDTO<>(conferencePage, conferenceDTOList);
+        return PagingResponseDTO.of(conferencePage, conferenceDTOList);
     }
 }

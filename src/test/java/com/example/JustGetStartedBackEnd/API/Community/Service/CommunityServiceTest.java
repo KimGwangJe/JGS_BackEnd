@@ -61,7 +61,7 @@ class CommunityServiceTest {
         PagingResponseDTO<CommunityDTO> result = communityService.findAll(0,10, "keyword");
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(communityRepository, times(1)).searchPagedCommunities(anyString(), any(Pageable.class));
     }
 
@@ -73,7 +73,7 @@ class CommunityServiceTest {
         PagingResponseDTO<CommunityDTO> result = communityService.findAll(0, 10, null);
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
 
         verify(communityRepository, times(1)).searchPagedCommunities(eq(null), any(Pageable.class));
     }

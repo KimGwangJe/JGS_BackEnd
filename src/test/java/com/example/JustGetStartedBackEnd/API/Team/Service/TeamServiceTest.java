@@ -63,7 +63,7 @@ class TeamServiceTest {
         PagingResponseDTO<TeamDTO> result = teamService.findAll(0, 10, "keyword", null);
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(teamRepository, times(1)).searchPagedTeam(isNull(), eq("keyword"), any(Pageable.class));
     }
 
@@ -80,7 +80,7 @@ class TeamServiceTest {
         PagingResponseDTO<TeamDTO> result = teamService.findAll(0,10, "", "Tier");
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(teamRepository, times(1)).searchPagedTeam(anyLong(), anyString(), any(Pageable.class));
     }
 
@@ -96,7 +96,7 @@ class TeamServiceTest {
         PagingResponseDTO<TeamDTO> result = teamService.findAll(0,10, "Keyword", "Tier");
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(teamRepository, times(1)).searchPagedTeam(anyLong(), anyString(), any(Pageable.class));
     }
 
@@ -108,7 +108,7 @@ class TeamServiceTest {
         PagingResponseDTO<TeamDTO> result = teamService.findAll(0, 10, null, null);
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(teamRepository, times(1)).searchPagedTeam(any(), any(), any(Pageable.class));
     }
 

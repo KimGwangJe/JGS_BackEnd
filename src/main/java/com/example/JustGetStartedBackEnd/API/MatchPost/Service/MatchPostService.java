@@ -26,18 +26,18 @@ public class MatchPostService {
     @Transactional(readOnly = true)
     public PagingResponseDTO<MatchPostDTO> getMatchPostList(int page, int size, String keyword, String tier){
         Pageable pageable = PageRequest.of(page,size);
-        Page<MatchPostDTO> matchPost;
+        Page<MatchPostDTO> matchPostPage;
 
         if(tier == null || tier.isBlank()){
-            matchPost =matchPostRepository.searchPagedMatchPost(null, keyword, pageable);
+            matchPostPage =matchPostRepository.searchPagedMatchPost(null, keyword, pageable);
         } else {
             Tier tierEntity = tierService.getTierByName(tier);
-            matchPost = matchPostRepository.searchPagedMatchPost(tierEntity.getTierId(), keyword, pageable);
+            matchPostPage = matchPostRepository.searchPagedMatchPost(tierEntity.getTierId(), keyword, pageable);
         }
 
-        List<MatchPostDTO> matchDTOs = matchPost.getContent().stream().toList();
+        List<MatchPostDTO> matchDTOs = matchPostPage.getContent().stream().toList();
 
-        return new PagingResponseDTO<>(matchPost, matchDTOs);
+        return PagingResponseDTO.of(matchPostPage, matchDTOs);
     }
 
     @Transactional(readOnly = true)

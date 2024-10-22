@@ -30,7 +30,7 @@ public class CommunityService {
 
         List<CommunityDTO> communityDTOList = communityPage.getContent().stream().toList();
 
-        return new PagingResponseDTO<>(communityPage, communityDTOList);
+        return PagingResponseDTO.of(communityPage, communityDTOList);
     }
 
     @Transactional(readOnly = true)

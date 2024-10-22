@@ -29,7 +29,7 @@ public class MemberService {
         Page<MemberDTO> memberPage = memberRepository.searchPagedMatchPost(keyword, pageable);
         List<MemberDTO> memberDTOS = memberPage.getContent().stream().toList();
 
-        return new PagingResponseDTO<>(memberPage, memberDTOS);
+        return PagingResponseDTO.of(memberPage, memberDTOS);
     }
 
     @Transactional(readOnly = true)

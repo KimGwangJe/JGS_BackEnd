@@ -37,7 +37,7 @@ public class MatchService {
 
         List<MatchInfoDTO> matchInfoDTOS = matchPage.getContent().stream().toList();
 
-        return new PagingResponseDTO<>(matchPage, matchInfoDTOS);
+        return PagingResponseDTO.of(matchPage, matchInfoDTOS);
     }
 
     @Transactional(readOnly = true)

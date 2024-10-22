@@ -72,7 +72,7 @@ class MemberServiceTest {
         PagingResponseDTO<MemberDTO> result = memberService.getMemberList(0,10,"Kim");
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
         verify(memberRepository, times(1)).searchPagedMatchPost(anyString(), any(Pageable.class));
     }
 
@@ -84,7 +84,7 @@ class MemberServiceTest {
         PagingResponseDTO<MemberDTO> result = memberService.getMemberList(0, 10, null);
 
         assertNotNull(result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(1, result.content().size());
 
         verify(memberRepository, times(1)).searchPagedMatchPost(eq(null), any(Pageable.class));
     }
