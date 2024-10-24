@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamInvite.Service;
 
-import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.FCMMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Member.ExceptionType.MemberExceptionType;
@@ -63,7 +63,7 @@ public class APITeamInviteService {
                     .build();
             teamInviteRepository.save(newTIN);
 
-            publisher.publishEvent(new SSEMessageDTO(inviteMemberId, message));
+            publisher.publishEvent(new FCMMessageDTO(inviteMemberId, message));
         } catch( Exception e){
             log.warn("Create Team Invite Failed : {}", e.getMessage());
             throw new BusinessLogicException(TeamInviteExceptionType.TEAM_INVITE_ERROR);
@@ -120,7 +120,7 @@ public class APITeamInviteService {
         }
 
         //팀 가입 요청 승인 알림 SSO
-        publisher.publishEvent(new SSEMessageDTO(teamLeaderId, message));
+        publisher.publishEvent(new FCMMessageDTO(teamLeaderId, message));
 
         try {
             apiNotificationService.saveNotification(message, teamLeaderId);

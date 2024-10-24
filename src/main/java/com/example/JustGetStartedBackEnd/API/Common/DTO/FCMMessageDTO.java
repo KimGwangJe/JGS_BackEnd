@@ -1,4 +1,4 @@
 package com.example.JustGetStartedBackEnd.API.Common.DTO;
 
-public record SSEMessageDTO(Long memberId, String message) {
+public record FCMMessageDTO(Long memberId, String message) {
 }

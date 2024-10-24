@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.MatchNotification.Service;
 
-import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.FCMMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Match.Service.APIMatchService;
@@ -63,7 +63,7 @@ public class APIMatchNotificationService {
         Long notificationMemberId = apiTeamMemberService.getLeaderId(matchPost.getTeamA());
         String message = applicantTeamName + "팀이 " +
                 matchPost.getTeamA().getTeamName() + "팀에 매치를 신청하였습니다.";
-        publisher.publishEvent(new SSEMessageDTO(notificationMemberId, message));
+        publisher.publishEvent(new FCMMessageDTO(notificationMemberId, message));
 
         MatchNotification newMatchNotification = MatchNotification.builder()
                 .matchPost(matchPost)
@@ -135,7 +135,7 @@ public class APIMatchNotificationService {
                 matchNotificationRepository.deleteById(matchingDTO.matchNotificationId());
             }
             //매치 승인 / 거부 알림 SSO
-            publisher.publishEvent(new SSEMessageDTO(notificationMemberId, message));
+            publisher.publishEvent(new FCMMessageDTO(notificationMemberId, message));
             apinotificationService.saveNotification(message, notificationMemberId);
         } catch(Exception e){
             throw new BusinessLogicException(MatchNotificationExceptionType.MATCH_NOTIFICATION_DELETE_ERROR);

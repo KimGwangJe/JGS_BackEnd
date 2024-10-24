@@ -65,7 +65,7 @@ public class QuartzSchedulerConfig {
                 .newTrigger()
                 .withIdentity("fcmTrigger", "fcmGroup")
                 .withDescription("매일 자정에 FCM 작업 실행")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0 00 00 * * ?"))
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 31 17 * * ?"))
                 .build();
 
         QuartzJobListener jobListener = new QuartzJobListener();

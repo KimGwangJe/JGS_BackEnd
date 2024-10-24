@@ -8,7 +8,7 @@ import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoom;
 import com.example.JustGetStartedBackEnd.API.Chat.Entity.ChatRoomMember;
 import com.example.JustGetStartedBackEnd.API.Chat.ExceptionType.ChatExceptionType;
 import com.example.JustGetStartedBackEnd.API.Chat.Repository.ChatRepository;
-import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.FCMMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class ChatService {
         chatRoom.getChatRoomMembers().stream()
                 .filter(member -> !member.getMember().getMemberId().equals(chatRoomMember.getMember().getMemberId()))
                 .forEach(member -> publisher.publishEvent(
-                        new SSEMessageDTO(member.getMember().getMemberId(), requestChatDTO.message())));
+                        new FCMMessageDTO(member.getMember().getMemberId(), requestChatDTO.message())));
 
         try{
             chatRepository.save(chat);

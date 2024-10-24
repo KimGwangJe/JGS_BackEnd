@@ -1,6 +1,5 @@
 package com.example.JustGetStartedBackEnd.API.SSE.Service;
 
-import com.example.JustGetStartedBackEnd.API.Chat.DTO.Response.ResponseChatDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -45,20 +44,6 @@ public class NotificationService {
         return emitter;
     }
 
-    public void sendNotification(Long userId, String message) {
-        SseEmitter emitter = emitters.get(userId);
-        if (emitter != null) {
-            executor.execute(() -> {
-                try {
-                    log.info("Notification To {}", userId);
-                    emitter.send(SseEmitter.event().name("notification").data(message));
-                } catch (IOException e) {
-                    cleanup(userId);
-                }
-            });
-        }
-    }
-
     public void newChatRoom(Long userId, Long chatRoomId) {
         SseEmitter emitter = emitters.get(userId);
         if (emitter != null) {
@@ -68,20 +53,6 @@ public class NotificationService {
                     emitter.send(SseEmitter.event().name("newChatRoom").data(chatRoomId));
                 } catch (IOException e) {
                     cleanup(userId);
-                }
-            });
-        }
-    }
-
-    public void newChat(Long to, ResponseChatDTO responseChatDTO) {
-        SseEmitter emitter = emitters.get(to);
-        if (emitter != null) {
-            executor.execute(() -> {
-                try {
-                    log.info("Chat From {}, To {}", responseChatDTO.getMemberId(), to);
-                    emitter.send(SseEmitter.event().name("newChat").data(responseChatDTO));
-                } catch (IOException e) {
-                    cleanup(to);
                 }
             });
         }

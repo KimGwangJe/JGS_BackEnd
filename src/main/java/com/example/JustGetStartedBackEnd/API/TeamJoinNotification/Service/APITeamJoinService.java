@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.TeamJoinNotification.Service;
 
-import com.example.JustGetStartedBackEnd.API.Common.DTO.SSEMessageDTO;
+import com.example.JustGetStartedBackEnd.API.Common.DTO.FCMMessageDTO;
 import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.CommonNotification.Service.APINotificationService;
 import com.example.JustGetStartedBackEnd.API.Community.Entity.Community;
@@ -95,7 +95,7 @@ public class APITeamJoinService {
                 .build();
 
         Long subMemberId = community.getWriter().getMemberId();
-        publisher.publishEvent(new SSEMessageDTO(subMemberId, message));
+        publisher.publishEvent(new FCMMessageDTO(subMemberId, message));
 
         try{
             teamJoinNotificationRepository.save(newJoinNotification);
@@ -122,7 +122,7 @@ public class APITeamJoinService {
             message = teamName + "팀에 보낸 가입 신청이 거부되었습니다.";
         }
         //매치 가입 신청 승인 / 거절 알림 SSO
-        publisher.publishEvent(new SSEMessageDTO(notificationMemberId, message));
+        publisher.publishEvent(new FCMMessageDTO(notificationMemberId, message));
 
         try{
             apinotificationService.saveNotification(message, notificationMemberId);

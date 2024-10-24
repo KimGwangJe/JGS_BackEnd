@@ -31,7 +31,7 @@ public class FCMService {
             optionalToken.get().updateToken(token);
             return;
         }
-
+        log.info("member Id : {}",memberId);
         FCMToken fcmToken = FCMToken.builder()
                 .fcmToken(token)
                 .createdAt(LocalDateTime.now())
@@ -43,7 +43,44 @@ public class FCMService {
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public void sendMessage() throws FirebaseMessagingException {
+    public void sendMessageForOneMember(Long memberId, String content) throws FirebaseMessagingException {
+        Optional<FCMToken> token = fcmRepository.findByMemberId(memberId);
+        if (token.isPresent()) {
+            Message message = Message.builder()
+                    .setNotification(Notification.builder()
+                            .setTitle("Notification")
+                            .setBody(content)
+                            .build())
+                    .setToken(token.get().getFcmToken())
+                    .build();
+
+            int maxRetries = 3;
+            int attempt = 0;
+            boolean sent = false;
+
+            while (!sent) {
+                try {
+                    FirebaseMessaging.getInstance().send(message);
+                    sent = true; // 전송 성공 시 반복문 종료
+                } catch (FirebaseMessagingException e) {
+                    attempt++;
+                    if (attempt >= maxRetries) {
+                        throw e;// 최대  재시도 횟수에 도달하면 예외를 던짐
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt(); // 현재 스레드를 복구
+                        throw new RuntimeException("메시지 전송 중 인터럽트 발생", ie);
+                    }
+                }
+            }
+        }
+    }
+
+
+    @Transactional(rollbackFor=Exception.class)
+    public void sendMessageForAllMember() throws FirebaseMessagingException {
         // FCMToken을 가져와서 리스트로 변환
         List<String> tokens = fcmRepository.findAllFCMTokens();
 
