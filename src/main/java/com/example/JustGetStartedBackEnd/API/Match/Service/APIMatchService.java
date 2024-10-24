@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -151,7 +151,7 @@ public class APIMatchService {
             throw new BusinessLogicException(MemberExceptionType.MEMBER_INVALID_AUTHORITY);
         }
 
-        if(gameMatch.getMatchDate().after(new Date())){
+        if (gameMatch.getMatchDate().isAfter(LocalDateTime.now())) {
             log.warn("Not Date Allow - Update Match Point");
             throw new BusinessLogicException(MatchExceptionType.MATCH_NOT_DATE_ALLOW);
         }

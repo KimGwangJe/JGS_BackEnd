@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,7 +22,7 @@ public class GameMatch {
     private Long matchId;
 
     @Column(name = "match_date")
-    private Timestamp matchDate;
+    private LocalDateTime matchDate;
 
     @Column(name = "team_a_score")
     private int teamAScore;
@@ -51,7 +51,7 @@ public class GameMatch {
     }
 
     @Builder
-    public GameMatch(Timestamp matchDate, Team teamA, Team teamB, Member referee) {
+    public GameMatch(LocalDateTime matchDate, Team teamA, Team teamB, Member referee) {
         this.matchDate = matchDate;
         this.teamA = teamA;
         this.teamB = teamB;

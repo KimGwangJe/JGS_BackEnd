@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ public class ConferenceDTO {
     @NotNull
     private Long organizer;
     @NotNull
-    private Date conferenceDate;
+    private LocalDate conferenceDate;
 
     private String content;
     private String winnerTeam;

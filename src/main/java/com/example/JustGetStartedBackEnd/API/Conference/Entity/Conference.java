@@ -2,14 +2,14 @@ package com.example.JustGetStartedBackEnd.API.Conference.Entity;
 
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.ConferenceDTO;
 import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.ConferenceInfoDTO;
-import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -26,7 +26,7 @@ public class Conference {
     private Member organizer;
 
     @Column(name = "conference_date")
-    private Date conferenceDate;
+    private LocalDate conferenceDate;
 
     @Column(name = "content")
     private String content;
@@ -46,7 +46,7 @@ public class Conference {
     }
 
     @Builder
-    public Conference(String conferenceName, Member organizer, Date conferenceDate, String content, Team winnerTeam) {
+    public Conference(String conferenceName, Member organizer, LocalDate conferenceDate, String content, Team winnerTeam) {
         this.conferenceName = conferenceName;
         this.organizer = organizer;
         this.conferenceDate = conferenceDate;

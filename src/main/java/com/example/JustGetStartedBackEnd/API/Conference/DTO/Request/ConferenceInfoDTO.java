@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Builder
 public record ConferenceInfoDTO(
@@ -14,7 +14,7 @@ public record ConferenceInfoDTO(
 
         @NotNull(message = "대회 날짜를 입력해주세요.")
         @FutureOrPresent(message = "대회 날짜는 현재 또는 미래만 됩니다.")
-        Date conferenceDate,
+        LocalDate conferenceDate,
 
         @NotBlank(message = "대회 내용은 null일 수 없습니다.")
         String content

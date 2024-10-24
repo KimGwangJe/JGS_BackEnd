@@ -19,7 +19,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Service
@@ -37,7 +37,7 @@ public class APICommunityService {
         Member member = memberService.findByIdReturnEntity(memberId);
         Community community;
 
-        if (createCommunityDTO.teamName() != null && !createCommunityDTO.teamName().isBlank()) {
+        if (createCommunityDTO.recruit()) {
             community = createTeamRecruitmentCommunityPost(createCommunityDTO, member);
         } else {
             community = createNonTeamRecruitmentCommunityPost(createCommunityDTO, member);
@@ -86,6 +86,10 @@ public class APICommunityService {
     }
 
     private Community createTeamRecruitmentCommunityPost(CreateCommunityDTO dto, Member member){
+        if(dto.recruitDate() == null || dto.teamName().isBlank()){
+            throw new BusinessLogicException(CommunityExceptionType.COMMUNITY_SAVE_ERROR);
+        }
+
         Team team = teamService.findByTeamNameReturnEntity(dto.teamName());
 
         apiTeamMemberService.validateLeaderAuthority(team, member.getMemberId());
@@ -97,7 +101,7 @@ public class APICommunityService {
                 .recruitDate(dto.recruitDate())
                 .team(team)
                 .writer(member)
-                .writeDate(new Date())
+                .writeDate(LocalDate.now())
                 .build();
     }
 
@@ -106,7 +110,7 @@ public class APICommunityService {
                 .content(dto.content())
                 .title(dto.title())
                 .recruit(false)
-                .writeDate(new Date())
+                .writeDate(LocalDate.now())
                 .team(null)
                 .writer(member)
                 .recruitDate(null)

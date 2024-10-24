@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -108,7 +107,7 @@ public class APIMatchNotificationService {
             //매치를 요청 한 사람에게 알림
             if(matchingDTO.status()){
                 CreateMatchDTO createMatchDTO = new CreateMatchDTO();
-                createMatchDTO.setMatchDate(Timestamp.valueOf(matchPost.getMatchDate()));
+                createMatchDTO.setMatchDate(matchPost.getMatchDate());
                 createMatchDTO.setTeamA(matchPostTeamName); //매치를 올린 팀
                 createMatchDTO.setTeamB(challengeTeamName); //도전자
 
@@ -116,10 +115,9 @@ public class APIMatchNotificationService {
                         challengeTeamName +
                         "팀의 매치가 성사 되었습니다.";
 
-                Timestamp lastMatchDate =  Timestamp.valueOf(matchPost.getMatchDate());
                 //두 팀의 마지막 매치 날짜 변경
-                matchNotification.getMatchPost().getTeamA().updateLastMatchDate(lastMatchDate);
-                matchNotification.getApplicantTeam().updateLastMatchDate(lastMatchDate);
+                matchNotification.getMatchPost().getTeamA().updateLastMatchDate(matchPost.getMatchDate());
+                matchNotification.getApplicantTeam().updateLastMatchDate(matchPost.getMatchDate());
 
                 //매치 생성
                 matchService.createMatch(createMatchDTO);

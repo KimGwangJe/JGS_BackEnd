@@ -4,12 +4,12 @@ import com.example.JustGetStartedBackEnd.API.Match.DTO.Request.EnterScoreDTO;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.Repository.GameMatchRepository;
 import com.example.JustGetStartedBackEnd.API.MatchNotification.DTO.CreateMatchDTO;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Tier;
 import com.example.JustGetStartedBackEnd.API.Team.Service.APITeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TeamService;
 import com.example.JustGetStartedBackEnd.API.Team.Service.TierService;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -75,7 +75,7 @@ class APIMatchServiceTest {
         when(gameMatchRepository.findById(enterScoreDTO.getMatchId())).thenReturn(Optional.of(gameMatch));
         when(gameMatch.getReferee()).thenReturn(referee);
         when(referee.getMemberId()).thenReturn(memberId);
-        when(gameMatch.getMatchDate()).thenReturn(new Timestamp(System.currentTimeMillis())); // Current timestamp for testing
+        when(gameMatch.getMatchDate()).thenReturn(LocalDateTime.now());
         when(gameMatch.getTeamAScore()).thenReturn(0);
         when(gameMatch.getTeamBScore()).thenReturn(0);
         when(gameMatch.getTeamA()).thenReturn(teamA);

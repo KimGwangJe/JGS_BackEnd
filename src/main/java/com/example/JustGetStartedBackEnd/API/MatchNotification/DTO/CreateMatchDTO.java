@@ -3,12 +3,12 @@ package com.example.JustGetStartedBackEnd.API.MatchNotification.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class CreateMatchDTO {
-    private Timestamp matchDate;
+    private LocalDateTime matchDate;
     private String teamA;
     private String teamB;
 }

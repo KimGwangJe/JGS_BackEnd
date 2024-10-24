@@ -1,7 +1,10 @@
 package com.example.JustGetStartedBackEnd.API.TeamReview.Service;
 
+import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
 import com.example.JustGetStartedBackEnd.API.Match.Entity.GameMatch;
 import com.example.JustGetStartedBackEnd.API.Match.Service.MatchService;
+import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
+import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import com.example.JustGetStartedBackEnd.API.Team.Entity.Team;
 import com.example.JustGetStartedBackEnd.API.TeamMember.ExceptionType.TeamMemberExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamMember.Service.APITeamMemberService;
@@ -9,9 +12,6 @@ import com.example.JustGetStartedBackEnd.API.TeamReview.DTO.Request.FillReviewDT
 import com.example.JustGetStartedBackEnd.API.TeamReview.Entity.TeamReview;
 import com.example.JustGetStartedBackEnd.API.TeamReview.ExceptionType.TeamReviewExceptionType;
 import com.example.JustGetStartedBackEnd.API.TeamReview.Repository.TeamReviewRepository;
-import com.example.JustGetStartedBackEnd.API.Common.Exception.BusinessLogicException;
-import com.example.JustGetStartedBackEnd.API.Member.Entity.Member;
-import com.example.JustGetStartedBackEnd.API.Member.Service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -61,14 +61,14 @@ class APITeamReviewServiceTest {
         futureGameMatch = GameMatch.builder()
                 .teamA(teamA)
                 .teamB(teamB)
-                .matchDate(new Timestamp(System.currentTimeMillis() + 100000))
+                .matchDate(LocalDateTime.now().plusMonths(1))
                 .referee(referee)
                 .build();
 
         pastGameMatch = GameMatch.builder()
                 .teamA(teamA)
                 .teamB(teamB)
-                .matchDate(new Timestamp(System.currentTimeMillis() - 100000))
+                .matchDate(LocalDateTime.now().minusMonths(1))
                 .referee(referee)
                 .build();
 

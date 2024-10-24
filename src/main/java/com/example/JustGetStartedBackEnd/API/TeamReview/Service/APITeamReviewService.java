@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +60,7 @@ public class APITeamReviewService {
 
     private GameMatch getGameMatch(Long matchId){
         GameMatch gameMatch = matchService.findByMatchById(matchId);
-        if(gameMatch.getMatchDate().after(new Date())){
+        if(gameMatch.getMatchDate().isAfter(LocalDateTime.now())){
             throw new BusinessLogicException(TeamReviewExceptionType.TEAM_REVIEW_INVALID_DATE_ERROR);
         }
         return gameMatch;

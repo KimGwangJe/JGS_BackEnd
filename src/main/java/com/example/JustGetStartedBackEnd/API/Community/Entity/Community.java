@@ -11,9 +11,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -41,7 +41,7 @@ public class Community {
     private LocalDateTime recruitDate;
 
     @Column(name = "write_date")
-    private Date writeDate;
+    private LocalDate writeDate;
 
     @JoinColumn(name = "writer")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -64,7 +64,7 @@ public class Community {
     }
 
     @Builder
-    Community(String title, String content, boolean recruit, LocalDateTime recruitDate, Date writeDate, Member writer, Team team) {
+    Community(String title, String content, boolean recruit, LocalDateTime recruitDate, LocalDate writeDate, Member writer, Team team) {
         this.title = title;
         this.content = content;
         this.recruit = recruit;

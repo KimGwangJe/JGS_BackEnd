@@ -5,6 +5,7 @@ import com.example.JustGetStartedBackEnd.API.Conference.DTO.Request.UpdateWinner
 import com.example.JustGetStartedBackEnd.API.Conference.Service.APIConferenceService;
 import com.example.JustGetStartedBackEnd.TestCustomOAuth2User.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(APIConferenceController.class)
@@ -34,17 +32,15 @@ class APIConferenceControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void createConference() throws Exception{
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date()); // 현재 날짜 설정
-        calendar.add(Calendar.MONTH, 1); // 한 달 추가
-        Date oneMonthLater = calendar.getTime();
+        LocalDate date = LocalDate.now().plusMonths(1);
         ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
-                .conferenceDate(oneMonthLater)
+                .conferenceDate(date)
                 .conferenceName("Conference")
                 .content("content")
                 .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         String jsonString = objectMapper.writeValueAsString(conferenceInfoDTO);
 
         mockMvc.perform(post("/api/conference")
@@ -77,18 +73,16 @@ class APIConferenceControllerTest {
     @WithMockCustomUser(id = 1L, role = "ADMIN")
     @Test
     void updateConference() throws Exception{
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date()); // 현재 날짜 설정
-        calendar.add(Calendar.MONTH, 1); // 한 달 추가
-        Date oneMonthLater = calendar.getTime();
+        LocalDate date = LocalDate.now().plusMonths(1);
 
         ConferenceInfoDTO conferenceInfoDTO = ConferenceInfoDTO.builder()
-                .conferenceDate(oneMonthLater)
+                .conferenceDate(date)
                 .conferenceName("Conference")
                 .content("content")
                 .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         String jsonString = objectMapper.writeValueAsString(conferenceInfoDTO);
 
         mockMvc.perform(put("/api/conference")

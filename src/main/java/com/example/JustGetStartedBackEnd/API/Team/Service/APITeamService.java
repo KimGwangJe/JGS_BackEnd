@@ -15,7 +15,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -39,7 +39,7 @@ public class APITeamService {
         Team newTeam = Team.builder()
                 .teamName(dto.teamName())
                 .tier(Tier.builder().tierId(1L).tierName("Bronze").build())
-                .createDate(new Date())
+                .createDate(LocalDate.now())
                 .introduce(dto.introduce())
                 .tierPoint(0)
                 .lastMatchDate(null)

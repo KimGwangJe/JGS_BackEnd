@@ -3,8 +3,8 @@ package com.example.JustGetStartedBackEnd.API.Community.DTO.Response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -14,7 +14,7 @@ public class CommunityInfoDTO {
     private String content;
     private boolean recruit;
     private LocalDateTime recruitDate;
-    private Date writeDate;
+    private LocalDate writeDate;
     private Long memberId;
     private String teamName;
 }

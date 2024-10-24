@@ -24,7 +24,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,7 +42,7 @@ public class Team {
 
     @NotNull
     @Column(name = "create_date")
-    private Date createDate;
+    private LocalDate createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tier_id")
@@ -54,7 +55,7 @@ public class Team {
     private String introduce;
 
     @Column(name = "last_match_date")
-    private Date lastMatchDate;
+    private LocalDateTime lastMatchDate;
 
     @JsonIgnore
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
@@ -85,7 +86,7 @@ public class Team {
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<TeamInviteNotification> teamInviteNotifications;
 
-    public void updateLastMatchDate(Date lastMatchDate) {
+    public void updateLastMatchDate(LocalDateTime lastMatchDate) {
         this.lastMatchDate = lastMatchDate;
     }
 
@@ -154,7 +155,7 @@ public class Team {
     }
 
     @Builder
-    public Team(String teamName, Date createDate, Tier tier, int tierPoint, String introduce, Date lastMatchDate) {
+    public Team(String teamName, LocalDate createDate, Tier tier, int tierPoint, String introduce, LocalDateTime lastMatchDate) {
         this.teamName = teamName;
         this.createDate = createDate;
         this.tier = tier;
