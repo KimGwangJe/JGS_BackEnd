@@ -1,6 +1,6 @@
 package com.example.JustGetStartedBackEnd.API.Quartz.Job;
 
-import com.example.JustGetStartedBackEnd.API.FCM.FCMDTO;
+import com.example.JustGetStartedBackEnd.API.FCM.DTO.FCMDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;

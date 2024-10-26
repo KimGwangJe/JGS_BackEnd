@@ -1,7 +1,7 @@
 package com.example.JustGetStartedBackEnd.API.Common.EventListener;
 
 import com.example.JustGetStartedBackEnd.API.Common.DTO.FCMMessageDTO;
-import com.example.JustGetStartedBackEnd.API.FCM.FCMDTO;
+import com.example.JustGetStartedBackEnd.API.FCM.DTO.FCMDTO;
 import com.example.JustGetStartedBackEnd.API.FCM.Service.FCMService;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;

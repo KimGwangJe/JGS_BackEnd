@@ -28,10 +28,4 @@ public class FCMController {
         fcmService.save(customOAuth2User.getMemberId(), token);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-//    @PostMapping("/notification")
-//    public ResponseEntity<Void> sendNotification() throws FirebaseMessagingException {
-//        fcmService00.sendMessage();
-//        return ResponseEntity.status(HttpStatus.OK).build();
-//    }
 }

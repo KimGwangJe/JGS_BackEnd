@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class QuartzSchedulerConfig {
+
     private final Scheduler scheduler;
 
     @PostConstruct
@@ -65,7 +66,7 @@ public class QuartzSchedulerConfig {
                 .newTrigger()
                 .withIdentity("fcmTrigger", "fcmGroup")
                 .withDescription("매일 자정에 FCM 작업 실행")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0 31 17 * * ?"))
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 00 00 * * ?"))
                 .build();
 
         QuartzJobListener jobListener = new QuartzJobListener();
