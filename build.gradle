@@ -81,6 +81,9 @@ dependencies {
 
 	//quartz 를 활용한 스케줄링
 	implementation 'org.springframework.boot:spring-boot-starter-quartz:3.2.3'
+
+	//XSS 공격을 방어 <>같은 특수문자들이 변환되어 반환된다. (DB에는 그대로 저장)
+	implementation 'org.apache.commons:commons-text:1.10.0'
 }
 
 // Querydsl 빌드 옵션 설정
