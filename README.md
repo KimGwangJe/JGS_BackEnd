@@ -9,6 +9,7 @@
 </br>
 
 **🛠️ 개발 스택**
+
 Java, SpringBoot 3.x.x, Spring Data JPA, Spring Security, Redis, MySQL, JWT, OAuth2, QueryDSL
 
 </br>
